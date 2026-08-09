@@ -1,0 +1,136 @@
+.product-select {
+  padding: 0 28px;
+}
+
+.product-select__title {
+  color: #222;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.6px;
+  margin-top: 20px;
+}
+
+.product-select__desc {
+  color: #222;
+  font-family: Pretendard;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.36px;
+  padding: 5px 0;
+}
+
+.product-select__categories {
+  display: flex;
+  gap: 12px;
+  padding: 30px 0 15px;
+  margin-bottom: 15px;
+}
+
+.category-btn {
+  display: flex;
+  padding: 5px 10px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  background: #222;
+  color: #fff;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: 0.42px;
+  border: none;  
+  outline: none;   
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.category-btn--active {
+  background: #E63237;
+}
+
+
+.product-card {
+  margin: 0 28px 20px;
+  padding: 15px 15px 20px;
+  border: 1.5px solid #D9D9D9;
+  border-radius: 15px;
+  background: transparent;
+}
+
+
+.product-card__image-area {
+
+  display: flex;
+  width: 100%;
+  padding: 15px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  background: #F5F5F5;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.product-card__image {
+  max-width: 100%;
+  max-height: 280px;
+  object-fit: contain;
+}
+
+.product-card__info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 14px;
+}
+
+.product-card__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.product-card__name {
+  color: #222;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  margin: 0 0 2px;
+}
+
+.product-card__price {
+  color: #222;
+  font-family: Pretendard;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  margin: 0;
+}
+
+.product-card__select-btn {
+  display: flex;
+  padding: 6px 16px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  background: #222;
+  color: #fff;
+  font-family: Pretendard;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  white-space: nowrap;
+  margin-left: 12px;
+  flex-shrink: 0;
+}

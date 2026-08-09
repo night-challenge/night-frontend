@@ -1,13 +1,16 @@
 import { Routes, Route } from 'react-router-dom'
 import PhoneFrame from './components/PhoneFrame.jsx'
 import Home from './pages/Home.jsx'
+import ProductSelect from './pages/ProductSelect.jsx'
+
+
 
 function App() {
   return (
     <PhoneFrame>
       <Routes>
         <Route path="/" element={<Home />} />
-        {/* 새 페이지 추가할 땐 여기 <Route> 한 줄씩 늘리면 돼요 */}
+        <Route path="/products" element={<ProductSelect />} />
       </Routes>
     </PhoneFrame>
   )
