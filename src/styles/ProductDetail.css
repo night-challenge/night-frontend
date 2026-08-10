@@ -1,0 +1,288 @@
+.product-detail {
+  padding: 0 28px 40px;
+}
+
+.product-detail__status,
+.product-detail__status-inline {
+  color: #666;
+  font-family: Pretendard;
+  font-size: 13px;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.product-detail__topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 0;
+}
+
+.product-detail__back {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #222;
+  line-height: 1;
+}
+
+.product-detail__topbar-title {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 600;
+  color: #222;
+}
+
+.product-detail__image-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  background: #F5F5F5;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.product-detail__image {
+  width: 100%;
+  max-height: 260px;
+  object-fit: contain;
+}
+
+.product-detail__image--placeholder {
+  width: 100%;
+  height: 220px;
+  background: #E5E5E5;
+  border-radius: 8px;
+}
+
+.product-detail__thumbnails {
+  display: flex;
+  gap: 10px;
+}
+
+.product-detail__thumb-btn {
+  width: 48px;
+  height: 48px;
+  padding: 4px;
+  border: 1.5px solid transparent;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.product-detail__thumb-btn--active {
+  border-color: #222;
+}
+
+.product-detail__thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.product-detail__name {
+  font-family: Pretendard;
+  font-size: 18px;
+  font-weight: 700;
+  color: #222;
+  margin-top: 20px;
+}
+
+.product-detail__price {
+  font-family: Pretendard;
+  font-size: 15px;
+  color: #222;
+  margin-top: 6px;
+}
+
+.product-detail__section {
+  margin-top: 30px;
+}
+
+.product-detail__section-title {
+  font-family: Pretendard;
+  font-size: 15px;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 12px;
+}
+
+.product-detail__section-title--center {
+  text-align: center;
+}
+
+.product-detail__desc-line {
+  font-family: Pretendard;
+  font-size: 13px;
+  line-height: 22px;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+.engraving-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.engraving-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1.5px solid #E0E0E0;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+}
+
+.engraving-card--active {
+  border-color: #E63237;
+}
+
+.engraving-card__thumb {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  background: #F5F5F5;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+}
+
+.engraving-card--active .engraving-card__thumb {
+  color: #E63237;
+}
+
+.engraving-card__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.engraving-card__name {
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 700;
+  color: #222;
+}
+
+.engraving-card__keywords {
+  font-family: Pretendard;
+  font-size: 12px;
+  color: #888;
+  margin: 2px 0;
+}
+
+.engraving-card__comment {
+  font-family: Pretendard;
+  font-size: 11px;
+  color: #aaa;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.engraving-card__chevron {
+  color: #ccc;
+  font-size: 18px;
+}
+
+.engraving-pager {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
+  font-family: Pretendard;
+  font-size: 13px;
+}
+
+.engraving-pager button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #222;
+}
+
+.engraving-pager button:disabled {
+  color: #ccc;
+  cursor: default;
+}
+
+.color-picker {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  background: #F5F5F5;
+  padding: 16px;
+  border-radius: 10px;
+}
+
+.color-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.color-swatch--active {
+  border-color: #222;
+}
+
+.product-detail__more-link {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 4px;
+  margin-top: 20px;
+  border: none;
+  border-top: 1px solid #eee;
+  background: none;
+  font-family: Pretendard;
+  font-size: 13px;
+  color: #222;
+  cursor: pointer;
+}
+
+.product-detail__error {
+  color: #E63237;
+  font-size: 12px;
+  margin-top: 12px;
+  text-align: center;
+}
+
+.product-detail__success {
+  color: #2E8B57;
+  font-size: 12px;
+  margin-top: 12px;
+  text-align: center;
+}
+
+.product-detail__submit-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 16px;
+  border: none;
+  border-radius: 8px;
+  background: #222;
+  color: #fff;
+  font-family: Pretendard;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.product-detail__submit-btn:disabled {
+  background: #ccc;
+  cursor: default;
+}

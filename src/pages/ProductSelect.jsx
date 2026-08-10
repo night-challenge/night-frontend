@@ -22,6 +22,10 @@ import lifestyleAirpodCase from '../assets/lifestyle_airpod_case.svg'
 
 import '../styles/ProductSelect.css'
 
+import { useNavigate } from 'react-router-dom'
+import { USE_MOCK, mockProductsByCategory } from '../data/mockData'
+
+
 const categories = ['가방', '트래블', '패션소품', '라이프스타일']
 
 // 백엔드 응답엔 이미지가 없어서, optionLabel 기준으로 로컬 이미지를 매칭하는 테이블
@@ -44,6 +48,7 @@ const imageMap = {
   },
 }
 
+
 function ProductSelect() {
   const [activeCategory, setActiveCategory] = useState('가방')
   const [products, setProducts] = useState([])
@@ -51,18 +56,36 @@ function ProductSelect() {
   const [optionIndex, setOptionIndex] = useState(0)
   const [errorMessage, setErrorMessage] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
+
+  const handleSelect = () => {
+    navigate(`/product/${currentOption.id}`, {
+      state: {
+        category: activeCategory,
+        // 같은 제품의 색상/옵션 형제 목록을 통째로 넘겨줌 (상세페이지 썸네일용)
+        siblingOptions: current.options.map((opt) => ({
+          id: opt.id,
+          label: opt.label,
+        })),
+      },
+    })
+  }
 
   useEffect(() => {
     const fetchProducts = async () => {
       setIsLoading(true)
       setErrorMessage(null)
       try {
-        const res = await axios.get('/api/products', {
-          params: { category: activeCategory },
-        })
-        const options = res.data.data.options
+        let options
+        if (USE_MOCK) {
+          options = mockProductsByCategory[activeCategory] || []
+        } else {
+          const res = await axios.get('/api/products', {
+            params: { category: activeCategory },
+          })
+          options = res.data.data.options
+        }
 
-        // optionName(제품명) 기준으로 그룹핑
         const grouped = {}
         options.forEach((opt) => {
           if (!grouped[opt.optionName]) {
@@ -90,7 +113,6 @@ function ProductSelect() {
         setIsLoading(false)
       }
     }
-
     fetchProducts()
   }, [activeCategory])
 
@@ -162,7 +184,9 @@ function ProductSelect() {
               <p className="product-card__name">{current.name}</p>
               <p className="product-card__price">{formatPrice(currentOption.price)}</p>
             </div>
-            <button className="product-card__select-btn">선택</button>
+            <button className="product-card__select-btn" onClick={handleSelect}>
+              선택
+            </button>
           </div>
         </div>
       )}
