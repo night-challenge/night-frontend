@@ -73,6 +73,10 @@
   border-radius: 8px;
   background: #fff;
   cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  box-shadow: none;
 }
 
 .product-detail__thumb-btn--active {
