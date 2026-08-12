@@ -1,31 +1,80 @@
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import { USE_MOCK, mockEngravings } from '../data/mockData'
 import EngraveCard from '../components/EngraveCard.jsx'
 import '../styles/Engraving.css'
 
-// 임시 데이터 (나중에 백엔드에서 받아온 걸로 교체하면 돼요)
-const items = [
-  { id: 1, title: '오리온의 흔적', tags: '침착함 · 역전 · 도전', description: '초반에는 신중하게 전개했지만,\n후반에는 과감한 공격을 선택했습니다.' },
-  { id: 2, title: '오리온의 흔적', tags: '침착함 · 역전 · 도전', description: '초반에는 신중하게 전개했지만,\n후반에는 과감한 공격을 선택했습니다.' },
-  { id: 3, title: '오리온의 흔적', tags: '침착함 · 역전 · 도전', description: '초반에는 신중하게 전개했지만,\n후반에는 과감한 공격을 선택했습니다.' },
-  { id: 4, title: '오리온의 흔적', tags: '침착함 · 역전 · 도전', description: '초반에는 신중하게 전개했지만,\n후반에는 과감한 공격을 선택했습니다.' },
-]
-
 function Engraving() {
+  const [engravings, setEngravings] = useState([])
+  // 화면 상태: loading(불러오는 중) | success | empty(각인 없음) | error
+  const [status, setStatus] = useState('loading')
+
+  // 화면 진입 시 보유 각인 목록 조회 (GET /api/engravings)
+  useEffect(() => {
+    const fetchEngravings = async () => {
+      try {
+        let data
+        if (USE_MOCK) {
+          // 백엔드 연동 전: mock 데이터 사용
+          data = mockEngravings
+        } else {
+          // 백엔드 완성되면 mockData.js의 USE_MOCK만 false로 바꾸면 됨
+          const res = await axios.get('/api/engravings')
+          data = res.data?.data ?? [] // 공통 응답 { status, message, data }
+        }
+
+        // createdAt 내림차순(최신 먼저) 정렬
+        const sorted = [...data].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+        )
+
+        if (sorted.length === 0) {
+          setStatus('empty')
+        } else {
+          setEngravings(sorted)
+          setStatus('success')
+        }
+      } catch (err) {
+        console.error('각인 목록 조회 실패:', err)
+        setStatus('error')
+      }
+    }
+    fetchEngravings()
+  }, [])
+
+  // 키워드 배열/문자열 → "침착함 · 역전 · 도전" 형태로 변환
+  const formatKeywords = (keywords) =>
+    Array.isArray(keywords) ? keywords.join(' · ') : keywords || ''
+
   return (
     <div className="engraving">
       <h1 className="engraving__title">각인 이름 수정하기</h1>
       <p className="engraving__subtitle">최근 작업된 각인</p>
 
-      <div className="engraving__list">
-        {items.map((item) => (
-          <EngraveCard
-            key={item.id}
-            title={item.title}
-            tags={item.tags}
-            description={item.description}
-            onClick={() => console.log('카드 클릭:', item.id)}
-          />
-        ))}
-      </div>
+      {status === 'loading' && (
+        <p className="engraving__state">불러오는 중...</p>
+      )}
+      {status === 'error' && (
+        <p className="engraving__state">각인을 불러오지 못했어요.</p>
+      )}
+      {status === 'empty' && (
+        <p className="engraving__state">아직 생성된 각인이 없어요.</p>
+      )}
+
+      {status === 'success' && (
+        <div className="engraving__list">
+          {engravings.map((item) => (
+            <EngraveCard
+              key={item.id}
+              constellation={item.constellationData}
+              title={item.constellationName}
+              tags={formatKeywords(item.keywords)}
+              description={item.comment}
+              onClick={() => console.log('카드 클릭:', item.id)}
+            />
+          ))}
+        </div>
+      )}
 
       {/* 페이지네이션 */}
       <div className="pagination">

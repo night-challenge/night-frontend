@@ -28,6 +28,15 @@
   gap: 15px;                 /* 카드 사이 여백 */
 }
 
+/* 로딩 / 에러 / 빈 상태 안내 문구 */
+.engraving__state {
+  margin: 40px 0;
+  text-align: center;
+  color: #999;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+}
+
 /* ===== 각인 카드 ===== */
 .engrave-card {
   display: flex;
@@ -50,6 +59,10 @@
   border-radius: 5px;
   background: #d9d9d9;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;               /* 별자리 선/점 색 (ConstellationThumb의 currentColor) */
 }
 .engrave-card__thumb img {
   width: 100%;
