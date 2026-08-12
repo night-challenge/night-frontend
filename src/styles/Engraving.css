@@ -1,12 +1,15 @@
 /* ===== 각인 페이지 ===== */
 .engraving {
-  padding: 15px 28px 0;      /* 위 15px(네비바~제목), 좌우 28px */
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;          /* 화면 세로 꽉 채움 (빈 상태 버튼을 맨 아래로) */
+  padding: 15px 28px 20px;   /* 위 15px(네비바~제목), 좌우 28px, 아래 20px */
 }
 
 .engraving__title {
   margin: 0;
   color: #222;
-  text-align: center;
+  text-align: left;          /* 왼쪽에서 28px(페이지 좌우 패딩)에 맞춤 */
   font-size: 20px;
   font-weight: 700;
   line-height: normal;
@@ -26,6 +29,67 @@
   display: flex;
   flex-direction: column;
   gap: 15px;                 /* 카드 사이 여백 */
+}
+
+/* 로딩 / 에러 안내 문구 */
+.engraving__state {
+  margin: 40px 0;
+  text-align: center;
+  color: #999;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+}
+
+/* ===== 빈 상태 (저장된 각인 없음) ===== */
+.engraving__empty {
+  flex: 1;                   /* 남는 공간 다 차지 → 버튼이 맨 아래로 */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* 뒷배경 로고 워터마크 */
+.engraving__empty-logo {
+  position: absolute;
+  width: 130px;
+  height: 115px;
+  aspect-ratio: 26 / 23;
+  opacity: 0.05;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.engraving__empty-title,
+.engraving__empty-desc {
+  position: relative;        /* 로고 위로 올라오게 */
+  z-index: 1;
+  margin: 0;
+  color: #000;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 130%;         /* 18.2px */
+}
+
+.engraving__empty-desc {
+  white-space: pre-line;     /* \n 을 줄바꿈으로 */
+}
+
+/* "게임하러 가기" 버튼 */
+.engraving__empty-btn {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  background: #222;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  cursor: pointer;
 }
 
 /* ===== 각인 카드 ===== */
@@ -50,6 +114,10 @@
   border-radius: 5px;
   background: #d9d9d9;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;               /* 별자리 선/점 색 (ConstellationThumb의 currentColor) */
 }
 .engrave-card__thumb img {
   width: 100%;

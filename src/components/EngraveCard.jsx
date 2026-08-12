@@ -1,13 +1,18 @@
 import rightArrow from '../assets/right arrow.png'
+import ConstellationThumb from './ConstellationThumb.jsx'
 
 // 각인 카드 컴포넌트.
-// props로 이미지, 제목, 태그, 설명을 받아서 보여줍니다. (재사용 가능)
-function EngraveCard({ image, title, tags, description, onClick }) {
+// props로 별자리 데이터/제목/태그/설명을 받아서 보여줍니다. (재사용 가능)
+function EngraveCard({ constellation, image, title, tags, description, onClick }) {
   return (
     <button className="engrave-card" onClick={onClick}>
-      {/* 왼쪽 썸네일 (이미지 없으면 회색 박스) */}
+      {/* 왼쪽 썸네일: 별자리 데이터 있으면 별자리, 없으면 이미지/회색 박스 */}
       <div className="engrave-card__thumb">
-        {image && <img src={image} alt="" />}
+        {constellation ? (
+          <ConstellationThumb data={constellation} size={100} />
+        ) : image ? (
+          <img src={image} alt="" />
+        ) : null}
       </div>
 
       {/* 가운데 내용 */}
@@ -22,11 +27,5 @@ function EngraveCard({ image, title, tags, description, onClick }) {
     </button>
   )
 }
-  44
+
 export default EngraveCard
-
-
-
-
-
-

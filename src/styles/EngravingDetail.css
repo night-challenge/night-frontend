@@ -1,0 +1,217 @@
+/* ===== 각인 상세 / 이름 수정 페이지 ===== */
+.detail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 12px 20px 20px;
+  color: #222;
+}
+
+.detail__state {
+  margin: 40px 0;
+  text-align: center;
+  color: #999;
+  font-size: 13px;
+}
+
+/* 헤더 */
+.detail__header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  margin-bottom: 12px;
+}
+.detail__back {
+  position: absolute;
+  left: 0;
+  border: none;
+  background: none;
+  font-size: 24px;
+  line-height: 1;
+  color: #222;
+  cursor: pointer;
+}
+.detail__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+/* Before / After */
+.detail__constellations {
+  display: flex;
+  gap: 12px;
+}
+.detail__const {
+  flex: 1;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.detail__const-box {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+/* Before: 밝은 격자 배경, 어두운 별자리 */
+.detail__const-box--before {
+  background-color: #ececec;
+  background-image: linear-gradient(#dcdcdc 1px, transparent 1px),
+    linear-gradient(90deg, #dcdcdc 1px, transparent 1px);
+  background-size: 20px 20px;
+  color: #555;
+}
+/* After: 검은 배경, 흰 별자리 */
+.detail__const-box--after {
+  background: #111;
+  color: #fff;
+}
+.detail__const-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #222;
+}
+
+/* 플레이 스토리 */
+.detail__story {
+  text-align: center;
+  margin: 28px 0;
+}
+.detail__story-heading {
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #222;
+}
+.detail__story-keywords {
+  margin: 0 0 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #222;
+  letter-spacing: 0.3px;
+}
+.detail__story-comment {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #222;
+}
+
+/* 입력 필드 공통 */
+.detail__field {
+  margin-top: 20px;
+}
+.detail__label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #222;
+}
+.detail__readonly {
+  padding: 14px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+  color: #222;
+}
+
+.detail__input-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.detail__input {
+  flex: 1;
+  padding: 14px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #222;
+  outline: none;
+}
+.detail__input::placeholder {
+  color: #bbb;
+}
+.detail__edit-btn {
+  flex-shrink: 0;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #222;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.detail__help {
+  margin: 8px 0 0;
+  font-size: 11px;
+  color: #999;
+}
+
+/* 하단 저장 버튼 */
+.detail__save-btn {
+  margin-top: auto;          /* 맨 아래로 밀기 */
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 8px;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+}
+/* "변경된 사항이 없습니다" 토스트가 뜰 때만 비활성화 색 */
+.detail__save-btn--inactive {
+  background: #a0a0a0;
+  transition: background 0.2s ease;
+}
+
+/* 토스트 (부드럽게 나타났다 사라짐) */
+.detail__toast {
+  position: absolute;
+  bottom: 96px;
+  left: 50%;
+  padding: 10px 18px;
+  border-radius: 6px;
+  background: rgba(60, 60, 60, 0.85);
+  color: #fff;
+  font-size: 13px;
+  white-space: nowrap;
+  animation: detail-toast 2s ease forwards;
+}
+
+@keyframes detail-toast {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+  }
+  15% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  80% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-8px);
+  }
+}

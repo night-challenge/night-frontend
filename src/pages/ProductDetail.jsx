@@ -5,7 +5,8 @@ import axios from 'axios'
 import { thumbMap, detailImageMap } from '../data/productAssets'
 import ConstellationThumb from '../components/ConstellationThumb'
 import '../styles/ProductDetail.css'
-import { USE_MOCK, mockProductDetails, mockEngravings } from '../data/mockData'
+import { USE_MOCK, mockProductDetails } from '../data/mockData'
+import { mockEngravings } from '../data/engravingData'
 
 const PAGE_SIZE = 4
 const COLORS = [
@@ -213,7 +214,7 @@ function ProductDetail() {
                   onClick={() => setSelectedRecordId(record.id)}
                 >
                   <div className="engraving-card__thumb">
-                    <ConstellationThumb data={record.constellationData} />
+                    <ConstellationThumb data={record.constellationData?.after ?? record.constellationData} />
                   </div>
                   <div className="engraving-card__text">
                     <p className="engraving-card__name">{record.constellationName}</p>
