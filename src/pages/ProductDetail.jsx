@@ -18,7 +18,6 @@ function ProductDetail() {
   const { optionId } = useParams()
   const location = useLocation()
   const navigate = useNavigate()
-  // ProductSelect에서 navigate(state)로 넘겨준 카테고리 (썸네일 이미지 찾을 때만 씀)
   const category = location.state?.category
 
   const [product, setProduct] = useState(null)
@@ -34,6 +33,7 @@ function ProductDetail() {
   const [submitError, setSubmitError] = useState(null)
   const [submitSuccess, setSubmitSuccess] = useState(null)
   const [submitting, setSubmitting] = useState(false)
+  const [showColorModal, setShowColorModal] = useState(false)
 
   // 7. 제품 상세 조회
   useEffect(() => {
@@ -261,11 +261,55 @@ function ProductDetail() {
               }
               style={{ backgroundColor: c.hex }}
               aria-label={c.label}
-              onClick={() => setSelectedColor(c.key)}
+              onClick={() => {
+                setSelectedColor(c.key)
+                setShowColorModal(true)
+              }}
             />
           ))}
         </div>
       </section>
+
+      {showColorModal && (
+        <div
+          className="color-modal-overlay"
+          onClick={() => setShowColorModal(false)}
+        >
+          <div className="color-modal" onClick={(e) => e.stopPropagation()}>
+            <p className="color-modal__note">
+              예시 이미지입니다.
+              <br />
+              이후 선택한 각인이 예시와 같이 새겨집니다.
+            </p>
+
+            <div className="color-modal__preview">
+              {/* TODO: 나중에 실제 각인된 부분 이미지로 교체 */}
+              각인된 부분 이미지
+            </div>
+
+            <div className="color-modal__swatches">
+              {COLORS.map((c) => (
+                <button
+                  key={c.key}
+                  className={
+                    'color-swatch' + (selectedColor === c.key ? ' color-swatch--active' : '')
+                  }
+                  style={{ backgroundColor: c.hex }}
+                  aria-label={c.label}
+                  onClick={() => setSelectedColor(c.key)}
+                />
+              ))}
+            </div>
+
+            <button
+              className="color-modal__confirm-btn"
+              onClick={() => setShowColorModal(false)}
+            >
+              이 색으로 선택하기
+            </button>
+          </div>
+        </div>
+      )}
 
       <button className="product-detail__more-link">
         MCM에서 더 많은 제품 보기
