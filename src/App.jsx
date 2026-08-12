@@ -11,7 +11,8 @@ function App() {
   return (
     <PhoneFrame>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<GameIntro />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/products" element={<ProductSelect />} />
         <Route path="/product/:optionId" element={<ProductDetail />} />
         <Route path="/game" element={<GameIntro />} />

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 // 아이콘 불러오기 (기본 / 선택됨 _on)
@@ -14,24 +13,24 @@ import profileIconOn from '../assets/profile_icon_on.png'
 // 탭 목록. icon = 기본, iconOn = 선택됐을 때
 const tabs = [
   { key: 'game', label: '게임', icon: gameIcon, iconOn: gameIconOn, path: '/game' },
-  { key: 'pen', label: '각인', icon: penIcon, iconOn: penIconOn },
-  { key: 'product', label: '제품', icon: productIcon, iconOn: productIconOn },
-  { key: 'profile', label: '마이', icon: profileIcon, iconOn: profileIconOn },
+  { key: 'pen', label: '각인', icon: penIcon, iconOn: penIconOn , path: '/engraving'},
+  { key: 'product', label: '제품', icon: productIcon, iconOn: productIconOn, path: '/products' },
+  { key: 'profile', label: '마이', icon: profileIcon, iconOn: profileIconOn, path: '/profile' },
 ]
 
 function TabBar() {
   // 지금 선택된 탭 (기본값: 게임)
-  const [active, setActive] = useState('game')
-
+  const navigate = useNavigate()
+  const location = useLocation()
   return (
     <nav className="tabbar">
       {tabs.map((tab) => {
-        const isActive = active === tab.key
+        const isActive = location.pathname === tab.path
         return (
           <button
             key={tab.key}
             className={`tab${isActive ? ' tab--active' : ''}`}
-            onClick={() => setActive(tab.key)}
+            onClick={() => navigate(tab.path)}
           >
             {/* 선택됐을 때 뜨는 상단 빨간 바 */}
             <span className="tab-bar" />
