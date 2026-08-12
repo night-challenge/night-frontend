@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 // 아이콘 불러오기 (기본 / 선택됨 _on)
 import gameIcon from '../assets/game_icon.png'
@@ -12,7 +13,7 @@ import profileIconOn from '../assets/profile_icon_on.png'
 
 // 탭 목록. icon = 기본, iconOn = 선택됐을 때
 const tabs = [
-  { key: 'game', label: '게임', icon: gameIcon, iconOn: gameIconOn },
+  { key: 'game', label: '게임', icon: gameIcon, iconOn: gameIconOn, path: '/game' },
   { key: 'pen', label: '각인', icon: penIcon, iconOn: penIconOn },
   { key: 'product', label: '제품', icon: productIcon, iconOn: productIconOn },
   { key: 'profile', label: '마이', icon: profileIcon, iconOn: profileIconOn },

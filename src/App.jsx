@@ -2,8 +2,10 @@ import { Routes, Route } from 'react-router-dom'
 import PhoneFrame from './components/PhoneFrame.jsx'
 import Home from './pages/Home.jsx'
 import ProductSelect from './pages/ProductSelect.jsx'
-import ProductDetail from './pages/ProductDetail.jsx'   // ← 추가
-
+import ProductDetail from './pages/ProductDetail.jsx'
+import GameIntro from './pages/GameIntro.jsx'
+import GameHome from './pages/GameHome.jsx'
+import GameBoard from './pages/GameBoard.jsx'
 
 function App() {
   return (
@@ -12,6 +14,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<ProductSelect />} />
         <Route path="/product/:optionId" element={<ProductDetail />} />
+        <Route path="/game" element={<GameIntro />} />
+        <Route path="/game/home" element={<GameHome />} />
+        <Route path="/game/board/:gameSessionId" element={<GameBoard />} />
       </Routes>
     </PhoneFrame>
   )

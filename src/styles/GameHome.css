@@ -1,0 +1,121 @@
+.game-home {
+  padding: 0 20px 40px;
+}
+
+.game-home-board-banner {
+  display: block;
+  margin: 30px 28px;
+}
+
+.game-home-title {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #222;
+  font-family: Pretendard;
+  font-style: normal;
+  line-height: normal;
+  align-self: stretch;
+  margin: 40px 28px 30px 28px;
+  letter-spacing: 0.36px;
+}
+
+.game-home-desc {
+  text-align: center;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.how-to-box {
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 16px;
+  margin: 24px 0;
+}
+
+.how-to-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.how-to-list {
+  padding-left: 18px;
+  font-size: 13px;
+  color: #444;
+  line-height: 1.9;
+}
+
+.knight-preview-box {
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.knight-preview-image {
+  width: 160px;
+  height: 160px;
+  margin: 0 auto 12px;
+  display: block;
+}
+
+.knight-preview-caption {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.recent-result-box {
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.recent-result-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.recent-result-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #333;
+  padding: 6px 0;
+}
+
+.mode-select-title {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.mode-select-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.mode-button {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 8px;
+  border: 1px solid #1a1a1a;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mode-button--active {
+  background: #1a1a1a;
+  color: #fff;
+}

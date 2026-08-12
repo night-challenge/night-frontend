@@ -1,5 +1,7 @@
 /* Pretendard 웹폰트 불러오기 */
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
+@import './GameIntro.css';
+@import './GameHome.css';
 
 * {
   box-sizing: border-box;
@@ -40,10 +42,16 @@ body {
   background: #fff;
 }
 
+.phone-content::-webkit-scrollbar {
+  display: none;               
+}
+
 /* 가운데 내용 영역: 남는 공간 다 차지 + 넘치면 스크롤 */
 .phone-content {
   flex: 1;
   overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 /* ===== 상단 네비게이션 바 ===== */
@@ -110,3 +118,4 @@ body {
 h1 {
   font-weight: 700;
 }
+
