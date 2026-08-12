@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { USE_MOCK, mockEngravings } from '../data/mockData'
+import { USE_MOCK } from '../data/mockData'
+import { mockEngravings } from '../data/engravingData'
 import EngraveCard from '../components/EngraveCard.jsx'
 import mcmLogo from '../assets/mcm_logo_loding.png'
 import '../styles/Engraving.css'
@@ -90,11 +91,11 @@ function Engraving() {
             {engravings.map((item) => (
               <EngraveCard
                 key={item.id}
-                constellation={item.constellationData}
+                constellation={item.constellationData?.after}
                 title={item.constellationName}
                 tags={formatKeywords(item.keywords)}
                 description={item.comment}
-                onClick={() => console.log('카드 클릭:', item.id)}
+                onClick={() => navigate(`/engraving/${item.id}`)}
               />
             ))}
           </div>

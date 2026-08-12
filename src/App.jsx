@@ -7,6 +7,7 @@ import GameIntro from './pages/GameIntro.jsx'
 import GameHome from './pages/GameHome.jsx'
 import GameBoard from './pages/GameBoard.jsx'
 import Engraving from './pages/Engraving.jsx'
+import EngravingDetail from './pages/EngravingDetail.jsx'
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/game/home" element={<GameHome />} />
         <Route path="/game/board/:gameSessionId" element={<GameBoard />} />
         <Route path="/engraving" element={<Engraving />} />
+        <Route path="/engraving/:id" element={<EngravingDetail />} />
       </Routes>
     </PhoneFrame>
   )

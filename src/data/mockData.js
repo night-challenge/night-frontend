@@ -57,8 +57,3 @@ export const mockProductDetails = {
     description: '헤리티지 모노그램이 돋보이는 모바일 액세서리 케이스\n\n풀그레인 나파 가죽으로 제작된 에어팟 프로 케이스.\n클래식 비세토스 모노그램이 엠보싱으로 표현되었으며,\n바이에른 다이아몬드에서 영감을 받은\n스프링 클래스프가 더해져 백에 부착할 수 있습니다.',
   },
 }
-
-// GET /api/engravings 응답(res.data.data.records) — 문서에 있던 예시 그대로
-export const mockEngravings = [
-
-]
