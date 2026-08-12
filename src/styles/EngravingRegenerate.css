@@ -1,0 +1,119 @@
+/* ===== 각인 별자리 재생성 (화면 5.1) ===== */
+.regen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 12px 28px 20px;
+  color: #222;
+}
+
+/* 헤더 */
+.regen__header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  margin-bottom: 12px;
+}
+.regen__back {
+  position: absolute;
+  left: 0;
+  border: none;
+  background: none;
+  font-size: 24px;
+  line-height: 1;
+  color: #222;
+  cursor: pointer;
+}
+.regen__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+/* Before / After 썸네일 */
+.regen__thumbs {
+  display: flex;
+  gap: 12px;
+}
+.regen__thumb {
+  flex: 1;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.regen__thumb-box {
+  width: 155px;
+  height: 155px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.regen__thumb-box--before {
+  background-color: #1a1a1a;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+  color: #fff;
+}
+.regen__thumb-box--after {
+  background: #111;
+  color: #fff;
+}
+.regen__thumb-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #222;
+}
+
+/* 큰 미리보기 */
+.regen__preview {
+  align-self: center;
+  width: 251px;
+  height: 251px;
+  margin: 20px 0;
+  border-radius: 10px;
+  background: #111;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 다시 생성하기 (작은 버튼, 가운데) */
+.regen__regenerate-btn {
+  align-self: center;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 8px;
+  background: #222;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.regen__regenerate-btn:disabled {
+  background: #a0a0a0;
+  cursor: default;
+}
+
+/* 이 디자인으로 결정하기 (하단 풀와이드) */
+.regen__confirm-btn {
+  margin-top: auto;
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 8px;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+}

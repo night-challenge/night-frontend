@@ -1,0 +1,277 @@
+/* ===== 각인 이름 짓기 (화면 5.2) ===== */
+.naming {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 12px 28px 20px;
+  color: #222;
+}
+
+/* 헤더 */
+.naming__header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  margin-bottom: 12px;
+}
+.naming__back {
+  position: absolute;
+  left: 0;
+  border: none;
+  background: none;
+  font-size: 24px;
+  line-height: 1;
+  color: #222;
+  cursor: pointer;
+}
+.naming__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+/* Before / After */
+.naming__constellations {
+  display: flex;
+  gap: 12px;
+}
+.naming__const {
+  flex: 1;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.naming__const-box {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+}
+.naming__const-box--before {
+  background-color: #1a1a1a;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+  color: #fff;
+}
+.naming__const-box--after {
+  background: #111;
+  color: #fff;
+}
+.naming__const-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #222;
+}
+
+/* 플레이 스토리 */
+.naming__story {
+  text-align: center;
+  margin: 28px 0;
+}
+.naming__story-heading {
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.naming__story-keywords {
+  margin: 0 0 14px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+.naming__story-comment {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* 필드 공통 */
+.naming__field {
+  margin-top: 20px;
+}
+.naming__label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 15px;
+  font-weight: 700;
+}
+.naming__desc {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: #888;
+}
+
+/* AI 추천 이름 박스 */
+.naming__ai-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  background: #fff;
+}
+.naming__ai-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.naming__ai-caption {
+  font-size: 10px;
+  color: #aaa;
+}
+.naming__ai-name {
+  font-size: 14px;
+  color: #222;
+}
+.naming__ai-btn {
+  flex-shrink: 0;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #222;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* 직접 입력 */
+.naming__input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.naming__input {
+  flex: 1;
+  padding: 14px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #222;
+  outline: none;
+}
+.naming__input::placeholder {
+  color: #bbb;
+}
+.naming__save-name-btn {
+  flex-shrink: 0;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #222;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.naming__help {
+  margin: 8px 0 0;
+  font-size: 11px;
+  color: #999;
+}
+
+/* 하단 저장 버튼 */
+.naming__save-btn {
+  margin-top: auto;
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 8px;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+}
+.naming__save-btn--inactive {
+  background: #a0a0a0;
+  cursor: default;
+}
+
+/* ===== 이미지 확대 라이트박스 ===== */
+.naming__lightbox {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(59, 59, 59, 0.5);
+  background-blend-mode: darken;
+}
+.naming__lightbox-img {
+  position: relative;
+  width: 290px;
+  height: 290px;
+  border-radius: 12px;
+  background: #111;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 사진 왼쪽 위 흰색 X (+ 를 45도 회전) */
+.naming__lightbox-close {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 28.284px;
+  height: 28.284px;
+  transform: rotate(45deg);
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.naming__lightbox-close-bar {
+  position: absolute;
+  background: #fff;
+}
+.naming__lightbox-close-bar:nth-child(1) {
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  transform: translateY(-50%);
+}
+.naming__lightbox-close-bar:nth-child(2) {
+  left: 50%;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  transform: translateX(-50%);
+}
+
+/* 토스트 */
+.naming__toast {
+  position: absolute;
+  bottom: 96px;
+  left: 50%;
+  padding: 10px 18px;
+  border-radius: 6px;
+  background: rgba(60, 60, 60, 0.85);
+  color: #fff;
+  font-size: 13px;
+  white-space: nowrap;
+  animation: naming-toast 2s ease forwards;
+}
+@keyframes naming-toast {
+  0% { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+}
