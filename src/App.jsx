@@ -8,6 +8,9 @@ import GameHome from './pages/GameHome.jsx'
 import GameBoard from './pages/GameBoard.jsx'
 import Engraving from './pages/Engraving.jsx'
 import EngravingDetail from './pages/EngravingDetail.jsx'
+import EngravingRegenerate from './pages/EngravingRegenerate.jsx'
+import EngravingNaming from './pages/EngravingNaming.jsx'
+import EngravingCardResult from './pages/EngravingCardResult.jsx'
 
 function App() {
   return (
@@ -21,6 +24,9 @@ function App() {
         <Route path="/game/home" element={<GameHome />} />
         <Route path="/game/board/:gameSessionId" element={<GameBoard />} />
         <Route path="/engraving" element={<Engraving />} />
+        <Route path="/engraving/regenerate" element={<EngravingRegenerate />} />
+        <Route path="/engraving/naming" element={<EngravingNaming />} />
+        <Route path="/engraving/card" element={<EngravingCardResult />} />
         <Route path="/engraving/:id" element={<EngravingDetail />} />
       </Routes>
     </PhoneFrame>
