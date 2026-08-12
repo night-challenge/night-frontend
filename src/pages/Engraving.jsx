@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { USE_MOCK, mockEngravings } from '../data/mockData'
 import EngraveCard from '../components/EngraveCard.jsx'
+import mcmLogo from '../assets/mcm_logo_loding.png'
 import '../styles/Engraving.css'
 
 function Engraving() {
+  const navigate = useNavigate()
   const [engravings, setEngravings] = useState([])
   // 화면 상태: loading(불러오는 중) | success | empty(각인 없음) | error
   const [status, setStatus] = useState('loading')
@@ -49,7 +52,10 @@ function Engraving() {
   return (
     <div className="engraving">
       <h1 className="engraving__title">각인 이름 수정하기</h1>
-      <p className="engraving__subtitle">최근 작업된 각인</p>
+      {/* 저장된 각인이 없을 때(empty)는 소제목 숨김 */}
+      {status !== 'empty' && (
+        <p className="engraving__subtitle">최근 작업된 각인</p>
+      )}
 
       {status === 'loading' && (
         <p className="engraving__state">불러오는 중...</p>
@@ -57,31 +63,49 @@ function Engraving() {
       {status === 'error' && (
         <p className="engraving__state">각인을 불러오지 못했어요.</p>
       )}
+
+      {/* 저장된 각인이 하나도 없을 때 */}
       {status === 'empty' && (
-        <p className="engraving__state">아직 생성된 각인이 없어요.</p>
+        <>
+          <div className="engraving__empty">
+            <img src={mcmLogo} alt="" className="engraving__empty-logo" />
+            <p className="engraving__empty-title">제작하신 각인이 없습니다.</p>
+            <p className="engraving__empty-desc">
+              {'게임을 플레이 하시고\n나만의 각인을 만들어 보세요.'}
+            </p>
+          </div>
+          <button
+            className="engraving__empty-btn"
+            onClick={() => navigate('/game')}
+          >
+            게임하러 가기
+          </button>
+        </>
       )}
 
+      {/* 각인이 있을 때: 카드 목록 + 페이지네이션 */}
       {status === 'success' && (
-        <div className="engraving__list">
-          {engravings.map((item) => (
-            <EngraveCard
-              key={item.id}
-              constellation={item.constellationData}
-              title={item.constellationName}
-              tags={formatKeywords(item.keywords)}
-              description={item.comment}
-              onClick={() => console.log('카드 클릭:', item.id)}
-            />
-          ))}
-        </div>
-      )}
+        <>
+          <div className="engraving__list">
+            {engravings.map((item) => (
+              <EngraveCard
+                key={item.id}
+                constellation={item.constellationData}
+                title={item.constellationName}
+                tags={formatKeywords(item.keywords)}
+                description={item.comment}
+                onClick={() => console.log('카드 클릭:', item.id)}
+              />
+            ))}
+          </div>
 
-      {/* 페이지네이션 */}
-      <div className="pagination">
-        <button className="pagination__arrow">‹</button>
-        <span className="pagination__page">1</span>
-        <button className="pagination__arrow">›</button>
-      </div>
+          <div className="pagination">
+            <button className="pagination__arrow">‹</button>
+            <span className="pagination__page">1</span>
+            <button className="pagination__arrow">›</button>
+          </div>
+        </>
+      )}
     </div>
   )
 }
