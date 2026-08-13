@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useLocation, useNavigate } from 'react-router-dom'
 import GameResultOverlay from '../components/GameResultOverlay.jsx'
-
+import { parseFen } from "../data/fen.js";
 // 기물 이미지 불러오기
 import wKing from '../assets/pieces/piece_white_king.svg'
 import wQueen from '../assets/pieces/piece_white_queen.svg'
@@ -15,7 +15,6 @@ import bRook from '../assets/pieces/piece_black_rook.svg'
 import bBishop from '../assets/pieces/piece_black_bishop.svg'
 import bKnight from '../assets/pieces/piece_black_knight.svg'
 import bPawn from '../assets/pieces/piece_black_pawn.svg'
-// boardBg 이미지는 더 이상 필요 없음 (CSS로 직접 그림)
 
 const PIECE_IMAGES = {
   white: { king: wKing, queen: wQueen, rook: wRook, bishop: wBishop, knight: wKnight, pawn: wPawn },
@@ -23,29 +22,48 @@ const PIECE_IMAGES = {
 }
 
 const FILES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+const MAX_TURN = 15
 
-function createInitialBoard() {
-  const backRank = ['rook', 'knight', 'bishop', 'queen', 'king', 'bishop', 'knight', 'rook']
-  const board = Array.from({ length: 8 }, () => Array(8).fill(null))
-
-  backRank.forEach((type, col) => {
-    board[0][col] = { type, color: 'black' }
-    board[7][col] = { type, color: 'white' }
-  })
-  for (let col = 0; col < 8; col++) {
-    board[1][col] = { type: 'pawn', color: 'black' }
-    board[6][col] = { type: 'pawn', color: 'white' }
-  }
-  return board
+// 캡처된 기물 코드를 한글로 표시하기 위한 매핑 (userMove.captured 값)
+const PIECE_LABEL_KO = {
+  PAWN: '폰',
+  KNIGHT: '나이트',
+  BISHOP: '비숍',
+  ROOK: '룩',
+  QUEEN: '퀸',
 }
 
-function squareToCoord(square) {
-  const col = FILES.indexOf(square[0].toUpperCase())
-  const row = 8 - Number(square[1])
-  return { row, col }
-}
 function coordToSquare(row, col) {
   return `${FILES[col]}${8 - row}`
+}
+
+// 서버가 body 없이(204 등) 응답하거나, 프록시 설정이 안 되어 있어서
+// JSON이 아닌 응답(빈 문자열 등)이 올 때 res.json()이 던지는
+// "Unexpected end of JSON input" 에러를 막기 위한 안전한 파서.
+async function safeParseJson(res) {
+  const text = await res.text()
+  if (!text) return null
+  try {
+    return JSON.parse(text)
+  } catch (err) {
+    console.error('JSON 파싱 실패, 응답 원문:', text)
+    return null
+  }
+}
+
+// 서버의 status(IN_PROGRESS / WON / LOST) -> 화면 표시용 값으로 변환
+function mapStatusToResult(status) {
+  if (status === 'WON') return 'win'
+  if (status === 'LOST') return 'lose'
+  return null
+}
+
+// currentTurn(ply, 반수)을 "N / 15" 표시용 유저 턴 수로 변환.
+// 가정: 유저 이동 + AI 응수 한 라운드가 끝날 때마다 currentTurn이 +2 된다.
+// (서버 예시 응답: 시작 시 0 -> 한 라운드 진행 후 2)
+// 만약 서버가 유저 턴만 카운트하는 방식이라면 이 함수만 currentTurn 그대로 반환하도록 고치면 됨.
+function toDisplayTurn(currentTurn) {
+  return Math.ceil(currentTurn / 2)
 }
 
 function GameBoard() {
@@ -53,25 +71,56 @@ function GameBoard() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const mode = location.state?.mode ?? 'easy'
-  const targetPoint = mode === 'hard' ? 300 : 150
-  const MAX_TURN = 15
+  // 게임 시작 화면(2)에서 POST /api/games 응답을 통째로 넘겨줬다면 그것을 초기값으로 사용,
+  // 없으면(새로고침, 뒤로가기 후 재진입 등) 마운트 시 서버에서 다시 받아온다.
+  const initialGameState = location.state?.gameState ?? null
 
-  const [board, setBoard] = useState(createInitialBoard)
-  const [turn, setTurn] = useState(1)
-  const [earnedPoint, setEarnedPoint] = useState(0)
+  const [gameState, setGameState] = useState(initialGameState)
+  const [board, setBoard] = useState(() =>
+    initialGameState ? parseFen(initialGameState.fen) : null
+  )
   const [selectedSquare, setSelectedSquare] = useState(null)
   const [legalMoves, setLegalMoves] = useState([])
   const [targetSquare, setTargetSquare] = useState(null)
-  const [gameResult, setGameResult] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(!initialGameState)
+  const [errorMsg, setErrorMsg] = useState(null)
+  const [lastMoveMsg, setLastMoveMsg] = useState(null)
+
+  // 게임 세션 상태 동기화 (최초 진입 및 재진입 시)
+  const syncGameState = useCallback(async () => {
+    setLoading(true)
+    setErrorMsg(null)
+    try {
+      const res = await fetch(`/api/games/${gameSessionId}`)
+      const data = await safeParseJson(res)
+      if (!res.ok || !data || data.status === 'error') {
+        throw new Error(
+          data?.message ?? `게임 정보를 불러오지 못했습니다. (HTTP ${res.status})`
+        )
+      }
+      setGameState(data.data)
+      setBoard(parseFen(data.data.fen))
+    } catch (err) {
+      console.error(err)
+      setErrorMsg(err.message ?? '게임 정보를 불러오지 못했습니다.')
+    } finally {
+      setLoading(false)
+    }
+  }, [gameSessionId])
+
+  useEffect(() => {
+    if (!initialGameState) {
+      syncGameState()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const fetchLegalMoves = useCallback(async (square) => {
     try {
       const res = await fetch(`/api/games/${gameSessionId}/legal-moves?square=${square}`)
-      if (!res.ok) throw new Error('legal-moves 조회 실패')
-      const data = await res.json()
-      return data.legalMoves ?? []
+      const data = await safeParseJson(res)
+      if (!res.ok || !data) throw new Error('legal-moves 조회 실패')
+      return data.legalMoves ?? data.data?.legalMoves ?? []
     } catch (err) {
       console.error(err)
       return []
@@ -79,7 +128,7 @@ function GameBoard() {
   }, [gameSessionId])
 
   const handleSquareClick = async (row, col) => {
-    if (loading || gameResult) return
+    if (loading || !gameState || gameState.status !== 'IN_PROGRESS') return
     const square = coordToSquare(row, col)
     const piece = board[row][col]
 
@@ -91,6 +140,7 @@ function GameBoard() {
     if (piece && piece.color === 'white') {
       setSelectedSquare(square)
       setTargetSquare(null)
+      setErrorMsg(null)
       const moves = await fetchLegalMoves(square)
       setLegalMoves(moves)
       return
@@ -104,23 +154,39 @@ function GameBoard() {
   const handleConfirmMove = async () => {
     if (!selectedSquare || !targetSquare || loading) return
     setLoading(true)
+    setErrorMsg(null)
+    setLastMoveMsg(null)
     try {
       const res = await fetch(`/api/games/${gameSessionId}/moves`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ from: selectedSquare, to: targetSquare }),
       })
-      if (!res.ok) throw new Error('이동 실행 실패')
-      const data = await res.json()
+      const data = await safeParseJson(res)
 
-      setBoard(data.board ?? board)
-      setTurn((prev) => data.turn ?? prev + 1)
-      setEarnedPoint(data.earnedPoint ?? earnedPoint)
+      if (!res.ok || !data || data.status === 'error') {
+        throw new Error(
+          data?.message ?? `이동을 처리하지 못했습니다. (HTTP ${res.status})`
+        )
+      }
 
-      if (data.status === 'WIN') setGameResult('win')
-      else if (data.status === 'LOSE') setGameResult('lose')
+      const { userMove, aiMove, gameState: nextGameState } = data.data
+
+      setGameState(nextGameState)
+      setBoard(parseFen(nextGameState.fen))
+
+      // 나이트로 캡처해 포인트를 획득했을 때 짧은 안내 메시지 표시
+      if (userMove?.pointGained > 0) {
+        const label = PIECE_LABEL_KO[userMove.captured] ?? userMove.captured
+        setLastMoveMsg(`나이트로 ${label}를 잡아 +${userMove.pointGained}pt 획득!`)
+      } else if (userMove?.captured) {
+        const label = PIECE_LABEL_KO[userMove.captured] ?? userMove.captured
+        setLastMoveMsg(`${label}를 잡았습니다. (포인트 없음)`)
+      }
+      // aiMove는 게임이 끝나지 않았을 때만 존재. 별도 표시가 필요하면 여기서 활용.
     } catch (err) {
       console.error(err)
+      setErrorMsg(err.message ?? '이동을 처리하지 못했습니다.')
     } finally {
       setSelectedSquare(null)
       setLegalMoves([])
@@ -129,11 +195,11 @@ function GameBoard() {
     }
   }
 
-  useEffect(() => {
-    if (gameResult) return
-    if (turn > MAX_TURN) setGameResult('lose')
-    else if (earnedPoint >= targetPoint) setGameResult('win')
-  }, [turn, earnedPoint, targetPoint, gameResult])
+  // 진행 중 게임 이탈: 별도 저장 API는 없음 (서버가 매 이동마다 이미 상태를 저장하고 있다고 가정).
+  // 홈으로 돌아가면 2.1 화면에서 "진행 중 게임 조회"로 이어서 진행 가능.
+  const handleBack = () => {
+    navigate('/game/home')
+  }
 
   const handleGoResult = () => {
     navigate(`/game/result/${gameSessionId}`)
@@ -142,10 +208,31 @@ function GameBoard() {
     navigate('/game/home')
   }
 
+  if (!gameState || !board) {
+    return (
+      <div className="game-board-page">
+        <header className="game-board-header">
+          <button className="game-board-back" onClick={handleBack} aria-label="뒤로가기">
+            ‹
+          </button>
+          <h1 className="game-board-title">나이트 챌린지 게임</h1>
+        </header>
+        {errorMsg ? (
+          <p className="game-board-error">{errorMsg}</p>
+        ) : (
+          <p className="game-board-loading">게임 정보를 불러오는 중...</p>
+        )}
+      </div>
+    )
+  }
+
+  const gameResult = mapStatusToResult(gameState.status)
+  const displayTurn = Math.min(toDisplayTurn(gameState.currentTurn), MAX_TURN)
+
   return (
     <div className="game-board-page">
       <header className="game-board-header">
-        <button className="game-board-back" onClick={() => navigate(-1)} aria-label="뒤로가기">
+        <button className="game-board-back" onClick={handleBack} aria-label="뒤로가기">
           ‹
         </button>
         <h1 className="game-board-title">나이트 챌린지 게임</h1>
@@ -154,20 +241,22 @@ function GameBoard() {
       <div className="game-board-stats">
         <div className="stat-item">
           <span className="stat-label">현재 턴</span>
-          <span className="stat-value">{turn} / {MAX_TURN}</span>
+          <span className="stat-value">{displayTurn} / {MAX_TURN}</span>
         </div>
         <div className="stat-item">
           <span className="stat-label">획득한 포인트</span>
-          <span className="stat-value">{earnedPoint}pt</span>
+          <span className="stat-value">{gameState.score}pt</span>
         </div>
         <div className="stat-item">
           <span className="stat-label">목표 포인트</span>
-          <span className="stat-value">{targetPoint}pt</span>
+          <span className="stat-value">{gameState.targetScore}pt</span>
         </div>
       </div>
 
+      {errorMsg && <p className="game-board-error">{errorMsg}</p>}
+      {lastMoveMsg && <p className="game-board-move-msg">{lastMoveMsg}</p>}
+
       <div className="game-board-wrapper">
-        {/* 이미지 대신 순수 CSS grid + 배경색으로 체스판을 그림 */}
         <div className="chess-board">
           {board.map((rowArr, row) =>
             rowArr.map((piece, col) => {
@@ -175,8 +264,7 @@ function GameBoard() {
               const isSelected = selectedSquare === square
               const isLegal = legalMoves.includes(square)
               const isTarget = targetSquare === square
-              const isDark = (row + col) % 2 === 0 // svg 기준: 짝수합 = 진한색(#FC594A)
-
+              const isDark = (row + col) % 2 === 0
               return (
                 <button
                   key={square}
@@ -188,6 +276,7 @@ function GameBoard() {
                     isTarget ? 'board-square--target' : '',
                   ].filter(Boolean).join(' ')}
                   onClick={() => handleSquareClick(row, col)}
+                  disabled={loading || gameState.status !== 'IN_PROGRESS'}
                 >
                   {piece && (
                     <img
