@@ -25,13 +25,13 @@ function ConstellationThumb({ data, size = 56 }) {
             x2={p2.x}
             y2={p2.y}
             stroke="currentColor"
-            strokeWidth="3"
+            strokeWidth="1.5"
             strokeLinecap="round"
           />
         )
       })}
       {points.map((p) => (
-        <circle key={`point-${p.id}`} cx={p.x} cy={p.y} r="5" fill="currentColor" />
+        <circle key={`point-${p.id}`} cx={p.x} cy={p.y} r="3.5" fill="currentColor" />
       ))}
     </svg>
   )
