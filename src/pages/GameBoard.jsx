@@ -15,6 +15,7 @@ import bRook from '../assets/pieces/piece_black_rook.svg'
 import bBishop from '../assets/pieces/piece_black_bishop.svg'
 import bKnight from '../assets/pieces/piece_black_knight.svg'
 import bPawn from '../assets/pieces/piece_black_pawn.svg'
+// boardBg 이미지는 더 이상 필요 없음 (CSS로 직접 그림)
 
 const PIECE_IMAGES = {
   white: { king: wKing, queen: wQueen, rook: wRook, bishop: wBishop, knight: wKnight, pawn: wPawn },
@@ -23,7 +24,6 @@ const PIECE_IMAGES = {
 
 const FILES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
 
-// 표준 체스 초기 배치 (row 0 = 8번 랭크 ~ row 7 = 1번 랭크)
 function createInitialBoard() {
   const backRank = ['rook', 'knight', 'bishop', 'queen', 'king', 'bishop', 'knight', 'rook']
   const board = Array.from({ length: 8 }, () => Array(8).fill(null))
@@ -39,7 +39,6 @@ function createInitialBoard() {
   return board
 }
 
-// "e2" 같은 표기 <-> {row, col} 변환
 function squareToCoord(square) {
   const col = FILES.indexOf(square[0].toUpperCase())
   const row = 8 - Number(square[1])
@@ -54,7 +53,6 @@ function GameBoard() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  // GameHome에서 넘겨준 모드/목표 포인트 (없으면 기본값)
   const mode = location.state?.mode ?? 'easy'
   const targetPoint = mode === 'hard' ? 300 : 150
   const MAX_TURN = 15
@@ -62,19 +60,18 @@ function GameBoard() {
   const [board, setBoard] = useState(createInitialBoard)
   const [turn, setTurn] = useState(1)
   const [earnedPoint, setEarnedPoint] = useState(0)
-  const [selectedSquare, setSelectedSquare] = useState(null) // "G1" 등
-  const [legalMoves, setLegalMoves] = useState([]) // ["F3","H3"] 등
-  const [targetSquare, setTargetSquare] = useState(null) // 이동 확정 전, 테두리 표시할 목적지
-  const [gameResult, setGameResult] = useState(null) // null | 'win' | 'lose'
+  const [selectedSquare, setSelectedSquare] = useState(null)
+  const [legalMoves, setLegalMoves] = useState([])
+  const [targetSquare, setTargetSquare] = useState(null)
+  const [gameResult, setGameResult] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  // TODO: 백엔드팀이 준 GET /api/games/{gameSessionId}/legal-moves?square=e2 로 교체
   const fetchLegalMoves = useCallback(async (square) => {
     try {
       const res = await fetch(`/api/games/${gameSessionId}/legal-moves?square=${square}`)
       if (!res.ok) throw new Error('legal-moves 조회 실패')
       const data = await res.json()
-      return data.legalMoves ?? [] // 백엔드 응답 형태에 맞춰 수정 필요
+      return data.legalMoves ?? []
     } catch (err) {
       console.error(err)
       return []
@@ -86,13 +83,11 @@ function GameBoard() {
     const square = coordToSquare(row, col)
     const piece = board[row][col]
 
-    // 케이스 1: 이미 말을 선택한 상태에서, 이동 가능한 칸을 다시 클릭 -> 목적지로 지정
     if (selectedSquare && legalMoves.includes(square)) {
       setTargetSquare(square)
       return
     }
 
-    // 케이스 2: 내 말(white) 클릭 -> 선택 + 이동 가능 칸 조회
     if (piece && piece.color === 'white') {
       setSelectedSquare(square)
       setTargetSquare(null)
@@ -101,7 +96,6 @@ function GameBoard() {
       return
     }
 
-    // 케이스 3: 그 외 클릭 -> 선택 해제
     setSelectedSquare(null)
     setLegalMoves([])
     setTargetSquare(null)
@@ -111,7 +105,6 @@ function GameBoard() {
     if (!selectedSquare || !targetSquare || loading) return
     setLoading(true)
     try {
-      // TODO: 백엔드팀 API 응답 필드명에 맞춰 수정 필요
       const res = await fetch(`/api/games/${gameSessionId}/moves`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -120,7 +113,7 @@ function GameBoard() {
       if (!res.ok) throw new Error('이동 실행 실패')
       const data = await res.json()
 
-      setBoard(data.board ?? board) // 서버가 최신 board 상태를 내려준다고 가정
+      setBoard(data.board ?? board)
       setTurn((prev) => data.turn ?? prev + 1)
       setEarnedPoint(data.earnedPoint ?? earnedPoint)
 
@@ -136,7 +129,6 @@ function GameBoard() {
     }
   }
 
-  // 로컬 안전장치: 턴 초과 시 패배 처리 (백엔드가 안 내려줄 경우 대비)
   useEffect(() => {
     if (gameResult) return
     if (turn > MAX_TURN) setGameResult('lose')
@@ -149,9 +141,6 @@ function GameBoard() {
   const handleGoHome = () => {
     navigate('/game/home')
   }
-
-  const selectedCoord = selectedSquare ? squareToCoord(selectedSquare) : null
-  const targetCoord = targetSquare ? squareToCoord(targetSquare) : null
 
   return (
     <div className="game-board-page">
@@ -178,14 +167,15 @@ function GameBoard() {
       </div>
 
       <div className="game-board-wrapper">
+        {/* 이미지 대신 순수 CSS grid + 배경색으로 체스판을 그림 */}
         <div className="chess-board">
           {board.map((rowArr, row) =>
             rowArr.map((piece, col) => {
               const square = coordToSquare(row, col)
-              const isDark = (row + col) % 2 === 1
               const isSelected = selectedSquare === square
               const isLegal = legalMoves.includes(square)
               const isTarget = targetSquare === square
+              const isDark = (row + col) % 2 === 0 // svg 기준: 짝수합 = 진한색(#FC594A)
 
               return (
                 <button
