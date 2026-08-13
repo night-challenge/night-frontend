@@ -26,6 +26,13 @@ const chain = [
   [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10],
 ]
 
+// GET /api/mypage 응답(data)을 흉내낸 mock (recentCard는 Profile에서 최신 각인으로 채움)
+export const mockMypage = {
+  nickname: '별 헤는 밤',
+  userId: '@mcm_user01',
+  hasEngravingRequest: true,
+}
+
 export const mockEngravings = [
   {
     id: 2,

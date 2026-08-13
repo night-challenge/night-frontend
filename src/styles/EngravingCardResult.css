@@ -41,21 +41,28 @@
   border-radius: 8px;
 }
 
-/* 2. 별자리 (사용자가 저장한 궤적) */
+/* 2. 별자리 (사용자가 저장한 궤적) — 이 영역(박스) 안에 꽉 차되 넘치지 않음 */
 .cardresult__card-constellation {
   position: absolute;
-  top: 0;
+  top: 8px;
   left: 8px;
-  color: #fff; /* ConstellationThumb currentColor */
+  width: 200px;   /* 오른쪽 말 이미지 안 침범 */
+  height: 160px;  /* 아래 끝이 이름과 약 5.5px 간격 */
+  color: #fff;
   z-index: 1;
+}
+.cardresult__constellation-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 /* 3. 카드 텍스트 이미지 (왼쪽 위) */
 .cardresult__card-text {
   position: absolute;
-  top: 14px;
-  left: 16px;
-  width: 64px;
+  top: 3px;
+  left: 2px;
+  width: 130px;
   height: auto;
   z-index: 2;
 }
@@ -63,9 +70,9 @@
 /* 4. 사용자가 정한 별자리 이름 (맨 위) */
 .cardresult__card-name {
   position: absolute;
-  left: 18px;
-  bottom: 16px;
-  font-size: 7px;
+  left: 70px;
+  bottom: 5.62px;
+  font-size: 10px;
   color: #fff;
   letter-spacing: 0.2px;
   z-index: 3;

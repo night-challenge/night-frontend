@@ -11,6 +11,7 @@ import EngravingDetail from './pages/EngravingDetail.jsx'
 import EngravingRegenerate from './pages/EngravingRegenerate.jsx'
 import EngravingNaming from './pages/EngravingNaming.jsx'
 import EngravingCardResult from './pages/EngravingCardResult.jsx'
+import Profile from './pages/Profile.jsx'
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/engraving/regenerate" element={<EngravingRegenerate />} />
         <Route path="/engraving/naming" element={<EngravingNaming />} />
         <Route path="/engraving/card" element={<EngravingCardResult />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/engraving/:id" element={<EngravingDetail />} />
       </Routes>
     </PhoneFrame>
