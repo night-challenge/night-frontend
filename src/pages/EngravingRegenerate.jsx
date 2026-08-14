@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { USE_MOCK } from '../data/mockData'
 import { mockEngravings } from '../data/engravingData'
@@ -24,36 +24,76 @@ function randomConnections(points) {
 }
 
 function EngravingRegenerate() {
+  const { id } = useParams()
   const navigate = useNavigate()
 
-  // TODO: 게임 종료 후 넘어올 때 실제 각인 id/데이터를 route state로 받아 연결.
-  //       지금은 mock 첫 번째 각인으로 미리보기.
-  const engraving = mockEngravings[0]
-  const beforeData = engraving.constellationData.before
+  const [status, setStatus] = useState('loading') // loading | success | error
+  const [beforeData, setBeforeData] = useState(null)
+  const [afterData, setAfterData] = useState(null)
+  const [regenLoading, setRegenLoading] = useState(false)
 
-  // after는 재생성 대상이라 state로 관리
-  const [afterData, setAfterData] = useState(engraving.constellationData.after)
-  const [loading, setLoading] = useState(false)
+  // 게임에서 새로 생성된 각인 상세 조회: GET /api/engravings/{id}
+  useEffect(() => {
+    const fetchDetail = async () => {
+      setStatus('loading')
+      try {
+        let data
+        if (USE_MOCK) {
+          data = mockEngravings.find((e) => String(e.id) === String(id))
+          if (!data) throw new Error('not found')
+        } else {
+          const res = await axios.get(`/api/engravings/${id}`)
+          data = res.data?.data
+        }
+        setBeforeData(data.constellationData.before)
+        setAfterData(data.constellationData.after)
+        setStatus('success')
+      } catch (err) {
+        console.error('각인 상세 조회 실패:', err)
+        setStatus('error')
+      }
+    }
+    fetchDetail()
+  }, [id])
 
   // 다시 생성하기: PATCH /api/engravings/{id}/regenerate
   const handleRegenerate = async () => {
-    setLoading(true)
+    setRegenLoading(true)
     try {
       if (USE_MOCK) {
-        setAfterData({
+        const newAfter = {
           points: afterData.points,
           connections: randomConnections(afterData.points),
-        })
+        }
+        setAfterData(newAfter)
+        // 실제 서버처럼 재생성 결과를 저장해둠 (다음 화면에서 다시 조회해도 유지되도록)
+        const target = mockEngravings.find((e) => String(e.id) === String(id))
+        if (target) target.constellationData.after = newAfter
       } else {
-        const res = await axios.patch(`/api/engravings/${engraving.id}/regenerate`)
+        const res = await axios.patch(`/api/engravings/${id}/regenerate`)
         // 응답: data.constellationData.after (before는 유지, after만 새로 생성)
         setAfterData(res.data?.data?.constellationData?.after)
       }
     } catch (err) {
       console.error('별자리 재생성 실패:', err)
     } finally {
-      setLoading(false)
+      setRegenLoading(false)
     }
+  }
+
+  if (status === 'loading') {
+    return (
+      <div className="regen">
+        <p className="regen__state">불러오는 중...</p>
+      </div>
+    )
+  }
+  if (status === 'error') {
+    return (
+      <div className="regen">
+        <p className="regen__state">각인을 불러오지 못했어요.</p>
+      </div>
+    )
   }
 
   return (
@@ -91,15 +131,15 @@ function EngravingRegenerate() {
       <button
         className="regen__regenerate-btn"
         onClick={handleRegenerate}
-        disabled={loading}
+        disabled={regenLoading}
       >
-        {loading ? '생성 중...' : '다시 생성하기'}
+        {regenLoading ? '생성 중...' : '다시 생성하기'}
       </button>
 
       {/* 이 디자인으로 결정하기 → 이름 수정 화면으로 */}
       <button
         className="regen__confirm-btn"
-        onClick={() => navigate('/engraving/naming')}
+        onClick={() => navigate(`/engraving/naming/${id}`)}
       >
         이 디자인으로 결정하기
       </button>

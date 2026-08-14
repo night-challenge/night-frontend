@@ -9,6 +9,13 @@
   padding: 0 28px;
 }
 
+.cardresult__state {
+  margin: 40px 0;
+  text-align: center;
+  color: #999;
+  font-size: 13px;
+}
+
 /* 축하 문구 */
 .cardresult__congrats {
   text-align: center;

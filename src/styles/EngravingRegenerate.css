@@ -7,6 +7,13 @@
   color: #222;
 }
 
+.regen__state {
+  margin: 40px 0;
+  text-align: center;
+  color: #999;
+  font-size: 13px;
+}
+
 /* 헤더 */
 .regen__header {
   position: relative;
