@@ -63,6 +63,7 @@ function EngravingDetail() {
         const target = mockEngravings.find((e) => String(e.id) === String(id))
         if (target) target.constellationName = trimmed
       } else {
+        // 요청 body: { constellationName } / 성공 message: "수정되었습니다."
         await axios.patch(`/api/engravings/${id}`, { constellationName: trimmed })
       }
       setName(trimmed) // 화면의 기존 이름 갱신
@@ -71,7 +72,8 @@ function EngravingDetail() {
       showToast('수정되었습니다.')
     } catch (err) {
       console.error('이름 수정 실패:', err)
-      showToast('수정에 실패했어요.')
+      // 백엔드 메시지 그대로 표시 (400: "변경된 사항이 없습니다." / 404: "존재하지 않는 각인입니다.")
+      showToast(err.response?.data?.message || '수정에 실패했어요.')
     }
   }
 

@@ -2,9 +2,23 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { USE_MOCK } from '../data/mockData'
-import { mockEngravingRequests, mockEngravings } from '../data/engravingData'
-import productImg from '../assets/travel_suitcase_option1.svg'
+import { mockEngravingRequests } from '../data/engravingData'
+import travelSuitcase from '../assets/travel_suitcase_option1.svg'
+import perfume from '../assets/fashion_perfume_option1_detail.svg'
+import bag from '../assets/bag_brown_detail.svg'
+import airpod from '../assets/lifestyle_airpod_case_detail.svg'
+import mcmLogo from '../assets/mcm_logo_loding.png'
 import '../styles/EngravingRequests.css'
+
+// product.optionName 으로 제품 이미지 매핑 (API가 이미지 URL을 주지 않으므로 프론트에서 매핑)
+function getProductImage(product) {
+  const name = product?.optionName || ''
+  if (name.includes('수트케이스') || name.includes('트래블')) return travelSuitcase
+  if (name.includes('퍼퓸') || name.includes('향수')) return perfume
+  if (name.includes('토트') || name.includes('가방') || name.includes('백')) return bag
+  if (name.includes('에어팟') || name.includes('케이스')) return airpod
+  return travelSuitcase // 기본값
+}
 
 // 별자리(after)를 tight viewBox로 그리는 헬퍼
 function Constellation({ after, className }) {
@@ -59,11 +73,7 @@ function EngravingRequests() {
       try {
         let data
         if (USE_MOCK) {
-          // mock: 각 신청 건에 각인 데이터 붙이기
-          data = mockEngravingRequests.map((r, i) => ({
-            ...r,
-            engraving: mockEngravings[i % mockEngravings.length],
-          }))
+          data = mockEngravingRequests
         } else {
           const res = await axios.get('/api/engraving-requests', {
             params: { status: '신청완료' },
@@ -108,7 +118,7 @@ function EngravingRequests() {
     )
   }
 
-  // 빈 화면
+  // 빈 화면 (신청한 각인 없음)
   if (records.length === 0) {
     return (
       <div className="req">
@@ -118,7 +128,18 @@ function EngravingRequests() {
           </button>
           <h1 className="req__title">신청한 각인 보기</h1>
         </header>
-        <p className="req__empty">신청한 각인이 없어요.</p>
+
+        <div className="req__empty-wrap">
+          <img src={mcmLogo} alt="" className="req__empty-logo" />
+          <p className="req__empty-title">신청한 각인이 없습니다.</p>
+          <p className="req__empty-desc">
+            {'게임을 플레이 하시고 나만의 각인을 만들어\n제품에 새겨보세요.'}
+          </p>
+        </div>
+
+        <button className="req__empty-btn" onClick={() => navigate('/game')}>
+          게임하러 가기
+        </button>
       </div>
     )
   }
@@ -151,7 +172,11 @@ function EngravingRequests() {
       <section className="req__section">
         <h2 className="req__label">선택한 제품</h2>
         <div className="req__product">
-          <img src={productImg} alt="" className="req__product-img" />
+          <img
+            src={getProductImage(record.product)}
+            alt={record.product?.optionName || ''}
+            className="req__product-img"
+          />
         </div>
       </section>
 
@@ -159,7 +184,7 @@ function EngravingRequests() {
       <section className="req__section">
         <h2 className="req__label">선택한 각인</h2>
         <div className="req__constellation">
-          <Constellation after={eng?.constellationData?.after} className="req__const-svg" />
+          <Constellation after={eng?.constellationData} className="req__const-svg" />
         </div>
       </section>
 
@@ -169,7 +194,7 @@ function EngravingRequests() {
         <div className="req__info-card">
           <div className="req__info-thumb">
             <Constellation
-              after={eng?.constellationData?.after}
+              after={eng?.constellationData}
               className="req__info-svg"
             />
           </div>

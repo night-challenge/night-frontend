@@ -7,12 +7,57 @@
   color: #222;
 }
 
-.req__state,
-.req__empty {
+.req__state {
   margin: 60px 0;
   text-align: center;
   color: #999;
   font-size: 13px;
+}
+
+/* ===== 신청한 각인 빈 화면 ===== */
+.req__empty-wrap {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.req__empty-logo {
+  position: absolute;
+  width: 130px;
+  height: 115px;
+  aspect-ratio: 26 / 23;
+  opacity: 0.05;
+  z-index: 0;
+  pointer-events: none;
+}
+.req__empty-title,
+.req__empty-desc {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: #000;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 130%;
+}
+.req__empty-desc {
+  white-space: pre-line;
+}
+.req__empty-btn {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 8px;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
 }
 
 /* 헤더 */

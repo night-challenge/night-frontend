@@ -13,16 +13,31 @@ const settings = ['알림 설정', '개인정보 처리방침', '이용약관', 
 function Profile() {
   const navigate = useNavigate()
   const [mypage, setMypage] = useState(null)
+  const [cardDetail, setCardDetail] = useState(null) // recentCard 상세(썸네일/키워드용)
 
   // 마이페이지 메인 조회: GET /api/mypage
+  // recentCard 는 id+이름만 오므로, 카드 썸네일용 상세는 GET /api/engravings/{id}로 확보
   useEffect(() => {
     const fetchMypage = async () => {
       try {
+        let mp
         if (USE_MOCK) {
-          setMypage({ ...mockMypage, recentCard: mockEngravings[0] })
+          mp = mockMypage
         } else {
           const res = await axios.get('/api/mypage')
-          setMypage(res.data?.data)
+          mp = res.data?.data
+        }
+        setMypage(mp)
+
+        if (mp?.recentCard) {
+          if (USE_MOCK) {
+            setCardDetail(
+              mockEngravings.find((e) => e.id === mp.recentCard.id) || null,
+            )
+          } else {
+            const d = await axios.get(`/api/engravings/${mp.recentCard.id}`)
+            setCardDetail(d.data?.data)
+          }
         }
       } catch (err) {
         console.error('마이페이지 조회 실패:', err)
@@ -82,7 +97,7 @@ function Profile() {
     )
   }
 
-  const card = mypage.recentCard
+  const recentCard = mypage.recentCard // { id, constellationName } | null
 
   return (
     <div className="profile">
@@ -91,14 +106,15 @@ function Profile() {
         <div className="profile__avatar" />
         <div className="profile__user-text">
           <p className="profile__nickname">{mypage.nickname}</p>
-          <p className="profile__userid">{mypage.userId}</p>
+          <p className="profile__userid">{mypage.userIdDisplay}</p>
         </div>
       </section>
 
-      {/* 신청한 각인 보기 */}
+      {/* 신청한 각인 보기 (신청 건 없으면 비활성화) */}
       <button
         className="profile__request-btn"
         onClick={() => navigate('/engraving-requests')}
+        disabled={!mypage.hasEngravingRequest}
       >
         신청한 각인 보기
       </button>
@@ -109,28 +125,32 @@ function Profile() {
         <span className="profile__row-chevron">›</span>
       </button>
 
-      {/* 카드 모음 */}
+      {/* 카드 모음 (recentCard 없으면 카드 미표시) */}
       <section className="profile__cards">
         <h2 className="profile__section-title">카드 모음</h2>
-        {card && (
+        {recentCard ? (
           <div className="profile__card">
             <div className="profile__card-thumb">
               <img src={cardImage} alt="" className="profile__card-bg" />
               <div className="profile__card-const">
-                {renderConstellation(card.constellationData?.after)}
+                {renderConstellation(cardDetail?.constellationData?.after)}
               </div>
               <img src={cardText} alt="" className="profile__card-logo" />
             </div>
             <div className="profile__card-info">
               <div className="profile__card-top">
-                <span className="profile__card-name">{card.constellationName}</span>
+                <span className="profile__card-name">
+                  {recentCard.constellationName}
+                </span>
                 <span className="profile__card-more">···</span>
               </div>
               <span className="profile__card-keywords">
-                {formatKeywords(card.keywords)}
+                {formatKeywords(cardDetail?.keywords)}
               </span>
             </div>
           </div>
+        ) : (
+          <p className="profile__no-card">아직 저장된 카드가 없어요.</p>
         )}
       </section>
 

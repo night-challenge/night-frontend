@@ -26,19 +26,60 @@ const chain = [
   [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10],
 ]
 
-// GET /api/engraving-requests?status=신청완료 응답(records)을 흉내낸 mock
-// 각 신청 건: 제품 코드 + 제품 정보 + 신청한 각인
-export const mockEngravingRequests = [
-  { id: 101, status: '신청완료', productCode: 'NWdfw25', engraving: null },
-  { id: 102, status: '신청완료', productCode: 'KMx8yz90', engraving: null },
-]
-
-// GET /api/mypage 응답(data)을 흉내낸 mock (recentCard는 Profile에서 최신 각인으로 채움)
-export const mockMypage = {
-  nickname: '별 헤는 밤',
-  userId: '@mcm_user01',
-  hasEngravingRequest: true,
+// after(최종 별자리) 데이터 — 신청 목록 mock에서도 재사용
+const mockEngravingAfter1 = {
+  points: points1,
+  connections: [
+    [0,1],[0,2],[1,2],[1,10],[2,10],[2,3],[3,4],[3,7],[3,8],
+    [4,5],[4,6],[4,7],[5,6],[6,7],[7,8],[7,9],[8,9],[9,10],[10,0],
+  ],
 }
+const mockEngravingAfter2 = {
+  points: points2,
+  connections: [
+    [0,1],[0,2],[1,2],[1,10],[2,3],[2,4],[3,4],[3,5],[4,5],[4,9],[4,10],
+    [5,6],[5,8],[6,7],[6,8],[7,8],[8,9],[9,10],
+  ],
+}
+
+// GET /api/mypage 응답(data)을 흉내낸 mock (명세서 구조 그대로)
+// recentCard 는 id + constellationName 만 포함 (썸네일/키워드는 상세 조회로 별도 확보)
+export const mockMypage = {
+  nickname: '사자후',
+  userIdDisplay: 'sajahoo',
+  hasEngravingRequest: true,
+  recentCard: { id: 2, constellationName: '설렘의 흔적' },
+}
+
+// GET /api/engraving-requests?status=신청완료 응답(data.records)을 흉내낸 mock
+// 명세서 구조 그대로: id / productCode / product{optionName,optionLabel} / engraving
+// engraving.constellationData 는 after(최종 별자리)만 포함
+export const mockEngravingRequests = [
+  {
+    id: 1,
+    productCode: 'NWdfw25',
+    product: { optionName: 'L 비세토스 수트케이스', optionLabel: '갈색' },
+    engraving: {
+      id: 1,
+      constellationName: '오리온의 흔적',
+      keywords: ['침착함', '역전', '도전'],
+      comment: '초반에는 신중하게 전개했지만, 후반에는 과감한 공격을 선택했습니다.',
+      constellationData: mockEngravingAfter1,
+    },
+  },
+  {
+    id: 2,
+    productCode: 'PLmxa41',
+    product: { optionName: '코스믹 스타 오 드 퍼퓸', optionLabel: '75ml' },
+    engraving: {
+      id: 2,
+      constellationName: '설렘의 흔적',
+      keywords: ['설렘', '용기', '선택'],
+      comment: '초반에는 다양한 시도를 했지만, 후반에는 신중하게 마무리했습니다.',
+      constellationData: mockEngravingAfter2,
+    },
+  },
+]
 
 export const mockEngravings = [
   {
