@@ -19,12 +19,19 @@ function Engraving() {
       try {
         let data
         if (USE_MOCK) {
-          // 백엔드 연동 전: mock 데이터 사용
-          data = mockEngravings
+          // 목록 응답은 constellationData가 after만 포함 → mock을 목록 형태로 변환
+          data = mockEngravings.map((e) => ({
+            id: e.id,
+            constellationName: e.constellationName,
+            keywords: e.keywords,
+            comment: e.comment,
+            constellationData: e.constellationData.after,
+            createdAt: e.createdAt,
+          }))
         } else {
-          // 백엔드 완성되면 mockData.js의 USE_MOCK만 false로 바꾸면 됨
+          // 공통 응답 { status, message, data: { records: [...] } }
           const res = await axios.get('/api/engravings')
-          data = res.data?.data ?? [] // 공통 응답 { status, message, data }
+          data = res.data?.data?.records ?? []
         }
 
         // createdAt 내림차순(최신 먼저) 정렬
@@ -91,7 +98,7 @@ function Engraving() {
             {engravings.map((item) => (
               <EngraveCard
                 key={item.id}
-                constellation={item.constellationData?.after}
+                constellation={item.constellationData}
                 title={item.constellationName}
                 tags={formatKeywords(item.keywords)}
                 description={item.comment}

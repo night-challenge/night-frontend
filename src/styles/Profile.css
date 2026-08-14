@@ -60,6 +60,17 @@
   text-align: left;
   cursor: pointer;
 }
+.profile__request-btn:disabled {
+  color: #bbb;
+  cursor: default;
+}
+.profile__no-card {
+  margin: 0;
+  padding: 20px 0;
+  text-align: center;
+  font-size: 12px;
+  color: #aaa;
+}
 
 /* MCM 바로가기 등 한 줄 행 */
 .profile__row {

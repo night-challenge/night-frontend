@@ -46,7 +46,8 @@ function EngravingRegenerate() {
         })
       } else {
         const res = await axios.patch(`/api/engravings/${engraving.id}/regenerate`)
-        setAfterData(res.data?.data?.after ?? res.data?.data)
+        // 응답: data.constellationData.after (before는 유지, after만 새로 생성)
+        setAfterData(res.data?.data?.constellationData?.after)
       }
     } catch (err) {
       console.error('별자리 재생성 실패:', err)
