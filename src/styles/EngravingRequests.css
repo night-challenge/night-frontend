@@ -1,0 +1,188 @@
+/* ===== 신청한 각인 보기 (화면 9.1) ===== */
+.req {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 12px 20px 20px;
+  color: #222;
+}
+
+.req__state,
+.req__empty {
+  margin: 60px 0;
+  text-align: center;
+  color: #999;
+  font-size: 13px;
+}
+
+/* 헤더 */
+.req__header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  margin-bottom: 8px;
+}
+.req__back {
+  position: absolute;
+  left: 0;
+  border: none;
+  background: none;
+  font-size: 24px;
+  line-height: 1;
+  color: #222;
+  cursor: pointer;
+}
+.req__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+/* 섹션 공통 */
+.req__section {
+  margin-top: 20px;
+}
+.req__label {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* 제품 코드 */
+.req__code-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  border-radius: 8px;
+  background: #9a9a9a;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.req__code-desc {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 11px;
+  color: #999;
+  line-height: 1.5;
+}
+
+/* 선택한 제품 */
+.req__product {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  border-radius: 8px;
+  background: #f5f5f5;
+}
+.req__product-img {
+  width: 80%;
+  height: auto;
+}
+
+/* 선택한 각인 (검은 박스) */
+.req__constellation {
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  background: #111;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.req__const-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 선택한 각인의 정보 카드 */
+.req__info-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  border: 0.8px solid #b5b5b5;
+  border-radius: 8px;
+}
+.req__info-thumb {
+  flex-shrink: 0;
+  width: 84px;
+  height: 84px;
+  border-radius: 6px;
+  background: #111;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+.req__info-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.req__info-text {
+  flex: 1;
+  min-width: 0;
+}
+.req__info-name {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+.req__info-keywords {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #666;
+}
+.req__info-comment {
+  margin: 8px 0 0;
+  font-size: 10px;
+  line-height: 1.5;
+  color: #999;
+}
+
+/* 페이지네이션 */
+.req__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0;
+}
+.req__arrow {
+  border: none;
+  background: none;
+  font-size: 18px;
+  color: #333;
+  cursor: pointer;
+}
+.req__arrow:disabled {
+  color: #ccc;
+  cursor: default;
+}
+.req__page {
+  font-size: 14px;
+}
+
+/* 신청 각인 취소하기 */
+.req__cancel-btn {
+  margin-top: auto;
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 8px;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
