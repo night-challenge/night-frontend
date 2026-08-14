@@ -13,6 +13,7 @@ import EngravingNaming from './pages/EngravingNaming.jsx'
 import EngravingCardResult from './pages/EngravingCardResult.jsx'
 import Profile from './pages/Profile.jsx'
 import EngravingRequests from './pages/EngravingRequests.jsx'
+import EngravingCards from './pages/EngravingCards.jsx'
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/engraving/card" element={<EngravingCardResult />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/engraving-requests" element={<EngravingRequests />} />
+        <Route path="/engravings/cards" element={<EngravingCards />} />
         <Route path="/engraving/:id" element={<EngravingDetail />} />
       </Routes>
     </PhoneFrame>
