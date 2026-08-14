@@ -1,0 +1,147 @@
+/* GameSessionDetail.css
+   공통 CSS(navbar/tabbar/phone-frame)와 같은 폰트/톤을 쓰도록 맞췄어요. */
+
+.gsd-state {
+  padding: 40px 20px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.gsd-page {
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px 24px;
+}
+
+/* ===== 상단 (뒤로가기 + 타이틀) ===== */
+.gsd-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+}
+
+.gsd-back {
+  border: none;
+  background: none;
+  font-size: 22px;
+  line-height: 1;
+  color: #1a1a1a;
+  cursor: pointer;
+  width: 28px;
+}
+
+.gsd-title {
+  flex: 1;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.gsd-header-spacer {
+  width: 28px; /* 뒤로가기 버튼과 대칭 맞추기 */
+}
+
+/* ===== 궤적 보드 =====
+   ConstellationThumb은 currentColor로 선/점을 그리기 때문에
+   여기서 배경(검정)과 글자색(흰색)만 지정해주면 됩니다. */
+.gsd-board-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #0d0d0d;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  color: #ffffff; /* ConstellationThumb의 currentColor */
+}
+
+.gsd-board-wrap svg {
+  width: 100%;
+  height: auto;
+}
+
+/* ===== 결과 패널 ===== */
+.gsd-result {
+  margin-bottom: 24px;
+}
+
+.gsd-result-title {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+
+.gsd-stat-list {
+  margin: 0;
+  border: 1px solid #e5e5e5;
+  border-radius: 14px;
+  padding: 4px 16px;
+}
+
+.gsd-stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 4px;
+  border-bottom: none; 
+}
+
+.gsd-stat-row dt {
+  font-size: 14px;
+  color: #555;
+}
+
+.gsd-stat-row dd {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.gsd-point-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  padding: 2px 8px;
+  background: #fff;
+  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 700;
+  border: 1px solid #999;
+  border-radius: 6px;
+  line-height: 1.4;
+}
+
+.gsd-stat-row dd {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.gsd-point-unit {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* ===== 하단 CTA ===== */
+.gsd-cta {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 10px;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.gsd-cta:active {
+  opacity: 0.85;
+}
