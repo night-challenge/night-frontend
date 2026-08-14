@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { USE_MOCK } from '../data/mockData'
 import { mockEngravings } from '../data/engravingData'
@@ -8,41 +8,64 @@ import ConstellationThumb from '../components/ConstellationThumb.jsx'
 import '../styles/EngravingNaming.css'
 
 function EngravingNaming() {
+  const { id } = useParams()
   const navigate = useNavigate()
 
-  // TODO: 5.1에서 결정한 실제 각인 데이터를 route state로 받아 연결.
-  //       지금은 mock 첫 번째 각인으로 미리보기.
-  const engraving = mockEngravings[0]
-  const beforeData = engraving.constellationData.before
-  const afterData = engraving.constellationData.after
-  const aiName = engraving.constellationName // AI가 각인 생성 시 지어준 이름
+  const [status, setStatus] = useState('loading') // loading | success | error
+  const [engraving, setEngraving] = useState(null)
 
   const [newName, setNewName] = useState('')
   const [decided, setDecided] = useState(false) // 저장되면 안내문구 변경 + 하단 버튼 활성화
   const [zoom, setZoom] = useState(null) // 확대해서 볼 별자리 데이터 (null이면 안 띄움)
+
+  // 5.1에서 결정한(재생성 반영된) 각인 상세 조회: GET /api/engravings/{id}
+  useEffect(() => {
+    const fetchDetail = async () => {
+      setStatus('loading')
+      try {
+        let data
+        if (USE_MOCK) {
+          data = mockEngravings.find((e) => String(e.id) === String(id))
+          if (!data) throw new Error('not found')
+        } else {
+          const res = await axios.get(`/api/engravings/${id}`)
+          data = res.data?.data
+        }
+        setEngraving(data)
+        setStatus('success')
+      } catch (err) {
+        console.error('각인 상세 조회 실패:', err)
+        setStatus('error')
+      }
+    }
+    fetchDetail()
+  }, [id])
 
   const formatKeywords = (keywords) =>
     Array.isArray(keywords) ? keywords.join(' · ') : keywords || ''
 
   // AI 추천 이름 사용 → 입력칸에 자동으로 채워줌 (토스트 없음)
   const handleUseAiName = () => {
-    setNewName(aiName)
+    setNewName(engraving.constellationName)
   }
 
   // 직접 입력한 이름 저장 → PATCH /api/engravings/{id}
   const handleSaveName = async () => {
     const trimmed = newName.trim()
     if (!trimmed) return
+    const aiName = engraving.constellationName
     try {
       // AI 추천 이름과 다를 때만 API 호출 (같으면 생성 시 이름 그대로 사용)
       if (trimmed !== aiName) {
         if (USE_MOCK) {
-          const target = mockEngravings.find((e) => e.id === engraving.id)
+          const target = mockEngravings.find((e) => String(e.id) === String(id))
           if (target) target.constellationName = trimmed
+          setEngraving((prev) => ({ ...prev, constellationName: trimmed }))
         } else {
-          await axios.patch(`/api/engravings/${engraving.id}`, {
+          await axios.patch(`/api/engravings/${id}`, {
             constellationName: trimmed,
           })
+          setEngraving((prev) => ({ ...prev, constellationName: trimmed }))
         }
       }
       setDecided(true) // 안내문구 "저장이 완료되었어요." + 하단 버튼 활성화
@@ -50,6 +73,25 @@ function EngravingNaming() {
       console.error('이름 저장 실패:', err)
     }
   }
+
+  if (status === 'loading') {
+    return (
+      <div className="naming">
+        <p className="naming__state">불러오는 중...</p>
+      </div>
+    )
+  }
+  if (status === 'error' || !engraving) {
+    return (
+      <div className="naming">
+        <p className="naming__state">각인을 불러오지 못했어요.</p>
+      </div>
+    )
+  }
+
+  const beforeData = engraving.constellationData.before
+  const afterData = engraving.constellationData.after
+  const aiName = engraving.constellationName // AI가 각인 생성 시 지어준 이름
 
   return (
     <div className="naming">
@@ -131,7 +173,7 @@ function EngravingNaming() {
       {/* 하단 저장 버튼 (이름 확정 전엔 비활성화) */}
       <button
         className={`naming__save-btn${!decided ? ' naming__save-btn--inactive' : ''}`}
-        onClick={() => navigate('/engraving/card')}
+        onClick={() => navigate(`/engraving/card/${id}`)}
         disabled={!decided}
       >
         나만의 별자리 저장하기

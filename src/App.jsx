@@ -27,9 +27,9 @@ function App() {
         <Route path="/game/home" element={<GameHome />} />
         <Route path="/game/board/:gameSessionId" element={<GameBoard />} />
         <Route path="/engraving" element={<Engraving />} />
-        <Route path="/engraving/regenerate" element={<EngravingRegenerate />} />
-        <Route path="/engraving/naming" element={<EngravingNaming />} />
-        <Route path="/engraving/card" element={<EngravingCardResult />} />
+        <Route path="/engraving/regenerate/:id" element={<EngravingRegenerate />} />
+        <Route path="/engraving/naming/:id" element={<EngravingNaming />} />
+        <Route path="/engraving/card/:id" element={<EngravingCardResult />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/engraving-requests" element={<EngravingRequests />} />
         <Route path="/engravings/cards" element={<EngravingCards />} />

@@ -1,14 +1,58 @@
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import axios from 'axios'
+import { USE_MOCK } from '../data/mockData'
 import { mockEngravings } from '../data/engravingData'
 import cardImage from '../assets/card_image.png'
 import cardText from '../assets/card_txt.png'
 import '../styles/EngravingCardResult.css'
 
 function EngravingCardResult() {
+  const { id } = useParams()
   const navigate = useNavigate()
 
-  // TODO: 실제 저장한 각인을 route state로 받아 연결. 지금은 mock 데이터로 미리보기.
-  const engraving = mockEngravings[1]
+  const [status, setStatus] = useState('loading') // loading | success | error
+  const [engraving, setEngraving] = useState(null)
+
+  // 방금 저장한 각인 상세 조회: GET /api/engravings/{id}
+  // (5.4 화면 자체의 전용 API는 명세서에 없어 상세 조회 API를 재사용)
+  useEffect(() => {
+    const fetchDetail = async () => {
+      setStatus('loading')
+      try {
+        let data
+        if (USE_MOCK) {
+          data = mockEngravings.find((e) => String(e.id) === String(id))
+          if (!data) throw new Error('not found')
+        } else {
+          const res = await axios.get(`/api/engravings/${id}`)
+          data = res.data?.data
+        }
+        setEngraving(data)
+        setStatus('success')
+      } catch (err) {
+        console.error('각인 상세 조회 실패:', err)
+        setStatus('error')
+      }
+    }
+    fetchDetail()
+  }, [id])
+
+  if (status === 'loading') {
+    return (
+      <div className="cardresult">
+        <p className="cardresult__state">불러오는 중...</p>
+      </div>
+    )
+  }
+  if (status === 'error' || !engraving) {
+    return (
+      <div className="cardresult">
+        <p className="cardresult__state">각인을 불러오지 못했어요.</p>
+      </div>
+    )
+  }
+
   const afterData = engraving.constellationData.after
   const name = engraving.constellationName
 

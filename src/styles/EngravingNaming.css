@@ -8,6 +8,13 @@
   color: #222;
 }
 
+.naming__state {
+  margin: 40px 0;
+  text-align: center;
+  color: #999;
+  font-size: 13px;
+}
+
 /* 헤더 */
 .naming__header {
   position: relative;
