@@ -1,0 +1,60 @@
+/* ===== 하단 탭 이동 로딩 화면 (로딩중4/5/6) ===== */
+.loading-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+}
+
+/* 위쪽 여백은 남는 공간을 자동으로 채우고, 아래(문구)와의 간격은 295px로 고정 */
+.loading-screen__logo-wrap {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loading-screen__logo {
+  width: 130px;
+  height: 115px;
+}
+
+.loading-screen__label {
+  margin: 17px 0 0; /* 이미지 ~ 로딩 문구 간격 17px */
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  color: #999;
+  letter-spacing: 0.3px;
+}
+
+.loading-screen__tip-box {
+  margin-top: 38px; /* 로딩 문구 ~ Tip! 간격 38px */
+  margin-bottom: 295px; /* 문구 ~ 페이지 끝 간격 295px */
+  padding: 0 28px;
+  text-align: center;
+}
+
+.loading-screen__tip-title {
+  margin: 0 0 36px; /* Tip! ~ 안내 문구 간격 (엔터 두번 정도) */
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  color: #222;
+}
+
+.loading-screen__tip-text {
+  margin: 0;
+  white-space: pre-line;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+  color: #666;
+}
