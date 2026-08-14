@@ -1,0 +1,181 @@
+/* ===== 각인 카드 모음 (화면 9.2) ===== */
+.cards {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 12px 20px 20px;
+  color: #222;
+  overflow: hidden;
+}
+
+/* 헤더 */
+.cards__header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  margin-bottom: 8px;
+}
+.cards__back {
+  position: absolute;
+  left: 0;
+  border: none;
+  background: none;
+  font-size: 24px;
+  line-height: 1;
+  color: #222;
+  cursor: pointer;
+}
+.cards__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+/* 카드 휠 (원형 배치의 무대) */
+.cards__deck {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none; /* 모바일 드래그 시 스크롤 방지 */
+}
+.cards__deck.is-dragging {
+  cursor: grabbing;
+}
+
+/* 카드 한 장 (기본: 검은 뒷면) — 원 위에 절대 배치 */
+.cards__card {
+  position: absolute;
+  width: 300px;
+  height: 180px;
+  border-radius: 12px;
+  background: #1a1a1a;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  transition: left 0.35s ease, top 0.35s ease, transform 0.35s ease;
+}
+/* 드래그 중엔 손가락 따라 즉시 움직이게 (부드러운 스냅은 놓을 때만) */
+.cards__deck.is-dragging .cards__card {
+  transition: none;
+}
+
+/* 선택된 카드 (앞면, 빨강) */
+.cards__card--active {
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4);
+}
+
+/* 아직 생성되지 않은 카드 (검은 플레이스홀더) */
+.cards__card--empty {
+  background: #1a1a1a;
+  cursor: default;
+}
+
+.cards__card-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.cards__card-const {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 190px;
+  height: 145px;
+  color: #fff;
+  z-index: 1;
+}
+.cards__card-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.cards__card-logo {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 84px;
+  height: auto;
+  z-index: 2;
+}
+.cards__card-name {
+  position: absolute;
+  left: 66px;
+  bottom: 10px;
+  font-size: 9px;
+  color: #fff;
+  z-index: 3;
+}
+
+/* ===== 카드 선택 상세 오버레이 (화면 9.3) ===== */
+.cards__detail {
+  position: absolute;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.cards__detail-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+.cards__detail-card {
+  position: relative;
+  width: 300px;
+  height: 180px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4);
+}
+.cards__detail-info {
+  width: 300px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: rgba(40, 40, 40, 0.92);
+  color: #fff;
+}
+.cards__detail-info p {
+  margin: 4px 0;
+  font-size: 12px;
+}
+.cards__detail-toast {
+  padding: 9px 18px;
+  border-radius: 6px;
+  background: rgba(50, 50, 50, 0.92);
+  color: #fff;
+  font-size: 12px;
+}
+.cards__detail-buttons {
+  display: flex;
+  gap: 10px;
+  width: 300px;
+}
+.cards__detail-share,
+.cards__detail-save {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.cards__detail-share {
+  background: #e63237;
+  color: #fff;
+}
+.cards__detail-save {
+  background: #fff;
+  color: #222;
+  border: 1px solid #ddd;
+}
