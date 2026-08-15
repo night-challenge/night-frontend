@@ -3,7 +3,7 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 import { thumbMap, detailImageMap } from '../data/productAssets'
-import ConstellationThumb from '../components/ConstellationThumb'
+import EngravingConstellation from '../components/EngravingConstellation'
 import '../styles/ProductDetail.css'
 import { USE_MOCK, mockProductDetails } from '../data/mockData'
 import { mockEngravings } from '../data/engravingData'
@@ -214,7 +214,11 @@ function ProductDetail() {
                   onClick={() => setSelectedRecordId(record.id)}
                 >
                   <div className="engraving-card__thumb">
-                    <ConstellationThumb data={record.constellationData?.after ?? record.constellationData} />
+                    <EngravingConstellation
+                      data={record.constellationData?.after ?? record.constellationData}
+                      space="canvas"
+                      size={56}
+                    />
                   </div>
                   <div className="engraving-card__text">
                     <p className="engraving-card__name">{record.constellationName}</p>

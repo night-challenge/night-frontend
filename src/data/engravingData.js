@@ -21,7 +21,24 @@ const points2 = [
   { id: 9, x: 230, y: 220 }, { id: 10, x: 200, y: 260 },
 ]
 
-// before = 플레이 순서대로 이은 경로(체인)
+// before = 게임판 나이트 이동 기록. 백엔드가 격자좌표(x축 A~H → 0~7, y축 1~8 → 0~7)로
+// 준다고 명세돼 있어서, mock도 300 단위가 아니라 0~7 범위로 맞춘다.
+// (렌더링 시 EngravingConstellation이 space="grid"로 300x300 캔버스 좌표로 변환함)
+const beforePoints1 = [
+  { id: 0, x: 0, y: 0 }, { id: 1, x: 2, y: 1 }, { id: 2, x: 4, y: 0 },
+  { id: 3, x: 6, y: 1 }, { id: 4, x: 7, y: 3 }, { id: 5, x: 5, y: 4 },
+  { id: 6, x: 6, y: 6 }, { id: 7, x: 4, y: 7 }, { id: 8, x: 2, y: 6 },
+  { id: 9, x: 0, y: 7 }, { id: 10, x: 1, y: 5 },
+]
+
+const beforePoints2 = [
+  { id: 0, x: 1, y: 0 }, { id: 1, x: 3, y: 1 }, { id: 2, x: 2, y: 3 },
+  { id: 3, x: 4, y: 4 }, { id: 4, x: 3, y: 2 }, { id: 5, x: 5, y: 1 },
+  { id: 6, x: 7, y: 2 }, { id: 7, x: 6, y: 4 }, { id: 8, x: 7, y: 6 },
+  { id: 9, x: 5, y: 7 }, { id: 10, x: 4, y: 6 },
+]
+
+// before = 플레이 순서대로 이은 경로(체인) — 이동 순번 그대로라 before 좌표계와 무관
 const chain = [
   [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10],
 ]
@@ -89,7 +106,7 @@ export const mockEngravings = [
     comment: '초반에는 다양한 시도를 했지만, 후반에는 신중하게 마무리했습니다.',
     createdAt: '2026-08-08T14:20:00',
     constellationData: {
-      before: { points: points2, connections: chain },
+      before: { points: beforePoints2, connections: chain },
       after: {
         points: points2,
         connections: [
@@ -106,7 +123,7 @@ export const mockEngravings = [
     comment: '초반에는 신중하게 전개했지만, 후반에는 과감한 공격을 선택했습니다.',
     createdAt: '2026-08-07T10:30:00',
     constellationData: {
-      before: { points: points1, connections: chain },
+      before: { points: beforePoints1, connections: chain },
       after: {
         points: points1,
         connections: [

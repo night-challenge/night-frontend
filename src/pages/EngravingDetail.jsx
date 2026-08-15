@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { USE_MOCK } from '../data/mockData'
 import { mockEngravings } from '../data/engravingData'
-import ConstellationThumb from '../components/ConstellationThumb.jsx'
+import EngravingConstellation from '../components/EngravingConstellation.jsx'
 import '../styles/EngravingDetail.css'
 
 function EngravingDetail() {
@@ -113,13 +113,13 @@ function EngravingDetail() {
       <div className="detail__constellations">
         <figure className="detail__const">
           <div className="detail__const-box detail__const-box--before">
-            <ConstellationThumb data={beforeData} size={140} />
+            <EngravingConstellation data={beforeData} space="grid" size={140} />
           </div>
           <figcaption className="detail__const-label">Before</figcaption>
         </figure>
         <figure className="detail__const">
           <div className="detail__const-box detail__const-box--after">
-            <ConstellationThumb data={afterData} size={140} />
+            <EngravingConstellation data={afterData} space="canvas" size={140} />
           </div>
           <figcaption className="detail__const-label">After</figcaption>
         </figure>
