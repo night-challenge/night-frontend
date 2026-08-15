@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useLocation, useNavigate } from 'react-router-dom'
 import GameResultOverlay from '../components/GameResultOverlay.jsx'
-import { parseFen } from "../data/fen.js";
+import { parseFen } from '../utils/fen.js'
+
 // 기물 이미지 불러오기
 import wKing from '../assets/pieces/piece_white_king.svg'
 import wQueen from '../assets/pieces/piece_white_queen.svg'
@@ -58,13 +59,8 @@ function mapStatusToResult(status) {
   return null
 }
 
-// currentTurn(ply, 반수)을 "N / 15" 표시용 유저 턴 수로 변환.
-// 가정: 유저 이동 + AI 응수 한 라운드가 끝날 때마다 currentTurn이 +2 된다.
-// (서버 예시 응답: 시작 시 0 -> 한 라운드 진행 후 2)
-// 만약 서버가 유저 턴만 카운트하는 방식이라면 이 함수만 currentTurn 그대로 반환하도록 고치면 됨.
-function toDisplayTurn(currentTurn) {
-  return Math.ceil(currentTurn / 2)
-}
+// 백엔드는 '유저 이동 1회 + AI 이동 1회'를 한 세트로 묶어 currentTurn을 1씩 증가시킨다.
+// 따라서 별도 변환 없이 그대로 표시하면 된다.
 
 function GameBoard() {
   const { gameSessionId } = useParams()
@@ -227,7 +223,7 @@ function GameBoard() {
   }
 
   const gameResult = mapStatusToResult(gameState.status)
-  const displayTurn = Math.min(toDisplayTurn(gameState.currentTurn), MAX_TURN)
+  const displayTurn = Math.min(gameState.currentTurn, MAX_TURN)
 
   return (
     <div className="game-board-page">
