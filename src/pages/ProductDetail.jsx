@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import { useParams, useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
-import { thumbMap, detailImageMap } from '../data/productAssets'
+import { thumbMap, detailImageMap, engravingBaseImageMap } from '../data/productAssets'
 import EngravingConstellation from '../components/EngravingConstellation'
+import EngravingPreview from '../components/EngravingPreview'
 import '../styles/ProductDetail.css'
 import { USE_MOCK, mockProductDetails } from '../data/mockData'
 import { mockEngravings } from '../data/engravingData'
@@ -82,10 +83,20 @@ function ProductDetail() {
   }, [])
   const siblingOptions = location.state?.siblingOptions || []
 
+  
   const mainImage =
+  category && product
+    ? detailImageMap[category]?.[product.optionLabel]
+    : null
+
+  const engravingImage =
     category && product
-      ? detailImageMap[category]?.[product.optionLabel]
+      ? engravingBaseImageMap[category]?.[product.optionLabel]
       : null
+
+  // 현재 선택된 각인 레코드 (별자리 points/connections 포함)
+  const selectedRecord = engravings.find((e) => e.id === selectedRecordId) || null
+  const selectedConstellationData = selectedRecord?.constellationData?.after || null
 
   const handleThumbClick = (newId) => {
     if (String(newId) === String(optionId)) return
@@ -151,7 +162,11 @@ function ProductDetail() {
 
       <div className="product-detail__image-area">
         {mainImage ? (
-          <img src={mainImage} alt={product.optionName} className="product-detail__image" />
+          <img
+            src={mainImage}
+            alt={product.optionName}
+            className="product-detail__image"
+          />
         ) : (
           <div className="product-detail__image product-detail__image--placeholder" />
         )}
@@ -288,9 +303,19 @@ function ProductDetail() {
             </p>
 
             <div className="color-modal__preview">
-              {/* TODO: 나중에 실제 각인된 부분 이미지로 교체 */}
-              각인된 부분 이미지
-            </div>
+              {engravingImage ? (
+                <EngravingPreview
+                  category={category}
+                  baseImageSrc={engravingImage}
+                  constellationData={selectedConstellationData}
+                  engravingColor={selectedColor}
+                  altText={product.optionName}
+                  scale={2}
+                />
+              ) : (
+                '각인된 부분 이미지'
+              )}
+            </div> 
 
             <div className="color-modal__swatches">
               {COLORS.map((c) => (
