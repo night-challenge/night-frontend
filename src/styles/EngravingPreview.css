@@ -1,0 +1,27 @@
+.engraving-preview-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.engraving-preview {
+  position: relative;
+  overflow: hidden;
+}
+
+.engraving-preview__base {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.engraving-preview__overlay {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+}
+
+.engraving-mark {
+  overflow: visible;
+  display: block;
+}

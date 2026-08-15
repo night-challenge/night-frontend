@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useLocation, useNavigate } from 'react-router-dom'
 import GameResultOverlay from '../components/GameResultOverlay.jsx'
-import { parseFen } from '../utils/fen.js'
+import { parseFen } from '../data/fen.js'
 
 // 기물 이미지 불러오기
 import wKing from '../assets/pieces/piece_white_king.svg'

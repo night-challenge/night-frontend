@@ -1,0 +1,8 @@
+.constellation-after-thumb {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  background: #0d0d0d;
+  border-radius: 8px;
+  color: #fff;
+}
