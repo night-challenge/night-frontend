@@ -10,17 +10,28 @@ function GameHome() {
   const [starting, setStarting] = useState(false)
   const [error, setError] = useState(null)
   const navigate = useNavigate()
-
   const handleStartGame = async () => {
     if (starting) return
     setStarting(true)
     setError(null)
 
-    // 테스트용: 백엔드 없이 화면만 확인
-    navigate('/game/board/test-session', { state: { mode } })
-    setStarting(false)
-  }
+    try {
+      const res = await fetch('/api/games', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode }),
+      })
+      if (!res.ok) throw new Error('게임을 시작하지 못했습니다')
+      const { data } = await res.json()
 
+      navigate(`/game/board/${data.gameSessionId}`, { state: { mode } })
+    } catch (e) {
+      setError('게임을 시작하지 못했어요. 잠시 후 다시 시도해주세요.')
+    } finally {
+      setStarting(false)
+    }
+  }
+  
   return (
     <div className="game-home">
       <img src={chessBoardPattern} alt="체스판 패턴" className="game-home-board-banner" />

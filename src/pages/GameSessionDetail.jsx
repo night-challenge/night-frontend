@@ -19,6 +19,17 @@ async function fetchGameSession(gameSessionId) {
   return mockGameSession(gameSessionId)
 }
 
+// 각인 생성 + 저장: POST /api/games/{gameSessionId}/engravings
+async function createEngraving(gameSessionId) {
+  const res = await fetch(`/api/games/${gameSessionId}/engravings`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  })
+  if (!res.ok) throw new Error('각인 생성에 실패했습니다')
+  const { data } = await res.json()
+  return data
+}
+
 const STATUS_LABEL = {
   WON: '승리',
   LOST: '패배',
@@ -29,10 +40,12 @@ export default function GameSessionDetail() {
   const { gameSessionId } = useParams()
   const navigate = useNavigate()
   const onBack = () => navigate(-1)
-  const onFinish = () => navigate('/game/home')
 
   const [session, setSession] = useState(null)
   const [status, setStatus] = useState('loading') // loading | error | ready
+
+  const [finishing, setFinishing] = useState(false)
+  const [finishError, setFinishError] = useState(null)
 
   useEffect(() => {
     let cancelled = false
@@ -59,6 +72,20 @@ export default function GameSessionDetail() {
     if (!session) return []
     return buildGroupsFromMoveLog(session.knightMoveLog)
   }, [session])
+
+  const onFinish = async () => {
+    if (finishing) return
+    setFinishing(true)
+    setFinishError(null)
+
+    try {
+      const engraving = await createEngraving(gameSessionId)
+      navigate(`/engraving/naming/${engraving.id}`)
+    } catch (e) {
+      setFinishError('각인 저장에 실패했어요. 다시 시도해주세요.')
+      setFinishing(false)
+    }
+  }
 
   if (status === 'loading') {
     return <div className="gsd-state">불러오는 중...</div>
@@ -101,8 +128,10 @@ export default function GameSessionDetail() {
         </dl>
       </section>
 
-      <button className="gsd-cta" onClick={onFinish}>
-        게임 마무리 하기
+      {finishError && <p className="gsd-error">{finishError}</p>}
+
+      <button className="gsd-cta" onClick={onFinish} disabled={finishing}>
+        {finishing ? '저장하는 중...' : '게임 마무리 하기'}
       </button>
     </div>
   )
