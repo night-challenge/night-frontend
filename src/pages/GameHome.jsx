@@ -1,3 +1,4 @@
+import { gameApi } from '../api/game'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import chessBoardPattern from '../assets/chess_board_pattern.svg'
@@ -10,27 +11,23 @@ function GameHome() {
   const [starting, setStarting] = useState(false)
   const [error, setError] = useState(null)
   const navigate = useNavigate()
-  const handleStartGame = async () => {
-    if (starting) return
-    setStarting(true)
-    setError(null)
+    const handleStartGame = async () => {
+      if (starting) return
+      setStarting(true)
+      setError(null)
 
-    try {
-      const res = await fetch('/api/games', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mode }),
-      })
-      if (!res.ok) throw new Error('게임을 시작하지 못했습니다')
-      const { data } = await res.json()
-
-      navigate(`/game/board/${data.gameSessionId}`, { state: { mode } })
-    } catch (e) {
-      setError('게임을 시작하지 못했어요. 잠시 후 다시 시도해주세요.')
-    } finally {
-      setStarting(false)
+      try {
+        const res = await gameApi.start(mode)
+        const game = res.data.data
+        navigate(`/game/board/${game.id}`, {
+          state: { gameState: game, mode },
+        })
+      } catch (e) {
+        setError(e.message)
+      } finally {
+        setStarting(false)
+      }
     }
-  }
   
   return (
     <div className="game-home">

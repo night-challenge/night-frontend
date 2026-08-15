@@ -4,31 +4,18 @@ import ConstellationThumb from '../components/ConstellationThumb'
 import { buildGroupsFromMoveLog } from '../data/gameTrajectory'
 import { mockGameSession } from '../data/gameSessionMock'
 import '../styles/GameSessionDetail.css'
+import { gameApi } from '../api/game'
 
-// -----------------------------------------------------------------------
-// TODO(백엔드 연동 시): 아래 fetchGameSession을 실제 API 호출로 교체
-//   GET /api/games/{gameSessionId}
-// 지금은 백엔드가 아직 없어서 mockGameSession으로 대체합니다.
-// -----------------------------------------------------------------------
 async function fetchGameSession(gameSessionId) {
-  // const res = await fetch(`/api/games/${gameSessionId}`)
-  // if (!res.ok) throw new Error('게임 세션을 불러오지 못했습니다')
-  // const { data } = await res.json()
-  // return data
-
-  return mockGameSession(gameSessionId)
+  const res = await gameApi.get(gameSessionId)
+  return res.data.data
 }
 
-// 각인 생성 + 저장: POST /api/games/{gameSessionId}/engravings
 async function createEngraving(gameSessionId) {
-  const res = await fetch(`/api/games/${gameSessionId}/engravings`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-  })
-  if (!res.ok) throw new Error('각인 생성에 실패했습니다')
-  const { data } = await res.json()
-  return data
+  const res = await gameApi.createEngraving(gameSessionId)
+  return res.data.data
 }
+
 
 const STATUS_LABEL = {
   WON: '승리',

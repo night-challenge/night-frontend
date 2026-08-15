@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8080', // 백엔드 실제 포트로 맞춰줘
+        target: 'https://night-backend-production.up.railway.app', 
         changeOrigin: true,
       },
     },

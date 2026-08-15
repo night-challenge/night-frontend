@@ -108,12 +108,29 @@
   background-color: rgba(255, 233, 224, 0.6);
 }
 
+.board-square--dimmed::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  z-index: 1;
+}
+
 .board-square--legal::after {
   content: '';
   position: absolute;
   inset: 0;
   background-color: rgba(255, 90, 60, 0.55);
   z-index: 1;
+}
+
+.board-square--dimmed .board-piece {
+  filter: brightness(0.55) saturate(0.85);
+
+}
+
+.board-square--selected {
+  z-index: 2;
 }
 
 .board-square--target {

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useParams, useLocation, useNavigate } from 'react-router-dom'
 import GameResultOverlay from '../components/GameResultOverlay.jsx'
 import { parseFen } from '../data/fen.js'
+import { gameApi } from '../api/game'
 
 // 기물 이미지 불러오기
 import wKing from '../assets/pieces/piece_white_king.svg'
@@ -36,20 +37,6 @@ const PIECE_LABEL_KO = {
 
 function coordToSquare(row, col) {
   return `${FILES[col]}${8 - row}`
-}
-
-// 서버가 body 없이(204 등) 응답하거나, 프록시 설정이 안 되어 있어서
-// JSON이 아닌 응답(빈 문자열 등)이 올 때 res.json()이 던지는
-// "Unexpected end of JSON input" 에러를 막기 위한 안전한 파서.
-async function safeParseJson(res) {
-  const text = await res.text()
-  if (!text) return null
-  try {
-    return JSON.parse(text)
-  } catch (err) {
-    console.error('JSON 파싱 실패, 응답 원문:', text)
-    return null
-  }
 }
 
 // 서버의 status(IN_PROGRESS / WON / LOST) -> 화면 표시용 값으로 변환
@@ -87,15 +74,10 @@ function GameBoard() {
     setLoading(true)
     setErrorMsg(null)
     try {
-      const res = await fetch(`/api/games/${gameSessionId}`)
-      const data = await safeParseJson(res)
-      if (!res.ok || !data || data.status === 'error') {
-        throw new Error(
-          data?.message ?? `게임 정보를 불러오지 못했습니다. (HTTP ${res.status})`
-        )
-      }
-      setGameState(data.data)
-      setBoard(parseFen(data.data.fen))
+      const res = await gameApi.get(gameSessionId)
+      const game = res.data.data
+      setGameState(game)
+      setBoard(parseFen(game.fen))
     } catch (err) {
       console.error(err)
       setErrorMsg(err.message ?? '게임 정보를 불러오지 못했습니다.')
@@ -113,10 +95,8 @@ function GameBoard() {
 
   const fetchLegalMoves = useCallback(async (square) => {
     try {
-      const res = await fetch(`/api/games/${gameSessionId}/legal-moves?square=${square}`)
-      const data = await safeParseJson(res)
-      if (!res.ok || !data) throw new Error('legal-moves 조회 실패')
-      return data.legalMoves ?? data.data?.legalMoves ?? []
+      const res = await gameApi.legalMoves(gameSessionId, square)
+      return res.data.data?.legalMoves ?? res.data.legalMoves ?? []
     } catch (err) {
       console.error(err)
       return []
@@ -127,6 +107,7 @@ function GameBoard() {
     if (loading || !gameState || gameState.status !== 'IN_PROGRESS') return
     const square = coordToSquare(row, col)
     const piece = board[row][col]
+    console.log('클릭:', square, piece)   //
 
     if (selectedSquare && legalMoves.includes(square)) {
       setTargetSquare(square)
@@ -153,20 +134,8 @@ function GameBoard() {
     setErrorMsg(null)
     setLastMoveMsg(null)
     try {
-      const res = await fetch(`/api/games/${gameSessionId}/moves`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ from: selectedSquare, to: targetSquare }),
-      })
-      const data = await safeParseJson(res)
-
-      if (!res.ok || !data || data.status === 'error') {
-        throw new Error(
-          data?.message ?? `이동을 처리하지 못했습니다. (HTTP ${res.status})`
-        )
-      }
-
-      const { userMove, aiMove, gameState: nextGameState } = data.data
+      const res = await gameApi.move(gameSessionId, selectedSquare, targetSquare)
+      const { userMove, aiMove, gameState: nextGameState } = res.data.data
 
       setGameState(nextGameState)
       setBoard(parseFen(nextGameState.fen))
@@ -261,6 +230,7 @@ function GameBoard() {
               const isLegal = legalMoves.includes(square)
               const isTarget = targetSquare === square
               const isDark = (row + col) % 2 === 0
+              const isDimmed = !!selectedSquare && !isSelected && !isLegal && !isTarget
               return (
                 <button
                   key={square}
@@ -270,6 +240,7 @@ function GameBoard() {
                     isSelected ? 'board-square--selected' : '',
                     isLegal ? 'board-square--legal' : '',
                     isTarget ? 'board-square--target' : '',
+                    isDimmed ? 'board-square--dimmed' : '',
                   ].filter(Boolean).join(' ')}
                   onClick={() => handleSquareClick(row, col)}
                   disabled={loading || gameState.status !== 'IN_PROGRESS'}

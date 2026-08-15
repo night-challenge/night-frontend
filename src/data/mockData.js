@@ -1,6 +1,4 @@
-// 임시 mock 데이터 — 백엔드(/api/products, /api/products/options/:id, /api/engravings)
-// 완성되면 USE_MOCK을 false로 바꾸면 원래 axios 코드가 그대로 작동함
-export const USE_MOCK = true
+export const USE_MOCK = false
 
 // GET /api/products?category=xxx 응답(res.data.data.options)을 흉내낸 데이터
 export const mockProductsByCategory = {
