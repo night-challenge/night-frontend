@@ -6,6 +6,7 @@ import ProductDetail from './pages/ProductDetail.jsx'
 import GameIntro from './pages/GameIntro.jsx'
 import GameHome from './pages/GameHome.jsx'
 import GameBoard from './pages/GameBoard.jsx'
+import GameSessionDetail from './pages/GameSessionDetail'
 import Engraving from './pages/Engraving.jsx'
 import EngravingDetail from './pages/EngravingDetail.jsx'
 import EngravingRegenerate from './pages/EngravingRegenerate.jsx'
@@ -26,6 +27,7 @@ function App() {
         <Route path="/game" element={<GameIntro />} />
         <Route path="/game/home" element={<GameHome />} />
         <Route path="/game/board/:gameSessionId" element={<GameBoard />} />
+        <Route path="/game/result/:gameSessionId" element={<GameSessionDetail />} />
         <Route path="/engraving" element={<Engraving />} />
         <Route path="/engraving/regenerate/:id" element={<EngravingRegenerate />} />
         <Route path="/engraving/naming/:id" element={<EngravingNaming />} />

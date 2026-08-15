@@ -95,12 +95,6 @@
   color: #555;
 }
 
-.gsd-stat-row dd {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: #1a1a1a;
-}
 
 .gsd-point-badge {
   display: inline-flex;
@@ -118,6 +112,10 @@
 }
 
 .gsd-stat-row dd {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
   display: flex;
   align-items: center;
   gap: 4px;
