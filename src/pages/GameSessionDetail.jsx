@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import ConstellationThumb from '../components/ConstellationThumb'
-import { buildConstellation } from '../data/gameTrajectory'
+import { buildGroupsFromMoveLog } from '../data/gameTrajectory'
 import { mockGameSession } from '../data/gameSessionMock'
 import '../styles/GameSessionDetail.css'
 
@@ -24,7 +25,12 @@ const STATUS_LABEL = {
   IN_PROGRESS: '진행중',
 }
 
-export default function GameSessionDetail({ gameSessionId, onBack, onFinish }) {
+export default function GameSessionDetail() {
+  const { gameSessionId } = useParams()
+  const navigate = useNavigate()
+  const onBack = () => navigate(-1)
+  const onFinish = () => navigate('/game/home')
+
   const [session, setSession] = useState(null)
   const [status, setStatus] = useState('loading') // loading | error | ready
 
@@ -48,10 +54,10 @@ export default function GameSessionDetail({ gameSessionId, onBack, onFinish }) {
     }
   }, [gameSessionId])
 
-  // 세션이 바뀔 때만 별자리 좌표/연결을 다시 계산
-  const constellation = useMemo(() => {
-    if (!session) return null
-    return buildConstellation(session.knightMoveLog)
+  // 세션이 바뀔 때만 그룹(체인)을 다시 계산
+  const trajectoryGroups = useMemo(() => {
+    if (!session) return []
+    return buildGroupsFromMoveLog(session.knightMoveLog)
   }, [session])
 
   if (status === 'loading') {
@@ -73,7 +79,7 @@ export default function GameSessionDetail({ gameSessionId, onBack, onFinish }) {
       </header>
 
       <div className="gsd-board-wrap">
-        <ConstellationThumb data={constellation} size={300} />
+        <ConstellationThumb data={trajectoryGroups} size={300} />
       </div>
 
       <section className="gsd-result">
