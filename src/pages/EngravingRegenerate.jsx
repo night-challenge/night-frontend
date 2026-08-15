@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { USE_MOCK } from '../data/mockData'
 import { mockEngravings } from '../data/engravingData'
-import ConstellationThumb from '../components/ConstellationThumb.jsx'
+import EngravingConstellation from '../components/EngravingConstellation.jsx'
 import '../styles/EngravingRegenerate.css'
 
 // mock 재생성: 점은 유지하고 연결선만 무작위로 새로 만든다 (매번 다른 모양)
@@ -110,13 +110,13 @@ function EngravingRegenerate() {
       <div className="regen__thumbs">
         <figure className="regen__thumb">
           <div className="regen__thumb-box regen__thumb-box--before">
-            <ConstellationThumb data={beforeData} size={155} />
+            <EngravingConstellation data={beforeData} space="grid" size={155} />
           </div>
           <figcaption className="regen__thumb-label">Before</figcaption>
         </figure>
         <figure className="regen__thumb">
           <div className="regen__thumb-box regen__thumb-box--after">
-            <ConstellationThumb data={afterData} size={155} />
+            <EngravingConstellation data={afterData} space="canvas" size={155} />
           </div>
           <figcaption className="regen__thumb-label">After</figcaption>
         </figure>
@@ -124,7 +124,7 @@ function EngravingRegenerate() {
 
       {/* 큰 미리보기 (현재 after) */}
       <div className="regen__preview">
-        <ConstellationThumb data={afterData} size={251} />
+        <EngravingConstellation data={afterData} space="canvas" size={251} />
       </div>
 
       {/* 다시 생성하기 */}

@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { USE_MOCK } from '../data/mockData'
 import { mockEngravings } from '../data/engravingData'
-import ConstellationThumb from '../components/ConstellationThumb.jsx'
+import EngravingConstellation from '../components/EngravingConstellation.jsx'
 import '../styles/EngravingNaming.css'
 
 function EngravingNaming() {
@@ -108,18 +108,18 @@ function EngravingNaming() {
         <figure className="naming__const">
           <div
             className="naming__const-box naming__const-box--before"
-            onClick={() => setZoom(beforeData)}
+            onClick={() => setZoom({ data: beforeData, space: 'grid' })}
           >
-            <ConstellationThumb data={beforeData} size={140} />
+            <EngravingConstellation data={beforeData} space="grid" size={140} />
           </div>
           <figcaption className="naming__const-label">Before</figcaption>
         </figure>
         <figure className="naming__const">
           <div
             className="naming__const-box naming__const-box--after"
-            onClick={() => setZoom(afterData)}
+            onClick={() => setZoom({ data: afterData, space: 'canvas' })}
           >
-            <ConstellationThumb data={afterData} size={140} />
+            <EngravingConstellation data={afterData} space="canvas" size={140} />
           </div>
           <figcaption className="naming__const-label">After</figcaption>
         </figure>
@@ -195,7 +195,7 @@ function EngravingNaming() {
                 <span className="naming__lightbox-close-bar" />
                 <span className="naming__lightbox-close-bar" />
               </button>
-              <ConstellationThumb data={zoom} size={290} />
+              <EngravingConstellation data={zoom.data} space={zoom.space} size={290} />
             </div>
           </div>,
           document.querySelector('.phone-frame') || document.body,

@@ -3,12 +3,10 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 import { thumbMap, detailImageMap } from '../data/productAssets'
-+ import EngravingConstellation from '../components/EngravingConstellation'
-import EngravingPreview from '../components/EngravingPreview'
+import EngravingConstellation from '../components/EngravingConstellation'
 import '../styles/ProductDetail.css'
 import { USE_MOCK, mockProductDetails } from '../data/mockData'
 import { mockEngravings } from '../data/engravingData'
-
 
 const PAGE_SIZE = 4
 const COLORS = [
@@ -89,10 +87,6 @@ function ProductDetail() {
       ? detailImageMap[category]?.[product.optionLabel]
       : null
 
-  // 현재 선택된 각인 레코드 (별자리 points/connections 포함)
-  const selectedRecord = engravings.find((e) => e.id === selectedRecordId) || null
-  const selectedConstellationData = selectedRecord?.constellationData?.after || null
-
   const handleThumbClick = (newId) => {
     if (String(newId) === String(optionId)) return
     navigate(`/product/${newId}`, {
@@ -157,13 +151,7 @@ function ProductDetail() {
 
       <div className="product-detail__image-area">
         {mainImage ? (
-          <EngravingPreview
-            category={category}
-            baseImageSrc={mainImage}
-            constellationData={selectedConstellationData}
-            engravingColor={selectedColor}
-            altText={product.optionName}
-          />
+          <img src={mainImage} alt={product.optionName} className="product-detail__image" />
         ) : (
           <div className="product-detail__image product-detail__image--placeholder" />
         )}
@@ -300,18 +288,8 @@ function ProductDetail() {
             </p>
 
             <div className="color-modal__preview">
-              {mainImage ? (
-                <EngravingPreview
-                  category={category}
-                  baseImageSrc={mainImage}
-                  constellationData={selectedConstellationData}
-                  engravingColor={selectedColor}
-                  altText={product.optionName}
-                  scale={2}
-                />
-              ) : (
-                '각인된 부분 이미지'
-              )}
+              {/* TODO: 나중에 실제 각인된 부분 이미지로 교체 */}
+              각인된 부분 이미지
             </div>
 
             <div className="color-modal__swatches">
