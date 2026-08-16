@@ -3,12 +3,12 @@
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  padding: 12px 20px 20px;
+  padding: 12px 0 0;    /* 좌우/아래 여백 없앰 → 카드 휠이 화면 끝까지 꽉 차게 */
   color: #222;
   overflow: hidden;
 }
 
-/* 헤더 */
+/* 헤더 (여기만 좌우 여백 살려둠) */
 .cards__header {
   position: relative;
   display: flex;
@@ -16,6 +16,7 @@
   justify-content: center;
   height: 32px;
   margin-bottom: 8px;
+  padding: 0 20px;
 }
 .cards__back {
   position: absolute;

@@ -91,15 +91,55 @@ function EngravingCards() {
     fetchCards()
   }, [])
 
-  // 실제 카드 + 검은 플레이스홀더(아직 생성되지 않은 카드)로 휠 채우기
-  const slots = [...cards]
-  while (slots.length < MIN_SLOTS) {
-    slots.push({ placeholder: true, id: `placeholder-${slots.length}` })
-  }
+  // 검은 플레이스홀더를 실제 카드 앞/뒤로 나눠서 채운다 (앞뒤 대칭) →
+  // 처음 들어왔을 때부터 맨 앞 카드(최신) 위아래로 검은 카드가 하나씩 보이게
+  const totalPad = Math.max(0, MIN_SLOTS - cards.length)
+  const padBefore = Math.floor(totalPad / 2)
+  const padAfter = totalPad - padBefore
+  const slots = [
+    ...Array.from({ length: padBefore }, (_, i) => ({
+      placeholder: true,
+      id: `placeholder-b-${i}`,
+    })),
+    ...cards,
+    ...Array.from({ length: padAfter }, (_, i) => ({
+      placeholder: true,
+      id: `placeholder-a-${i}`,
+    })),
+  ]
+
+  // 카드 로딩 끝나면 맨 처음 실제 카드(최신)가 정면에 오도록 회전값 초기화
+  useEffect(() => {
+    if (cards.length > 0) {
+      setRotation(padBefore * STEP)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cards.length])
+
   const maxRot = (slots.length - 1) * STEP
   const clampRot = (r) => Math.max(0, Math.min(r, maxRot))
   // 정면(각도 0)에 가장 가까운 슬롯이 활성
   const activeIndex = clampRot(Math.round(rotation / STEP) * STEP) / STEP
+
+  // 실제 카드가 있는 인덱스만 모아서, 놓았을 때 검은 플레이스홀더가 아니라
+  // 항상 실제 카드 중 가장 가까운 것에 스냅되게 함
+  const realIndices = slots.reduce((acc, s, i) => {
+    if (!s.placeholder) acc.push(i)
+    return acc
+  }, [])
+  const snapToNearestReal = (r) => {
+    if (realIndices.length === 0) return clampRot(Math.round(r / STEP) * STEP)
+    let best = realIndices[0]
+    let bestDiff = Infinity
+    for (const idx of realIndices) {
+      const diff = Math.abs(idx * STEP - r)
+      if (diff < bestDiff) {
+        bestDiff = diff
+        best = idx
+      }
+    }
+    return best * STEP
+  }
 
   // ===== 드래그로 휠 돌리기 =====
   const onPointerDown = (e) => {
@@ -122,15 +162,15 @@ function EngravingCards() {
       const front = slots[activeIndex]
       if (front && !front.placeholder) openDetail(front)
     } else {
-      setRotation((r) => clampRot(Math.round(r / STEP) * STEP)) // 가까운 카드로 스냅
+      setRotation((r) => snapToNearestReal(r)) // 검은 카드 말고 실제 카드로만 스냅
     }
   }
-  const onPointerLeave = () => {
-    if (!drag.current.active) return
-    drag.current.active = false
-    setDragging(false)
-    setRotation((r) => clampRot(Math.round(r / STEP) * STEP))
-  }
+  // ⚠️ onPointerLeave에서는 드래그를 끝내지 않는다 — pointerdown에서
+  // setPointerCapture를 걸어놨기 때문에, 손가락/커서가 카드 영역 밖으로
+  // 나가도 move/up 이벤트는 계속 이 요소로 들어온다. 근데 pointerleave는
+  // capture와 무관하게 "실제 좌표가 요소 밖으로 나감"을 기준으로 발생해서,
+  // 여기서 드래그를 끊어버리면 세로로 조금만 크게 드래그해도 중간에
+  // 끊기는 문제가 있었다 (드래그가 잘 안 된다는 문제의 원인).
 
   // 카드 상세 조회: GET /api/engravings/{id} (목록엔 keywords가 없어 상세로 받아옴)
   const openDetail = async (card) => {
@@ -163,7 +203,7 @@ function EngravingCards() {
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
-        onPointerLeave={onPointerLeave}
+        onPointerCancel={onPointerUp}
       >
         {slots.map((slot, i) => {
           const angle = i * STEP - rotation // 정면=0
