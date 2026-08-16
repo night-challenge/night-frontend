@@ -61,7 +61,11 @@ function ProductDetail() {
     }
     fetchProduct()
   }, [optionId])
-
+  
+  const handleConfirmColor = async () => {
+    setShowColorModal(false)
+    await handleSubmit()
+  }
   // 각인 리스트 조회 (화면 5, 8 공통 API)
   useEffect(() => {
     const fetchEngravings = async () => {
@@ -333,7 +337,8 @@ function ProductDetail() {
 
             <button
               className="color-modal__confirm-btn"
-              onClick={() => setShowColorModal(false)}
+              onClick={handleConfirmColor}
+              disabled={submitting}
             >
               이 색으로 선택하기
             </button>

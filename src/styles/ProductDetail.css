@@ -369,3 +369,8 @@
   cursor: pointer;
   margin-top: 8px;
 }
+
+.color-modal__confirm-btn:disabled {
+  background: #666;
+  cursor: default;
+}
