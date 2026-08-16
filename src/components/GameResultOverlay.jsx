@@ -14,7 +14,7 @@ function GameResultOverlay({ result, onConfirm, onRestart }) {
       />
 
       <button
-        className={`game-cta-button ${isWin ? 'game-cta-button--red' : ''}`}
+        className={`result-overlay-cta ${isWin ? 'result-overlay-cta.game-cta-button--red' : ''}`}
         onClick={isWin ? onConfirm : onRestart}
       >
         {isWin ? '게임 결과 확인하기' : '처음 화면으로 돌아가기'}
