@@ -106,7 +106,7 @@
    CTA button
    -------------------------------------------------------------------------- */
 
-.game-cta-button {
+.result-overlay-cta {
   position: absolute;
   bottom: 24px;
   left: 50%;
@@ -124,19 +124,19 @@
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-.game-cta-button:active {
+.result-overlay-cta:active {
   transform: translateX(-50%) scale(0.98);
 }
 
-.game-cta-button--red {
+.result-overlay-cta.game-cta-button--red {
   background-color: #e8332b;
 }
 
-.game-cta-button--red:hover {
+.result-overlay-cta.game-cta-button--red:hover {
   background-color: #d42a22;
 }
 
-.game-cta-button:not(.game-cta-button--red):hover {
+.result-overlay-cta:not(.result-overlay-cta.game-cta-button--red):hover {
   background-color: #1f1f1f;
 }
 
@@ -172,7 +172,7 @@
   color: #fff;
 }
 
-.game-result-overlay .game-cta-button {
+.game-result-overlay .result-overlay-cta {
   width: 260px;
 }
 
