@@ -285,7 +285,12 @@ function ProductDetail() {
             <button
               key={c.key}
               className={
-                'color-swatch' + (selectedColor === c.key ? ' color-swatch--active' : '')
+                'color-swatch' +
+                (selectedColor === c.key
+                  ? c.key === 'black'
+                    ? ' color-swatch--active color-swatch--active-black'
+                    : ' color-swatch--active'
+                  : '')
               }
               style={{ backgroundColor: c.hex }}
               aria-label={c.label}
@@ -330,7 +335,12 @@ function ProductDetail() {
                 <button
                   key={c.key}
                   className={
-                    'color-swatch' + (selectedColor === c.key ? ' color-swatch--active' : '')
+                    'color-swatch' +
+                    (selectedColor === c.key
+                      ? c.key === 'black'
+                        ? ' color-swatch--active color-swatch--active-black'
+                        : ' color-swatch--active'
+                      : '')
                   }
                   style={{ backgroundColor: c.hex }}
                   aria-label={c.label}

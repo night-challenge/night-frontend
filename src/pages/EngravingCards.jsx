@@ -186,7 +186,9 @@ function EngravingCards() {
                 zIndex: active ? 100 : 50 - Math.abs(i - activeIndex),
               }}
             >
-              {active && (
+              {/* 플레이스홀더(아직 없는 카드)만 빈 검은 박스, 실제 카드 3건은
+                  정면이 아니어도 항상 얼굴이 보이게 → 드래그 중에도 서로 구분됨 */}
+              {!slot.placeholder && (
                 <>
                   <img src={cardImage} alt="" className="cards__card-bg" />
                   <div className="cards__card-const">
