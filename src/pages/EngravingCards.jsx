@@ -121,6 +121,26 @@ function EngravingCards() {
   // 정면(각도 0)에 가장 가까운 슬롯이 활성
   const activeIndex = clampRot(Math.round(rotation / STEP) * STEP) / STEP
 
+  // 실제 카드가 있는 인덱스만 모아서, 놓았을 때 검은 플레이스홀더가 아니라
+  // 항상 실제 카드 중 가장 가까운 것에 스냅되게 함
+  const realIndices = slots.reduce((acc, s, i) => {
+    if (!s.placeholder) acc.push(i)
+    return acc
+  }, [])
+  const snapToNearestReal = (r) => {
+    if (realIndices.length === 0) return clampRot(Math.round(r / STEP) * STEP)
+    let best = realIndices[0]
+    let bestDiff = Infinity
+    for (const idx of realIndices) {
+      const diff = Math.abs(idx * STEP - r)
+      if (diff < bestDiff) {
+        bestDiff = diff
+        best = idx
+      }
+    }
+    return best * STEP
+  }
+
   // ===== 드래그로 휠 돌리기 =====
   const onPointerDown = (e) => {
     drag.current = { active: true, startY: e.clientY, startRot: rotation }
@@ -142,7 +162,7 @@ function EngravingCards() {
       const front = slots[activeIndex]
       if (front && !front.placeholder) openDetail(front)
     } else {
-      setRotation((r) => clampRot(Math.round(r / STEP) * STEP)) // 가까운 카드로 스냅
+      setRotation((r) => snapToNearestReal(r)) // 검은 카드 말고 실제 카드로만 스냅
     }
   }
   // ⚠️ onPointerLeave에서는 드래그를 끝내지 않는다 — pointerdown에서
