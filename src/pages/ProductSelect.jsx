@@ -36,12 +36,12 @@ const imageMap = {
     '검정': { image: bagBlack, thumb: bagBlackThumb },
   },
   '트래블': {
-    '옵션1': { image: travelSuitcaseOption1, thumb: travelOption1Thumb },
-    '옵션2': { image: travelSuitcaseOption2, thumb: travelOption2Thumb },
+    '갈색': { image: travelSuitcaseOption1, thumb: travelOption1Thumb },
+    '분홍': { image: travelSuitcaseOption2, thumb: travelOption2Thumb },
   },
   '패션소품': {
-    '옵션1': { image: fashionPerfumeOption1, thumb: fashionPerfumeThumb1 },
-    '옵션2': { image: fashionPerfumeOption2, thumb: fashionPerfumeThumb2 },
+    '50ml': { image: fashionPerfumeOption1, thumb: fashionPerfumeThumb1 },
+    '75ml': { image: fashionPerfumeOption2, thumb: fashionPerfumeThumb2 },
   },
   '라이프스타일': {
     '기본': { image: lifestyleAirpodCase, thumb: lifestyleAirpodCase },
@@ -91,7 +91,9 @@ function ProductSelect() {
           if (!grouped[opt.optionName]) {
             grouped[opt.optionName] = { name: opt.optionName, options: [] }
           }
-          const localImg = imageMap[activeCategory]?.[opt.optionLabel] || {}
+          // 수정
+        const labelKey = opt.optionLabel ?? '기본'
+        const localImg = imageMap[activeCategory]?.[labelKey] || {}
           grouped[opt.optionName].options.push({
             id: opt.id,
             label: opt.optionLabel,

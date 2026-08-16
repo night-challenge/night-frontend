@@ -62,9 +62,8 @@ function ProductDetail() {
     fetchProduct()
   }, [optionId])
   
-  const handleConfirmColor = async () => {
+  const handleConfirmColor = () => {
     setShowColorModal(false)
-    await handleSubmit()
   }
   // 각인 리스트 조회 (화면 5, 8 공통 API)
   useEffect(() => {
@@ -88,19 +87,24 @@ function ProductDetail() {
   const siblingOptions = location.state?.siblingOptions || []
 
   
+
+  const labelKey = product?.optionLabel ?? '기본'
+
   const mainImage =
-  category && product
-    ? detailImageMap[category]?.[product.optionLabel]
-    : null
+    category && product
+      ? detailImageMap[category]?.[labelKey]
+      : null
 
   const engravingImage =
     category && product
-      ? engravingBaseImageMap[category]?.[product.optionLabel]
+      ? engravingBaseImageMap[category]?.[labelKey]
       : null
 
   // 현재 선택된 각인 레코드 (별자리 points/connections 포함)
+  // 현재 선택된 각인 레코드 (별자리 points/connections 포함)
   const selectedRecord = engravings.find((e) => e.id === selectedRecordId) || null
-  const selectedConstellationData = selectedRecord?.constellationData?.after || null
+  const selectedConstellationData =
+    selectedRecord?.constellationData?.after ?? selectedRecord?.constellationData ?? null
 
   const handleThumbClick = (newId) => {
     if (String(newId) === String(optionId)) return
@@ -178,7 +182,7 @@ function ProductDetail() {
         {siblingOptions.length > 1 && (
           <div className="product-detail__thumbnails">
             {siblingOptions.map((opt) => {
-              const thumbSrc = category && thumbMap[category]?.[opt.label]
+              const thumbSrc = category && thumbMap[category]?.[opt.label ?? '기본']
               const isActive = String(opt.id) === String(optionId)
               return (
                 <button

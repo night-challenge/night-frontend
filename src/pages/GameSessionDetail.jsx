@@ -67,7 +67,7 @@ export default function GameSessionDetail() {
 
     try {
       const engraving = await createEngraving(gameSessionId)
-      navigate(`/engraving/naming/${engraving.id}`)
+      navigate(`/engraving/regenerate/${engraving.id}`)
     } catch (e) {
       setFinishError('각인 저장에 실패했어요. 다시 시도해주세요.')
       setFinishing(false)

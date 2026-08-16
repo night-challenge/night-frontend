@@ -9,14 +9,20 @@ const api = axios.create({
 api.interceptors.response.use(
   (res) => {
     if (res.data?.status === 'error') {
-      return Promise.reject(new Error(res.data.message ?? '요청에 실패했습니다.'))
+      const err = new Error(res.data.message ?? '요청에 실패했습니다.')
+      err.status = res.status
+      return Promise.reject(err)
     }
     return res
   },
   (error) => {
     const serverMessage = error.response?.data?.message
     const message = serverMessage ?? '요청을 처리하지 못했습니다. 잠시 후 다시 시도해주세요.'
-    return Promise.reject(new Error(message))
+    const err = new Error(message)
+    // 원본 axios 에러의 status를 보존해야 컴포넌트에서 404 같은 특정 상태를
+    // "정상적인 케이스"로 구분해 처리할 수 있음 (e.g. 진행 중인 게임 없음)
+    err.status = error.response?.status
+    return Promise.reject(err)
   }
 )
 

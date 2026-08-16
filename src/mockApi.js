@@ -30,7 +30,7 @@ if (import.meta.env.DEV && import.meta.env.VITE_USE_MOCK === 'true') {
     if (path.match(/\/api\/games\/[^/]+\/moves$/) && options.method === 'POST') {
       mockGameState = {
         ...mockGameState,
-        currentTurn: mockGameState.currentTurn + 2,
+        currentTurn: mockGameState.currentTurn + 1,
         score: mockGameState.score + 3,
       }
       return new Response(JSON.stringify({
