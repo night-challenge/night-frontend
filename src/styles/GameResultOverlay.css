@@ -1,7 +1,6 @@
-/* ==========================================================================
-   Game Result Overlay
-   ========================================================================== */
-
+.game-board-page {
+  position: relative;
+}
 .game-result-overlay {
   position: absolute;
   inset: 0;
@@ -11,10 +10,6 @@
   justify-content: center;
   z-index: 10;
 }
-
-/* --------------------------------------------------------------------------
-   Burst / glow container behind the text
-   -------------------------------------------------------------------------- */
 
 .result-burst {
   position: absolute;
@@ -143,4 +138,54 @@
 
 .game-cta-button:not(.game-cta-button--red):hover {
   background-color: #1f1f1f;
+}
+
+.game-result-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  background: rgba(0, 0, 0, 0.6); 
+}
+
+.result-burst {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-text {
+  font-size: 48px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.result-text--win {
+  color: #FC594A; /* 프로젝트 메인 컬러랑 맞춰서 */
+}
+
+.result-text--lose {
+  color: #fff;
+}
+
+.game-result-overlay .game-cta-button {
+  width: 260px;
+}
+
+ 
+.result-badge {
+  width: 260px;
+  height: auto;
+}
+ 
+.result-badge--win {
+  width: 500px;
+}
+ 
+.result-badge--lose {
+  width: 375px;
 }

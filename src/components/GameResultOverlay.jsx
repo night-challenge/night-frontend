@@ -1,13 +1,17 @@
+import winBadge from '../assets/result/win.svg'
+import loseBadge from '../assets/result/lose.svg'
+import '../styles/GameResultOverlay.css'
+
 function GameResultOverlay({ result, onConfirm, onRestart }) {
   const isWin = result === 'win'
 
   return (
     <div className="game-result-overlay">
-      <div className={`result-burst ${isWin ? 'result-burst--win' : 'result-burst--lose'}`}>
-        <span className={`result-text ${isWin ? 'result-text--win' : 'result-text--lose'}`}>
-          {isWin ? 'WIN!' : 'Lose'}
-        </span>
-      </div>
+      <img
+        src={isWin ? winBadge : loseBadge}
+        alt={isWin ? '승리' : '패배'}
+        className={`result-badge ${isWin ? 'result-badge--win' : 'result-badge--lose'}`}
+      />
 
       <button
         className={`game-cta-button ${isWin ? 'game-cta-button--red' : ''}`}
