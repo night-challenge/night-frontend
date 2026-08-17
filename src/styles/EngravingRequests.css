@@ -162,8 +162,8 @@
   align-items: center;
   gap: 14px;
   padding: 12px;
-  border: 0.8px solid #b5b5b5;
-  border-radius: 8px;
+  border-radius: 5px;
+  border: 0.8px solid #B5B5B5;
 }
 .req__info-thumb {
   flex-shrink: 0;

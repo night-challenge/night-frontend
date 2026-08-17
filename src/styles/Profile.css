@@ -19,8 +19,8 @@
   align-items: center;
   gap: 14px;
   padding: 12px 4px;
-  border: 1px solid #eee;
-  border-radius: 10px;
+  border-radius: 5px;
+  border: 0.8px solid #B5B5B5;
 }
 .profile__avatar {
   flex-shrink: 0;
@@ -210,8 +210,8 @@
   width: 100%;
   padding: 15px 12px;
   margin-bottom: 8px;
-  border: 1px solid #eee;
-  border-radius: 8px;
+  border-radius: 5px;
+  border: 0.8px solid #B5B5B5;
   background: #fff;
   font-size: 13px;
   color: #333;

@@ -134,8 +134,8 @@
 }
 .detail__readonly {
   padding: 14px;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
+  border-radius: 5px;
+  border: 0.8px solid #B5B5B5;
   background: #fff;
   font-size: 14px;
   color: #222;
@@ -150,8 +150,8 @@
 .detail__input {
   flex: 1;
   padding: 14px;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
+  border-radius: 5px;
+  border: 0.8px solid #B5B5B5;
   font-size: 14px;
   color: #222;
   outline: none;
