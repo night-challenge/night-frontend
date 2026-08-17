@@ -84,17 +84,24 @@ function ProductSelect() {
             params: { category: activeCategory },
           })
           options = res.data.data.options
+          options = res.data.data.options
+          console.log('패션소품 옵션:', options)
         }
 
         const grouped = {}
         options.forEach((opt) => {
-          if (!grouped[opt.optionName]) {
-            grouped[opt.optionName] = { name: opt.optionName, options: [] }
+          // optionName 끝에 optionLabel이 붙어 있으면 떼어내서 그룹 키로 사용
+          const groupKey = opt.optionLabel && opt.optionName.endsWith(opt.optionLabel)
+            ? opt.optionName.slice(0, -opt.optionLabel.length).trim()
+            : opt.optionName
+
+          if (!grouped[groupKey]) {
+            grouped[groupKey] = { name: groupKey, options: [] }
           }
-          // 수정
-        const labelKey = opt.optionLabel ?? '기본'
-        const localImg = imageMap[activeCategory]?.[labelKey] || {}
-          grouped[opt.optionName].options.push({
+
+          const labelKey = opt.optionLabel ?? '기본'
+          const localImg = imageMap[activeCategory]?.[labelKey] || {}
+          grouped[groupKey].options.push({
             id: opt.id,
             label: opt.optionLabel,
             price: opt.price,
