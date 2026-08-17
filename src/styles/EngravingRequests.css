@@ -49,14 +49,22 @@
 }
 .req__empty-btn {
   width: 100%;
-  padding: 16px;
+  height: 37px;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   border: none;
   border-radius: 8px;
   background: #1a1a1a;
   color: #fff;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.42px;
   cursor: pointer;
 }
 
@@ -222,12 +230,21 @@
 .req__cancel-btn {
   margin-top: auto;
   width: 100%;
-  padding: 16px;
+  height: 37px;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   border: none;
   border-radius: 8px;
   background: #1a1a1a;
   color: #fff;
-  font-size: 15px;
-  font-weight: 600;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.42px;
   cursor: pointer;
 }

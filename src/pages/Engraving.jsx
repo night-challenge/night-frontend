@@ -7,11 +7,14 @@ import EngraveCard from '../components/EngraveCard.jsx'
 import mcmLogo from '../assets/mcm_logo_loding.png'
 import '../styles/Engraving.css'
 
+const PAGE_SIZE = 4 // 한 페이지에 최대 4개
+
 function Engraving() {
   const navigate = useNavigate()
   const [engravings, setEngravings] = useState([])
   // 화면 상태: loading(불러오는 중) | success | empty(각인 없음) | error
   const [status, setStatus] = useState('loading')
+  const [page, setPage] = useState(0) // 0-indexed
 
   // 화면 진입 시 보유 각인 목록 조회 (GET /api/engravings)
   useEffect(() => {
@@ -57,6 +60,12 @@ function Engraving() {
   const formatKeywords = (keywords) =>
     Array.isArray(keywords) ? keywords.join(' · ') : keywords || ''
 
+  const totalPages = Math.max(1, Math.ceil(engravings.length / PAGE_SIZE))
+  const pagedEngravings = engravings.slice(
+    page * PAGE_SIZE,
+    page * PAGE_SIZE + PAGE_SIZE,
+  )
+
   return (
     <div className="engraving">
       <h1 className="engraving__title">각인 이름 수정하기</h1>
@@ -95,7 +104,7 @@ function Engraving() {
       {status === 'success' && (
         <>
           <div className="engraving__list">
-            {engravings.map((item) => (
+            {pagedEngravings.map((item) => (
               <EngraveCard
                 key={item.id}
                 constellation={item.constellationData}
@@ -108,9 +117,21 @@ function Engraving() {
           </div>
 
           <div className="pagination">
-            <button className="pagination__arrow">‹</button>
-            <span className="pagination__page">1</span>
-            <button className="pagination__arrow">›</button>
+            <button
+              className="pagination__arrow"
+              onClick={() => setPage((p) => Math.max(0, p - 1))}
+              disabled={page === 0}
+            >
+              ‹
+            </button>
+            <span className="pagination__page">{page + 1}</span>
+            <button
+              className="pagination__arrow"
+              onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+              disabled={page === totalPages - 1}
+            >
+              ›
+            </button>
           </div>
         </>
       )}

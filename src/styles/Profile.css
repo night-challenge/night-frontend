@@ -182,13 +182,22 @@
 .profile__save-btn {
   margin-top: 16px;
   width: 100%;
-  padding: 15px;
+  height: 37px;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   border: none;
   border-radius: 8px;
   background: #1a1a1a;
   color: #fff;
+  font-family: 'Pretendard', sans-serif;
   font-size: 14px;
-  font-weight: 600;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.42px;
   cursor: pointer;
 }
 

@@ -91,14 +91,23 @@
   gap: 12px;
 }
 .cardresult__btn {
-  padding: 13px 22px;
+  flex: 1;
+  height: 37px;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   border: none;
   border-radius: 8px;
   background: #1a1a1a;
   color: #fff;
+  font-family: 'Pretendard', sans-serif;
   font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.3px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.42px;
   cursor: pointer;
 }
 
