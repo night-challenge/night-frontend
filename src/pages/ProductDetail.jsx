@@ -36,6 +36,8 @@ function ProductDetail() {
   const [submitSuccess, setSubmitSuccess] = useState(null)
   const [submitting, setSubmitting] = useState(false)
   const [showColorModal, setShowColorModal] = useState(false)
+  const [showToast, setShowToast] = useState(false)   
+  
 
   // 7. 제품 상세 조회
   useEffect(() => {
@@ -61,10 +63,23 @@ function ProductDetail() {
     }
     fetchProduct()
   }, [optionId])
-  
+
+  useEffect(() => {
+    setSelectedRecordId(null)
+    setSelectedColor(null)
+    setSubmitError(null)
+    setSubmitSuccess(null)
+    setSubmitting(false)
+    setShowColorModal(false)
+    setShowToast(false)
+  }, [optionId])
+
   const handleConfirmColor = () => {
     setShowColorModal(false)
+    setShowToast(true)
+    setTimeout(() => setShowToast(false), 1500)
   }
+
   // 각인 리스트 조회 (화면 5, 8 공통 API)
   useEffect(() => {
     const fetchEngravings = async () => {
@@ -86,8 +101,6 @@ function ProductDetail() {
   }, [])
   const siblingOptions = location.state?.siblingOptions || []
 
-  
-
   const labelKey = product?.optionLabel ?? '기본'
 
   const mainImage =
@@ -100,7 +113,6 @@ function ProductDetail() {
       ? engravingBaseImageMap[category]?.[labelKey]
       : null
 
-  // 현재 선택된 각인 레코드 (별자리 points/connections 포함)
   // 현재 선택된 각인 레코드 (별자리 points/connections 포함)
   const selectedRecord = engravings.find((e) => e.id === selectedRecordId) || null
   const selectedConstellationData =
@@ -134,7 +146,6 @@ function ProductDetail() {
       })
       setSubmitSuccess(res.data.data.productCode)
     } catch (err) {
-      // 화면 7.5 에러 안내 대응 (미선택/둘다미선택 등 백엔드 방어 검증 케이스)
       setSubmitError(
         err.response?.data?.message || '신청 중 오류가 발생했습니다.'
       )
@@ -285,12 +296,7 @@ function ProductDetail() {
             <button
               key={c.key}
               className={
-                'color-swatch' +
-                (selectedColor === c.key
-                  ? c.key === 'black'
-                    ? ' color-swatch--active color-swatch--active-black'
-                    : ' color-swatch--active'
-                  : '')
+                'color-swatch' + (selectedColor === c.key ? ' color-swatch--active' : '')
               }
               style={{ backgroundColor: c.hex }}
               aria-label={c.label}
@@ -328,19 +334,14 @@ function ProductDetail() {
               ) : (
                 '각인된 부분 이미지'
               )}
-            </div> 
+            </div>
 
             <div className="color-modal__swatches">
               {COLORS.map((c) => (
                 <button
                   key={c.key}
                   className={
-                    'color-swatch' +
-                    (selectedColor === c.key
-                      ? c.key === 'black'
-                        ? ' color-swatch--active color-swatch--active-black'
-                        : ' color-swatch--active'
-                      : '')
+                    'color-swatch' + (selectedColor === c.key ? ' color-swatch--active' : '')
                   }
                   style={{ backgroundColor: c.hex }}
                   aria-label={c.label}
@@ -358,6 +359,10 @@ function ProductDetail() {
             </button>
           </div>
         </div>
+      )}
+
+      {showToast && (
+        <div className="toast-message">색상이 선택되었습니다.</div>
       )}
 
       <button className="product-detail__more-link">
