@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import PhoneFrame from './components/PhoneFrame.jsx'
 import Home from './pages/Home.jsx'
 import ProductSelect from './pages/ProductSelect.jsx'
-import ProductDetail from './pages/ProductDetail.jsx'
+import ProductDetailWrapper from './pages/ProductDetailWrapper.jsx'
 import GameIntro from './pages/GameIntro.jsx'
 import GameHome from './pages/GameHome.jsx'
 import GameBoard from './pages/GameBoard.jsx'
@@ -23,7 +23,7 @@ function App() {
         <Route path="/" element={<GameIntro />} />
         <Route path="/home" element={<Home />} />
         <Route path="/products" element={<ProductSelect />} />
-        <Route path="/product/:optionId" element={<ProductDetail />} />
+        <Route path="/product/:optionId" element={<ProductDetailWrapper />} />
         <Route path="/game" element={<GameIntro />} />
         <Route path="/game/home" element={<GameHome />} />
         <Route path="/game/board/:gameSessionId" element={<GameBoard />} />

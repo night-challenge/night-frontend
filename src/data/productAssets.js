@@ -33,12 +33,12 @@ export const engravingBaseImageMap = {
     '검정': engravingBagBlack,
   },
   '트래블': {
-    '옵션1': engravingTravelOption1,
-    '옵션2': engravingTravelOption2,
+    '갈색': engravingTravelOption1,
+    '분홍': engravingTravelOption2,
   },
   '패션소품': {
-    '옵션1': engravingFashionOption1,
-    '옵션2': engravingFashionOption2,
+    '50ml': engravingFashionOption1,
+    '75ml': engravingFashionOption2,
   },
   '라이프스타일': {
     '기본': engravingLifestyleAirpod,
@@ -52,12 +52,12 @@ export const thumbMap = {
     '검정': bagBlackThumb,
   },
   '트래블': {
-    '옵션1': travelOption1Thumb,
-    '옵션2': travelOption2Thumb,
+    '갈색': travelOption1Thumb,
+    '분홍': travelOption2Thumb,
   },
   '패션소품': {
-    '옵션1': fashionPerfumeThumb1,
-    '옵션2': fashionPerfumeThumb2,
+    '50ml': fashionPerfumeThumb1,
+    '75ml': fashionPerfumeThumb2,
   },
   '라이프스타일': {
     '기본': lifestyleAirpodCase,
@@ -71,12 +71,12 @@ export const detailImageMap = {
     '검정': bagBlackDetail,
   },
   '트래블': {
-    '옵션1': travelOption1Detail,
-    '옵션2': travelOption2Detail,
+    '갈색': travelOption1Detail,
+    '분홍': travelOption2Detail,
   },
   '패션소품': {
-    '옵션1': fashionPerfumeDetail1,
-    '옵션2': fashionPerfumeDetail2,
+    '50ml': fashionPerfumeDetail1,
+    '75ml': fashionPerfumeDetail2,
   },
   '라이프스타일': {
     '기본': lifestyleAirpodCaseDetail,
