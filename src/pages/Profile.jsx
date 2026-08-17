@@ -123,7 +123,15 @@ function Profile() {
       </button>
 
       {/* MCM 바로가기 */}
-      <button className="profile__row" onClick={() => {}}>
+      <button
+        className="profile__row"
+        onClick={() =>
+          window.open(
+            'https://kr.mcmworldwide.com/ko_KR/home?srsltid=AfmBOorADtM89tv6Fon_iD3kECEK3yGwZlA79OyAsfRgbo6qXMgzCNjW',
+            '_blank',
+          )
+        }
+      >
         <span>MCM 바로가기 버튼</span>
         <span className="profile__row-chevron">›</span>
       </button>

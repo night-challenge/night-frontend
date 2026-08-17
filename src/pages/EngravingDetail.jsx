@@ -5,6 +5,7 @@ import { USE_MOCK } from '../data/mockData'
 import { mockEngravings } from '../data/engravingData'
 import EngravingConstellation from '../components/EngravingConstellation.jsx'
 import ConstellationThumb from '../components/ConstellationThumb.jsx'
+import { buildBeforeGroups } from '../data/beforeGroups'
 import '../styles/EngravingDetail.css'
 
 function EngravingDetail() {
@@ -101,8 +102,9 @@ function EngravingDetail() {
   const afterData = engraving.constellationData?.after
 
   // Before는 게임 끝나고 나온 화면과 똑같이(체스판 격자 + 이동 화살표) 보여준다.
+  // connections 기준으로 나이트별 경로를 분리해서 그룹화(서로 다른 경로끼리 이어지지 않도록).
   const beforeGroups = beforeData?.points
-    ? [{ points: beforeData.points.map((p) => ({ x: p.x, y: p.y })) }]
+    ? buildBeforeGroups(beforeData.points, beforeData.connections)
     : []
 
   return (

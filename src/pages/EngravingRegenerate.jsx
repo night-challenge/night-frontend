@@ -5,6 +5,7 @@ import { USE_MOCK } from '../data/mockData'
 import { mockEngravings } from '../data/engravingData'
 import EngravingConstellation from '../components/EngravingConstellation.jsx'
 import ConstellationThumb from '../components/ConstellationThumb.jsx'
+import { buildBeforeGroups } from '../data/beforeGroups'
 import '../styles/EngravingRegenerate.css'
 
 // mock 재생성: 점은 유지하고 연결선만 무작위로 새로 만든다 (매번 다른 모양)
@@ -98,9 +99,9 @@ function EngravingRegenerate() {
   }
 
   // Before는 게임 끝나고 나온 화면과 똑같이(체스판 격자 + 이동 화살표) 보여준다.
-  // ConstellationThumb(게임 탭 공용)이 기대하는 형태로 변환: [{ points: [{x,y}, ...] }]
+  // connections 기준으로 나이트별 경로를 분리해서 그룹화(서로 다른 경로끼리 이어지지 않도록).
   const beforeGroups = beforeData?.points
-    ? [{ points: beforeData.points.map((p) => ({ x: p.x, y: p.y })) }]
+    ? buildBeforeGroups(beforeData.points, beforeData.connections)
     : []
 
   return (
