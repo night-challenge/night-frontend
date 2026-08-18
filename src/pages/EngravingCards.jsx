@@ -6,6 +6,7 @@ import { USE_MOCK } from '../data/mockData'
 import { mockEngravings } from '../data/engravingData'
 import cardImage from '../assets/card_image.png'
 import cardText from '../assets/card_txt.png'
+import shareImage from '../assets/share.png'
 import '../styles/EngravingCards.css'
 
 // 별자리(after)를 tight viewBox로 그리기
@@ -64,6 +65,7 @@ function EngravingCards() {
   const drag = useRef({ active: false, startY: 0, startRot: 0 })
   const [detail, setDetail] = useState(null) // 선택된 카드 상세(오버레이). null이면 닫힘
   const [saved, setSaved] = useState(false) // "저장되었습니다." 토스트
+  const [shareOpen, setShareOpen] = useState(false) // 카드 공유하기 → share 이미지 모달
 
   // 카드 모음 조회: GET /api/engravings/cards
   useEffect(() => {
@@ -286,7 +288,12 @@ function EngravingCards() {
               {saved && <div className="cards__detail-toast">저장되었습니다.</div>}
 
               <div className="cards__detail-buttons">
-                <button className="cards__detail-share">카드 공유하기</button>
+                <button
+                  className="cards__detail-share"
+                  onClick={() => setShareOpen(true)}
+                >
+                  카드 공유하기
+                </button>
                 <button
                   className="cards__detail-save"
                   onClick={() => setSaved(true)}
@@ -295,6 +302,20 @@ function EngravingCards() {
                 </button>
               </div>
             </div>
+          </div>,
+          document.querySelector('.phone-frame') || document.body,
+        )}
+
+      {/* 카드 공유하기 → share 이미지 모달 */}
+      {shareOpen &&
+        createPortal(
+          <div className="cards__share" onClick={() => setShareOpen(false)}>
+            <img
+              src={shareImage}
+              alt="공유"
+              className="cards__share-img"
+              onClick={(e) => e.stopPropagation()}
+            />
           </div>,
           document.querySelector('.phone-frame') || document.body,
         )}

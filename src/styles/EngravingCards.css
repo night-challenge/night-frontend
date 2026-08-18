@@ -217,3 +217,20 @@
   color: #222;       /* 흰 배경이라 텍스트는 어둡게 유지 */
   border: 1px solid #ddd;
 }
+
+/* ===== 카드 공유하기 → share 이미지 모달 ===== */
+.cards__share {
+  position: absolute;
+  inset: 0;
+  z-index: 300;      /* 상세 오버레이(200)보다 위 */
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.cards__share-img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 12px;
+}
