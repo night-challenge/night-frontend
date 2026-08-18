@@ -131,3 +131,45 @@
 .game-cta-button--red {
   background: #e0483e;
 }
+
+.game-intro-banner {
+  position: relative;
+  width: 100%;
+}
+
+.banner-image {
+  display: block;
+  width: 100%;
+}
+
+.banner-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  border: none;
+  background: transparent;
+  color: white;
+
+  font-size: 40px;
+  line-height: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  z-index: 999;
+}
+
+.banner-arrow-left {
+  left: 10px;
+}
+
+.banner-arrow-right {
+  right: 10px;
+}
+
+.banner-arrow:hover {
+  background: rgba(0, 0, 0, 0.7);
+}

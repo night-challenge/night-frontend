@@ -1,13 +1,55 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import bannerImg from '../assets/night_challenge_banner.svg'
+
+import bannerImg1 from '../assets/night_challenge_banner.svg'
+import bannerImg2 from '../assets/night_challenge_banner_2.svg'
+import bannerImg3 from '../assets/night_challenge_banner_3.svg'
 
 function GameIntro() {
   const navigate = useNavigate()
 
+  const banners = [bannerImg1, bannerImg2, bannerImg3]
+  const [currentBanner, setCurrentBanner] = useState(0)
+
+  const handlePrev = () => {
+    setCurrentBanner((prev) =>
+      prev === 0 ? banners.length - 1 : prev - 1
+    )
+  }
+
+  const handleNext = () => {
+    setCurrentBanner((prev) =>
+      prev === banners.length - 1 ? 0 : prev + 1
+    )
+  }
+
   return (
     <div className="game-intro">
       <div className="game-intro-banner">
-        <img src={bannerImg} alt="Night Challenge 2026" className="banner-image" />
+
+        {/* 왼쪽 화살표 */}
+        <button
+          className="banner-arrow banner-arrow-left"
+          onClick={handlePrev}
+        >
+          ‹
+        </button>
+
+        {/* 배너 이미지 */}
+        <img
+          src={banners[currentBanner]}
+          alt={`Night Challenge 2026 ${currentBanner + 1}`}
+          className="banner-image"
+        />
+
+        {/* 오른쪽 화살표 */}
+        <button
+          className="banner-arrow banner-arrow-right"
+          onClick={handleNext}
+        >
+          ›
+        </button>
+
       </div>
 
       <h2 className="game-intro-title">나이트 챌린지</h2>
@@ -19,6 +61,7 @@ function GameIntro() {
         <br />
         전략적 미학의 컬렉션을 선보였습니다.
       </p>
+
       <p className="game-intro-desc">
         이를 기념해 준비한 나이트 챌린지!
         <br />
@@ -26,6 +69,7 @@ function GameIntro() {
         <br />
         그게 곧 하나의 각인이 됩니다.
       </p>
+
       <p className="game-intro-desc">
         플레이 결과에 따라 각인의 희귀도가 달라지니
         <br />
@@ -56,7 +100,10 @@ function GameIntro() {
         </p>
       </div>
 
-      <button className="game-cta-button" onClick={() => navigate('/game/home')}>
+      <button
+        className="game-cta-button"
+        onClick={() => navigate('/game/home')}
+      >
         대전 시작하기
       </button>
     </div>
