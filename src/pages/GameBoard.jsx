@@ -269,24 +269,27 @@ function GameBoard() {
         </div>
       </div>
 
-      <div className="legal-moves-chips">
-        {!selectedSquare ? (
-          <span className="legal-move-chip legal-move-chip--empty">
-            말을 선택해주세요
-          </span>
-        ) : legalMovesError ? (
-          <span className="legal-move-chip legal-move-chip--error">
-            이동 가능한 칸을 불러오지 못했습니다. 다시 선택해 주세요
-          </span>
-        ) : legalMoves.length > 0 ? (
-          legalMoves.map((sq) => (
-            <span key={sq} className="legal-move-chip">{sq}</span>
-          ))
-        ) : (
-          <span className="legal-move-chip legal-move-chip--empty">
-            이동 가능한 칸이 없습니다. 다른 말을 선택해 주세요
-          </span>
-        )}
+      <div className="legal-moves-box">
+        <p className="legal-moves-title">나이트가 이동 가능한 칸</p>
+        <div className="legal-moves-chips">
+          {!selectedSquare ? (
+            <span className="legal-move-chip legal-move-chip--empty">
+              말을 선택해주세요
+            </span>
+          ) : legalMovesError ? (
+            <span className="legal-move-chip legal-move-chip--error">
+              이동 가능한 칸을 불러오지 못했습니다. 다시 선택해 주세요
+            </span>
+          ) : legalMoves.length > 0 ? (
+            legalMoves.map((sq) => (
+              <span key={sq} className="legal-move-chip">{sq}</span>
+            ))
+          ) : (
+            <span className="legal-move-chip legal-move-chip--empty">
+              이동 가능한 칸이 없습니다. 다른 말을 선택해 주세요
+            </span>
+          )}
+        </div>
       </div>
 
       <button
