@@ -75,6 +75,7 @@ export const mockEngravingRequests = [
   {
     id: 1,
     productCode: 'NWdfw25',
+    engravingColor: 'gold',
     product: { optionName: 'L 비세토스 수트케이스', optionLabel: '갈색' },
     engraving: {
       id: 1,
@@ -87,6 +88,7 @@ export const mockEngravingRequests = [
   {
     id: 2,
     productCode: 'PLmxa41',
+    engravingColor: 'silver',
     product: { optionName: '코스믹 스타 오 드 퍼퓸', optionLabel: '75ml' },
     engraving: {
       id: 2,
