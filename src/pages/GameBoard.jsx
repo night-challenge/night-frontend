@@ -64,8 +64,9 @@ function GameBoard() {
   )
   const [selectedSquare, setSelectedSquare] = useState(null)
   const [legalMoves, setLegalMoves] = useState([])
+  const [legalMovesError, setLegalMovesError] = useState(false) // 추가
   const [targetSquare, setTargetSquare] = useState(null)
-  const [loading, setLoading] = useState(!initialGameState)
+  const [loading, setLoading] = useState(true)
   const [errorMsg, setErrorMsg] = useState(null)
   const [lastMoveMsg, setLastMoveMsg] = useState(null)
 
@@ -87,11 +88,8 @@ function GameBoard() {
   }, [gameSessionId])
 
   useEffect(() => {
-    if (!initialGameState) {
       syncGameState()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    }, [syncGameState])
 
   const fetchLegalMoves = useCallback(async (square) => {
     try {
@@ -99,7 +97,7 @@ function GameBoard() {
       return res.data.data?.legalMoves ?? res.data.legalMoves ?? []
     } catch (err) {
       console.error(err)
-      return []
+      return null   // ← 실패는 null로 구분
     }
   }, [gameSessionId])
 
@@ -118,8 +116,15 @@ function GameBoard() {
       setSelectedSquare(square)
       setTargetSquare(null)
       setErrorMsg(null)
+      setLegalMovesError(false)
+      setLegalMoves([])
+
       const moves = await fetchLegalMoves(square)
-      setLegalMoves(moves)
+      if (moves === null) {
+        setLegalMovesError(true)  // 추가
+      } else {
+        setLegalMoves(moves)
+      }
       return
     }
 
@@ -264,17 +269,24 @@ function GameBoard() {
         </div>
       </div>
 
-      <div className="legal-moves-box">
-        <p className="legal-moves-title">나이트가 이동 가능한 칸</p>
-        <div className="legal-moves-chips">
-          {legalMoves.length > 0 ? (
-            legalMoves.map((sq) => (
-              <span key={sq} className="legal-move-chip">{sq}</span>
-            ))
-          ) : (
-            <span className="legal-move-chip legal-move-chip--empty">말을 선택해주세요</span>
-          )}
-        </div>
+      <div className="legal-moves-chips">
+        {!selectedSquare ? (
+          <span className="legal-move-chip legal-move-chip--empty">
+            말을 선택해주세요
+          </span>
+        ) : legalMovesError ? (
+          <span className="legal-move-chip legal-move-chip--error">
+            이동 가능한 칸을 불러오지 못했습니다. 다시 선택해 주세요
+          </span>
+        ) : legalMoves.length > 0 ? (
+          legalMoves.map((sq) => (
+            <span key={sq} className="legal-move-chip">{sq}</span>
+          ))
+        ) : (
+          <span className="legal-move-chip legal-move-chip--empty">
+            이동 가능한 칸이 없습니다. 다른 말을 선택해 주세요
+          </span>
+        )}
       </div>
 
       <button
