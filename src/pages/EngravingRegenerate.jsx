@@ -4,6 +4,8 @@ import axios from 'axios'
 import { USE_MOCK } from '../data/mockData'
 import { mockEngravings } from '../data/engravingData'
 import EngravingConstellation from '../components/EngravingConstellation.jsx'
+import ConstellationThumb from '../components/ConstellationThumb.jsx'
+import { buildBeforeGroups } from '../data/beforeGroups'
 import '../styles/EngravingRegenerate.css'
 
 // mock 재생성: 점은 유지하고 연결선만 무작위로 새로 만든다 (매번 다른 모양)
@@ -96,6 +98,12 @@ function EngravingRegenerate() {
     )
   }
 
+  // Before는 게임 끝나고 나온 화면과 똑같이(체스판 격자 + 이동 화살표) 보여준다.
+  // connections 기준으로 나이트별 경로를 분리해서 그룹화(서로 다른 경로끼리 이어지지 않도록).
+  const beforeGroups = beforeData?.points
+    ? buildBeforeGroups(beforeData.points, beforeData.connections)
+    : []
+
   return (
     <div className="regen">
       {/* 헤더 */}
@@ -110,7 +118,7 @@ function EngravingRegenerate() {
       <div className="regen__thumbs">
         <figure className="regen__thumb">
           <div className="regen__thumb-box regen__thumb-box--before">
-            <EngravingConstellation data={beforeData} space="grid" size={155} />
+            <ConstellationThumb data={beforeGroups} size={155} />
           </div>
           <figcaption className="regen__thumb-label">Before</figcaption>
         </figure>

@@ -4,6 +4,8 @@ import axios from 'axios'
 import { USE_MOCK } from '../data/mockData'
 import { mockEngravings } from '../data/engravingData'
 import EngravingConstellation from '../components/EngravingConstellation.jsx'
+import ConstellationThumb from '../components/ConstellationThumb.jsx'
+import { buildBeforeGroups } from '../data/beforeGroups'
 import '../styles/EngravingDetail.css'
 
 function EngravingDetail() {
@@ -99,6 +101,12 @@ function EngravingDetail() {
   const beforeData = engraving.constellationData?.before
   const afterData = engraving.constellationData?.after
 
+  // Before는 게임 끝나고 나온 화면과 똑같이(체스판 격자 + 이동 화살표) 보여준다.
+  // connections 기준으로 나이트별 경로를 분리해서 그룹화(서로 다른 경로끼리 이어지지 않도록).
+  const beforeGroups = beforeData?.points
+    ? buildBeforeGroups(beforeData.points, beforeData.connections)
+    : []
+
   return (
     <div className="detail">
       {/* 헤더: 뒤로가기 + 제목 */}
@@ -113,7 +121,7 @@ function EngravingDetail() {
       <div className="detail__constellations">
         <figure className="detail__const">
           <div className="detail__const-box detail__const-box--before">
-            <EngravingConstellation data={beforeData} space="grid" size={140} />
+            <ConstellationThumb data={beforeGroups} size={140} />
           </div>
           <figcaption className="detail__const-label">Before</figcaption>
         </figure>
@@ -138,8 +146,8 @@ function EngravingDetail() {
         <div className="detail__readonly">{name}</div>
       </section>
 
-      {/* 나만의 각인 이름 입력 */}
-      <section className="detail__field">
+      {/* 나만의 각인 이름 입력 (기존 이름 칸과 18px 거리) */}
+      <section className="detail__field detail__field--new-name">
         <label className="detail__label">나만의 각인 이름 입력</label>
         <div className="detail__input-row">
           <input

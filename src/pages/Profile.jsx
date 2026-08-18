@@ -5,6 +5,7 @@ import { USE_MOCK } from '../data/mockData'
 import { mockMypage, mockEngravings } from '../data/engravingData'
 import cardImage from '../assets/card_image.png'
 import cardText from '../assets/card_txt.png'
+import mcmLogo from '../assets/mcm_logo_loding.png'
 import '../styles/Profile.css'
 
 // 계정 및 설정 항목
@@ -103,7 +104,9 @@ function Profile() {
     <div className="profile">
       {/* 유저 정보 */}
       <section className="profile__user">
-        <div className="profile__avatar" />
+        <div className="profile__avatar">
+          <img src={mcmLogo} alt="MCM" className="profile__avatar-logo" />
+        </div>
         <div className="profile__user-text">
           <p className="profile__nickname">{mypage.nickname}</p>
           <p className="profile__userid">{mypage.userIdDisplay}</p>
@@ -120,7 +123,15 @@ function Profile() {
       </button>
 
       {/* MCM 바로가기 */}
-      <button className="profile__row" onClick={() => {}}>
+      <button
+        className="profile__row"
+        onClick={() =>
+          window.open(
+            'https://kr.mcmworldwide.com/ko_KR/home?srsltid=AfmBOorADtM89tv6Fon_iD3kECEK3yGwZlA79OyAsfRgbo6qXMgzCNjW',
+            '_blank',
+          )
+        }
+      >
         <span>MCM 바로가기 버튼</span>
         <span className="profile__row-chevron">›</span>
       </button>

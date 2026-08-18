@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  padding: 12px 28px 20px;
+  padding: 12px 28px 25px;   /* 아래: '이 디자인으로 결정하기' ~ 하단탭 25px */
   color: #222;
 }
 
@@ -62,11 +62,10 @@
   justify-content: center;
   overflow: hidden;
 }
+/* Before는 ConstellationThumb(게임 탭 공용)이 자체적으로 격자를 그려주므로
+   배경은 단색만 깔아준다 */
 .regen__thumb-box--before {
-  background-color: #1a1a1a;
-  background-image: linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-  background-size: 20px 20px;
+  background: #0d0d0d;
   color: #fff;
 }
 .regen__thumb-box--after {
@@ -74,17 +73,22 @@
   color: #fff;
 }
 .regen__thumb-label {
-  font-size: 13px;
-  font-weight: 500;
   color: #222;
+  text-align: center;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.42px;
 }
 
-/* 큰 미리보기 */
+/* 큰 미리보기 (Before/After 텍스트와 36px, 다시 생성하기 버튼과 20px) */
 .regen__preview {
   align-self: center;
   width: 251px;
   height: 251px;
-  margin: 20px 0;
+  margin: 36px 0 20px;
   border-radius: 10px;
   background: #111;
   color: #fff;
@@ -96,13 +100,22 @@
 /* 다시 생성하기 (작은 버튼, 가운데) */
 .regen__regenerate-btn {
   align-self: center;
-  padding: 12px 28px;
+  height: 37px;
+  padding: 10px 25.5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   border: none;
   border-radius: 8px;
   background: #222;
   color: #fff;
+  font-family: 'Pretendard', sans-serif;
   font-size: 14px;
-  font-weight: 500;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.42px;
   cursor: pointer;
 }
 .regen__regenerate-btn:disabled {
@@ -110,17 +123,25 @@
   cursor: default;
 }
 
-/* 이 디자인으로 결정하기 (하단 풀와이드) */
+/* 이 디자인으로 결정하기 (다시 생성하기 버튼과 43px, 하단탭과도 25px) */
 .regen__confirm-btn {
-  margin-top: auto;
+  margin-top: 43px;
   width: 100%;
-  padding: 16px;
+  height: 37px;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   border: none;
   border-radius: 8px;
   background: #1a1a1a;
   color: #fff;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.42px;
   cursor: pointer;
 }

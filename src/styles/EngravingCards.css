@@ -164,11 +164,20 @@
 .cards__detail-share,
 .cards__detail-save {
   flex: 1;
-  padding: 14px;
+  height: 37px;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   border: none;
   border-radius: 8px;
+  font-family: 'Pretendard', sans-serif;
   font-size: 14px;
-  font-weight: 600;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.42px;
   cursor: pointer;
 }
 .cards__detail-share {
@@ -177,6 +186,6 @@
 }
 .cards__detail-save {
   background: #fff;
-  color: #222;
+  color: #222;       /* 흰 배경이라 텍스트는 어둡게 유지 */
   border: 1px solid #ddd;
 }

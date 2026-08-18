@@ -3,10 +3,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   min-height: 100%;
-  gap: 24px;
-  padding: 0 28px;
+  padding: 117px 28px 0;   /* 첫 줄 ~ 헤더 117px */
 }
 
 .cardresult__state {
@@ -22,11 +20,26 @@
 }
 .cardresult__congrats p {
   margin: 0;
-  font-size: 15px;
-  font-weight: 700;
-  color: #222;
-  line-height: 1.5;
-  letter-spacing: 0.3px;
+  color: #000;
+  text-align: center;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: 0.48px;
+}
+.cardresult__congrats p:first-child {
+  margin-bottom: 11px;   /* 첫째 줄 ~ 둘째 줄 11px */
+}
+
+/* 카드: 축하 문구 둘째 줄과 56px */
+.cardresult__card-wrap {
+  width: 100%;
+  margin-top: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ===== 카드 (레이어로 쌓기) ===== */
@@ -88,23 +101,40 @@
 /* 버튼 2개 */
 .cardresult__buttons {
   display: flex;
-  gap: 12px;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  margin-top: 23px;
 }
 .cardresult__btn {
-  padding: 13px 22px;
+  display: flex;
+  width: 119px;
+  padding: 10px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
   border: none;
-  border-radius: 8px;
-  background: #1a1a1a;
+  border-radius: 5px;
+  background: #222;
   color: #fff;
+  font-family: 'Pretendard', sans-serif;
   font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.3px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.42px;
   cursor: pointer;
 }
 
 /* 안내 문구 */
 .cardresult__help {
-  margin: 0;
-  font-size: 11px;
-  color: #999;
+  margin: 20px 0 0;
+  color: #000;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.3px;
 }

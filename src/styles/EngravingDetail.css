@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  padding: 12px 28px 20px;
+  padding: 12px 28px 35px;   /* 아래: 저장 버튼 ~ 하단탭 35px */
   color: #222;
 }
 
@@ -63,12 +63,10 @@
   justify-content: center;
   overflow: hidden;
 }
-/* Before: 밝은 격자 배경, 어두운 별자리 */
+/* Before: ConstellationThumb(게임 탭 공용)이 자체적으로 격자를 그려주므로
+   배경은 단색만 깔아준다 */
 .detail__const-box--before {
-  background-color: #ececec;
-  background-image: linear-gradient(#dcdcdc 1px, transparent 1px),
-    linear-gradient(90deg, #dcdcdc 1px, transparent 1px);
-  background-size: 20px 20px;
+  background: #ececec;
   color: #555;
 }
 /* After: 검은 배경, 흰 별자리 */
@@ -77,52 +75,67 @@
   color: #fff;
 }
 .detail__const-label {
-  font-size: 13px;
-  font-weight: 500;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
   color: #222;
 }
 
-/* 플레이 스토리 */
+/* 플레이 스토리 (Before/After 첫 줄과 57px 거리) */
 .detail__story {
   text-align: center;
-  margin: 28px 0;
+  margin: 57px 0 28px;
 }
 .detail__story-heading {
-  margin: 0 0 14px;
+  margin: 0 0 10px;          /* 첫 줄 ~ 플레이 키워드 10px */
   font-size: 13px;
   font-weight: 500;
   color: #222;
 }
 .detail__story-keywords {
-  margin: 0 0 14px;
-  font-size: 14px;
-  font-weight: 500;
+  margin: 0 0 30px;          /* 플레이 키워드 ~ 설명글 30px */
   color: #222;
-  letter-spacing: 0.3px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 160%;         /* 19.2px */
+  letter-spacing: 0.36px;
 }
 .detail__story-comment {
   margin: 0;
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 1.6;
   color: #222;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 160%;         /* 19.2px */
+  letter-spacing: 0.36px;
 }
 
 /* 입력 필드 공통 */
 .detail__field {
   margin-top: 20px;
 }
+.detail__field--new-name {
+  margin-top: 18px;          /* 기존 이름 칸 ~ '나만의 각인 이름 입력' 제목 18px */
+}
 .detail__label {
   display: block;
-  margin-bottom: 8px;
-  font-size: 15px;
-  font-weight: 700;
+  margin-bottom: 15px;       /* 제목 ~ 각 입력 칸 15px (둘 다 동일) */
   color: #222;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.48px;
 }
 .detail__readonly {
   padding: 14px;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
+  border-radius: 5px;
+  border: 0.8px solid #B5B5B5;
   background: #fff;
   font-size: 14px;
   color: #222;
@@ -137,8 +150,8 @@
 .detail__input {
   flex: 1;
   padding: 14px;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
+  border-radius: 5px;
+  border: 0.8px solid #B5B5B5;
   font-size: 14px;
   color: #222;
   outline: none;
@@ -158,23 +171,31 @@
   cursor: pointer;
 }
 .detail__help {
-  margin: 8px 0 0;
+  margin: 10px 0 0;          /* 입력 칸 ~ 안내문구 10px */
   font-size: 11px;
   color: #999;
 }
 
-/* 하단 저장 버튼 */
+/* 하단 저장 버튼 (안내문구와 35px, 하단탭과도 35px) */
 .detail__save-btn {
-  margin-top: auto;          /* 맨 아래로 밀기 */
+  margin-top: 35px;
   width: 100%;
-  padding: 16px;
+  height: 37px;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   border: none;
   border-radius: 8px;
   background: #1a1a1a;
   color: #fff;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.42px;
   cursor: pointer;
 }
 /* "변경된 사항이 없습니다" 토스트가 뜰 때만 비활성화 색 */

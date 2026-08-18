@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  padding: 12px 28px 20px;
+  padding: 12px 28px 35px;   /* 아래: 저장 버튼 ~ 하단탭 35px */
   color: #222;
 }
 
@@ -64,11 +64,9 @@
   overflow: hidden;
   cursor: pointer;
 }
+/* ConstellationThumb(게임 탭 공용)이 자체적으로 격자를 그려주므로 배경은 단색만 */
 .naming__const-box--before {
-  background-color: #1a1a1a;
-  background-image: linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-  background-size: 20px 20px;
+  background: #0d0d0d;
   color: #fff;
 }
 .naming__const-box--after {
@@ -76,131 +74,200 @@
   color: #fff;
 }
 .naming__const-label {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  color: #222;
+}
+
+/* 플레이 스토리 (Before/After 첫 줄과 57px 거리) */
+.naming__story {
+  text-align: center;
+  margin: 57px 0 28px;
+}
+.naming__story-heading {
+  margin: 0 0 10px;          /* 첫 줄 ~ 플레이 키워드 10px */
   font-size: 13px;
   font-weight: 500;
   color: #222;
 }
-
-/* 플레이 스토리 */
-.naming__story {
-  text-align: center;
-  margin: 28px 0;
-}
-.naming__story-heading {
-  margin: 0 0 14px;
-  font-size: 13px;
-  font-weight: 500;
-}
 .naming__story-keywords {
-  margin: 0 0 14px;
-  font-size: 14px;
+  margin: 0 0 30px;          /* 플레이 키워드 ~ 설명글 30px */
+  color: #222;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-style: normal;
   font-weight: 500;
-  letter-spacing: 0.3px;
+  line-height: 160%;         /* 19.2px */
+  letter-spacing: 0.36px;
 }
 .naming__story-comment {
   margin: 0;
-  font-size: 13px;
-  line-height: 1.6;
+  color: #222;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 160%;         /* 19.2px */
+  letter-spacing: 0.36px;
 }
 
 /* 필드 공통 */
 .naming__field {
   margin-top: 20px;
 }
+.naming__field--new-name {
+  margin-top: 18px;          /* 위 필드 ~ '나만의 각인 이름 입력' 제목 18px */
+}
 .naming__label {
   display: block;
-  margin-bottom: 6px;
-  font-size: 15px;
+  margin-bottom: 15px;       /* 제목 ~ 아래 내용 15px */
+  color: #222;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 16px;
+  font-style: normal;
   font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.48px;
+}
+.naming__label--no-gap {
+  margin-bottom: 0;          /* 아래 안내문구가 자체 padding-top 8px을 가지므로 */
 }
 .naming__desc {
-  margin: 0 0 8px;
+  margin: 0;
+  padding: 8px 0;            /* 위/아래 컨텐츠와 8px */
+  color: #222;
+  font-family: 'Pretendard', sans-serif;
   font-size: 12px;
-  color: #888;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 166.667% */
+  letter-spacing: 0.36px;
 }
 
-/* AI 추천 이름 박스 */
+/* AI 추천 이름 박스: 컨테이너 자체는 상하좌우 15px, 버튼만 위 35px/아래 15px */
 .naming__ai-box {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  padding: 12px 14px;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
+  padding: 15px;
+  border-radius: 5px;
+  border: 0.8px solid #B5B5B5;
   background: #fff;
 }
 .naming__ai-text {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 .naming__ai-caption {
+  color: #222;
+  font-family: 'Pretendard', sans-serif;
   font-size: 10px;
-  color: #aaa;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 200% */
+  letter-spacing: 0.3px;
 }
 .naming__ai-name {
-  font-size: 14px;
   color: #222;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 142.857% */
+  letter-spacing: 0.42px;
 }
 .naming__ai-btn {
   flex-shrink: 0;
-  padding: 10px 14px;
+  margin-top: 20px;           /* 컨테이너 위 패딩 15px + 20px = 35px */
+  padding: 2px 10px;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   background: #222;
   color: #fff;
-  font-size: 13px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-style: normal;
   font-weight: 500;
+  line-height: 20px; /* 166.667% */
+  letter-spacing: 0.36px;
   cursor: pointer;
 }
 
-/* 직접 입력 */
+/* 직접 입력: 버튼이 입력창 안으로 들어간 형태. 안쪽 콘텐츠는 297x28, 상하좌우 패딩 10px */
 .naming__input-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between; /* 텍스트 ~ 버튼 간격 auto */
+  width: 100%;
+  padding: 10px; /* 상하좌우 10px */
+  border-radius: 5px;
+  border: 0.8px solid #B5B5B5;
+  background: #fff;
+  box-sizing: border-box;
 }
 .naming__input {
   flex: 1;
-  padding: 14px;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
   font-size: 14px;
   color: #222;
   outline: none;
 }
 .naming__input::placeholder {
-  color: #bbb;
+  color: #B5B5B5;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.36px;
 }
 .naming__save-name-btn {
   flex-shrink: 0;
-  padding: 10px 14px;
+  padding: 4px 10px;         /* 상하 패딩만 4px, 이름 사용 버튼과 다름 */
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   background: #222;
   color: #fff;
-  font-size: 13px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-style: normal;
   font-weight: 500;
+  line-height: 20px; /* 166.667% */
+  letter-spacing: 0.36px;
   cursor: pointer;
 }
 .naming__help {
-  margin: 8px 0 0;
+  margin: 10px 0 0;          /* 입력 칸 ~ 안내문구 10px */
   font-size: 11px;
   color: #999;
 }
 
-/* 하단 저장 버튼 */
+/* 하단 저장 버튼 (안내문구와 35px, 하단탭과도 35px) */
 .naming__save-btn {
-  margin-top: auto;
+  margin-top: 35px;
   width: 100%;
-  padding: 16px;
+  height: 37px;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   border: none;
   border-radius: 8px;
   background: #1a1a1a;
   color: #fff;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.42px;
   cursor: pointer;
 }
 .naming__save-btn--inactive {

@@ -2,7 +2,7 @@
 .profile {
   display: flex;
   flex-direction: column;
-  padding: 16px 20px 24px;
+  padding: 25px 20px 24px;   /* 유저 정보 칸 ~ 헤더 25px */
   color: #222;
 }
 
@@ -13,47 +13,71 @@
   font-size: 13px;
 }
 
-/* 유저 정보 */
+/* 유저 정보 (297x52, 상하좌우 패딩 10px, 프사~이름 auto) */
 .profile__user {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 12px 4px;
-  border: 1px solid #eee;
-  border-radius: 10px;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #D9D9D9;
+  margin-bottom: 30px;   /* 신청한 각인 보기와 30px */
 }
 .profile__avatar {
   flex-shrink: 0;
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: #d9d9d9;
-  margin-left: 8px;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.profile__avatar-logo {
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
+  opacity: 0.55; /* 회색빛으로 은은하게 */
 }
 .profile__user-text {
-  flex: 1;
+  align-self: flex-end;   /* 아이디 ~ 컨테이너 아래 10px 고정, 닉네임 ~ 위는 auto */
   text-align: right;
-  padding-right: 12px;
 }
 .profile__nickname {
   margin: 0;
-  font-size: 15px;
-  font-weight: 700;
+  color: #222;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px; /* 142.857% */
+  letter-spacing: 0.42px;
 }
 .profile__userid {
-  margin: 4px 0 0;
-  font-size: 12px;
-  color: #aaa;
+  margin: 0;
+  color: #B5B5B5;
+  text-align: right;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 200% */
+  letter-spacing: 0.3px;
 }
 
 /* 신청한 각인 보기 */
 .profile__request-btn {
-  margin-top: 14px;
+  margin-top: 0;
+  display: flex;
   width: 100%;
-  padding: 14px;
-  border: none;
-  border-radius: 8px;
-  background: #f0f0f0;
+  padding: 13px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  border: 2px solid #D9D9D9;
+  background: #EFEFEF;
   color: #444;
   font-size: 13px;
   font-weight: 500;
@@ -172,13 +196,22 @@
 .profile__save-btn {
   margin-top: 16px;
   width: 100%;
-  padding: 15px;
+  height: 37px;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   border: none;
   border-radius: 8px;
   background: #1a1a1a;
   color: #fff;
+  font-family: 'Pretendard', sans-serif;
   font-size: 14px;
-  font-weight: 600;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.42px;
   cursor: pointer;
 }
 
@@ -191,8 +224,8 @@
   width: 100%;
   padding: 15px 12px;
   margin-bottom: 8px;
-  border: 1px solid #eee;
-  border-radius: 8px;
+  border-radius: 5px;
+  border: 0.8px solid #B5B5B5;
   background: #fff;
   font-size: 13px;
   color: #333;

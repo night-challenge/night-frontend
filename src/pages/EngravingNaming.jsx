@@ -5,6 +5,8 @@ import axios from 'axios'
 import { USE_MOCK } from '../data/mockData'
 import { mockEngravings } from '../data/engravingData'
 import EngravingConstellation from '../components/EngravingConstellation.jsx'
+import ConstellationThumb from '../components/ConstellationThumb.jsx'
+import { buildBeforeGroups } from '../data/beforeGroups'
 import '../styles/EngravingNaming.css'
 
 function EngravingNaming() {
@@ -93,6 +95,12 @@ function EngravingNaming() {
   const afterData = engraving.constellationData.after
   const aiName = engraving.constellationName // AI가 각인 생성 시 지어준 이름
 
+  // Before는 게임 끝나고 나온 화면과 똑같이(체스판 격자 + 이동 화살표) 보여준다.
+  // connections 기준으로 나이트별 경로를 분리해서 그룹화(서로 다른 경로끼리 이어지지 않도록).
+  const beforeGroups = beforeData?.points
+    ? buildBeforeGroups(beforeData.points, beforeData.connections)
+    : []
+
   return (
     <div className="naming">
       {/* 헤더 */}
@@ -110,7 +118,7 @@ function EngravingNaming() {
             className="naming__const-box naming__const-box--before"
             onClick={() => setZoom({ data: beforeData, space: 'grid' })}
           >
-            <EngravingConstellation data={beforeData} space="grid" size={140} />
+            <ConstellationThumb data={beforeGroups} size={140} />
           </div>
           <figcaption className="naming__const-label">Before</figcaption>
         </figure>
@@ -134,7 +142,7 @@ function EngravingNaming() {
 
       {/* 각인 이름 짓기 (AI 추천) */}
       <section className="naming__field">
-        <label className="naming__label">각인 이름 짓기</label>
+        <label className="naming__label naming__label--no-gap">각인 이름 짓기</label>
         <p className="naming__desc">AI가 추천한 이름을 사용하거나 직접 입력하세요.</p>
         <div className="naming__ai-box">
           <div className="naming__ai-text">
@@ -147,8 +155,8 @@ function EngravingNaming() {
         </div>
       </section>
 
-      {/* 나만의 각인 이름 입력 */}
-      <section className="naming__field">
+      {/* 나만의 각인 이름 입력 (위 필드와 18px 거리) */}
+      <section className="naming__field naming__field--new-name">
         <label className="naming__label">나만의 각인 이름 입력</label>
         <div className="naming__input-row">
           <input
@@ -195,7 +203,18 @@ function EngravingNaming() {
                 <span className="naming__lightbox-close-bar" />
                 <span className="naming__lightbox-close-bar" />
               </button>
-              <EngravingConstellation data={zoom.data} space={zoom.space} size={290} />
+              {zoom.space === 'grid' ? (
+                <ConstellationThumb
+                  data={
+                    zoom.data?.points
+                      ? buildBeforeGroups(zoom.data.points, zoom.data.connections)
+                      : []
+                  }
+                  size={290}
+                />
+              ) : (
+                <EngravingConstellation data={zoom.data} space={zoom.space} size={290} />
+              )}
             </div>
           </div>,
           document.querySelector('.phone-frame') || document.body,
