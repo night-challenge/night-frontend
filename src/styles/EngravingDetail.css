@@ -141,17 +141,25 @@
   color: #222;
 }
 
+/* 5.2와 동일하게 버튼이 입력창 안으로 들어간 형태 */
 .detail__input-row {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between; /* 텍스트 ~ 버튼 간격 auto */
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 0.8px solid #B5B5B5;
+  background: #fff;
+  box-sizing: border-box;
 }
 .detail__input {
   flex: 1;
-  padding: 14px;
-  border-radius: 5px;
-  border: 0.8px solid #B5B5B5;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
   font-size: 14px;
   color: #222;
   outline: none;
@@ -161,13 +169,17 @@
 }
 .detail__edit-btn {
   flex-shrink: 0;
-  padding: 10px 14px;
+  padding: 4px 10px;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   background: #222;
   color: #fff;
-  font-size: 13px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-style: normal;
   font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.36px;
   cursor: pointer;
 }
 .detail__help {

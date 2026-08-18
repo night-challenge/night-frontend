@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { USE_MOCK } from '../data/mockData'
@@ -51,8 +52,8 @@ function Constellation({ after, className }) {
 // 원형 휠 배치 파라미터
 const CX = -173 // 원 중심 x (왼쪽 화면 바깥) → 앞 카드가 가운데로 오게
 const RADIUS = 340 // 반지름
-const STEP = 26 // 카드 사이 각도(도)
-const MIN_SLOTS = 9 // 휠을 채우는 최소 슬롯 수 (부족분은 검은 플레이스홀더)
+const STEP = 27 // 카드 사이 각도(도) — 카드 사이 간격을 좀 더 벌림
+const PAD_PER_SIDE = 3 // 카드가 몇 개든 상관없이 위/아래에 항상 검은 카드가 보이게 고정 패딩
 const DRAG_SENS = 0.28 // 드래그 1px당 회전 각도
 
 function EngravingCards() {
@@ -91,27 +92,26 @@ function EngravingCards() {
     fetchCards()
   }, [])
 
-  // 검은 플레이스홀더를 실제 카드 앞/뒤로 나눠서 채운다 (앞뒤 대칭) →
-  // 처음 들어왔을 때부터 맨 앞 카드(최신) 위아래로 검은 카드가 하나씩 보이게
-  const totalPad = Math.max(0, MIN_SLOTS - cards.length)
-  const padBefore = Math.floor(totalPad / 2)
-  const padAfter = totalPad - padBefore
+  // 검은 플레이스홀더를 실제 카드 앞/뒤로 항상 고정 개수만큼 채운다 →
+  // 카드가 몇 장이든(9장이 넘어도) 맨 위/맨 아래로 끝까지 스크롤해도
+  // 항상 검은 카드가 보이게(리스트가 꽉 차서 끝나 보이지 않도록)
   const slots = [
-    ...Array.from({ length: padBefore }, (_, i) => ({
+    ...Array.from({ length: PAD_PER_SIDE }, (_, i) => ({
       placeholder: true,
       id: `placeholder-b-${i}`,
     })),
     ...cards,
-    ...Array.from({ length: padAfter }, (_, i) => ({
+    ...Array.from({ length: PAD_PER_SIDE }, (_, i) => ({
       placeholder: true,
       id: `placeholder-a-${i}`,
     })),
   ]
 
-  // 카드 로딩 끝나면 맨 처음 실제 카드(최신)가 정면에 오도록 회전값 초기화
+  // 카드 로딩 끝나면 카드 목록의 정 가운데 카드가 정면에 오도록 회전값 초기화
   useEffect(() => {
     if (cards.length > 0) {
-      setRotation(padBefore * STEP)
+      const middleOffset = Math.floor((cards.length - 1) / 2)
+      setRotation((PAD_PER_SIDE + middleOffset) * STEP)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cards.length])
@@ -245,8 +245,11 @@ function EngravingCards() {
           )
         })}
 
-        {/* 카드 선택 시 상세 오버레이 (화면 9.3) */}
-        {detail && (
+      </div>
+
+      {/* 카드 선택 시 상세 오버레이 (화면 9.3) — 헤더/하단 탭까지 다 덮도록 폰 프레임 전체에 렌더 */}
+      {detail &&
+        createPortal(
           <div
             className="cards__detail"
             onClick={() => setDetail(null)}
@@ -258,14 +261,14 @@ function EngravingCards() {
             >
               <div className="cards__detail-card">
                 <img src={cardImage} alt="" className="cards__card-bg" />
-                <div className="cards__card-const">
+                <div className="cards__detail-const">
                   <Constellation
                     after={detail.constellationData?.after}
                     className="cards__card-svg"
                   />
                 </div>
-                <img src={cardText} alt="" className="cards__card-logo" />
-                <span className="cards__card-name">
+                <img src={cardText} alt="" className="cards__detail-logo" />
+                <span className="cards__detail-name">
                   {detail.constellationName}
                 </span>
               </div>
@@ -292,9 +295,9 @@ function EngravingCards() {
                 </button>
               </div>
             </div>
-          </div>
+          </div>,
+          document.querySelector('.phone-frame') || document.body,
         )}
-      </div>
     </div>
   )
 }

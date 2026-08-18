@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { USE_MOCK } from '../data/mockData'
@@ -9,6 +9,13 @@ import bag from '../assets/bag_brown_detail.svg'
 import airpod from '../assets/lifestyle_airpod_case_detail.svg'
 import mcmLogo from '../assets/mcm_logo_loding.png'
 import '../styles/EngravingRequests.css'
+
+// engravingColor(gold/silver/black) → 화면에 보여줄 한국어 색상명
+const ENGRAVING_COLOR_LABEL = {
+  gold: '금색',
+  silver: '은색',
+  black: '검정색',
+}
 
 // product.optionName 으로 제품 이미지 매핑 (API가 이미지 URL을 주지 않으므로 프론트에서 매핑)
 function getProductImage(product) {
@@ -66,6 +73,15 @@ function EngravingRequests() {
   const [records, setRecords] = useState([])
   const [index, setIndex] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [toast, setToast] = useState(null) // 토스트 { id, msg }
+  const toastTimer = useRef(null)
+
+  // 토스트 잠깐 보여주기 (매번 새 id로 애니메이션 재시작)
+  const showToast = (message) => {
+    setToast({ id: Date.now(), msg: message })
+    if (toastTimer.current) clearTimeout(toastTimer.current)
+    toastTimer.current = setTimeout(() => setToast(null), 2000)
+  }
 
   // 신청 목록 조회: GET /api/engraving-requests?status=신청완료
   useEffect(() => {
@@ -105,8 +121,10 @@ function EngravingRequests() {
       const next = records.filter((_, i) => i !== index)
       setRecords(next)
       setIndex((prev) => Math.min(prev, Math.max(0, next.length - 1)))
+      showToast('취소가 완료되었습니다.')
     } catch (err) {
       console.error('신청 취소 실패:', err)
+      showToast(err.response?.data?.message || '취소에 실패했어요.')
     }
   }
 
@@ -140,6 +158,13 @@ function EngravingRequests() {
         <button className="req__empty-btn" onClick={() => navigate('/game')}>
           게임하러 가기
         </button>
+
+        {/* 토스트 */}
+        {toast && (
+          <div key={toast.id} className="req__toast">
+            {toast.msg}
+          </div>
+        )}
       </div>
     )
   }
@@ -178,6 +203,11 @@ function EngravingRequests() {
             className="req__product-img"
           />
         </div>
+        {record.engravingColor && (
+          <p className="req__product-color">
+            각인 색상: {ENGRAVING_COLOR_LABEL[record.engravingColor] || record.engravingColor}
+          </p>
+        )}
       </section>
 
       {/* 선택한 각인 */}
@@ -229,6 +259,13 @@ function EngravingRequests() {
       <button className="req__cancel-btn" onClick={handleCancel}>
         신청 각인 취소하기
       </button>
+
+      {/* 토스트 */}
+      {toast && (
+        <div key={toast.id} className="req__toast">
+          {toast.msg}
+        </div>
+      )}
     </div>
   )
 }
