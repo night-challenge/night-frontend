@@ -64,10 +64,10 @@
   overflow: hidden;
 }
 /* Before: ConstellationThumb(게임 탭 공용)이 자체적으로 격자를 그려주므로
-   배경은 단색만 깔아준다 */
+   배경은 단색만 깔아준다. 5.1/5.2와 동일하게 검정 배경 + 흰 궤적으로 통일 */
 .detail__const-box--before {
-  background: #ececec;
-  color: #555;
+  background: #0d0d0d;
+  color: #fff;
 }
 /* After: 검은 배경, 흰 별자리 */
 .detail__const-box--after {
