@@ -3,12 +3,11 @@
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  padding: 12px 0 0;    /* 좌우/아래 여백 없앰 → 카드 휠이 화면 끝까지 꽉 차게 */
+  padding: 12px 20px 20px;
   color: #222;
-  overflow: hidden;
 }
 
-/* 헤더 (여기만 좌우 여백 살려둠) */
+/* 헤더 */
 .cards__header {
   position: relative;
   display: flex;
@@ -16,7 +15,6 @@
   justify-content: center;
   height: 32px;
   margin-bottom: 8px;
-  padding: 0 20px;
 }
 .cards__back {
   position: absolute;
@@ -35,43 +33,33 @@
   letter-spacing: 0.4px;
 }
 
-/* 카드 휠 (원형 배치의 무대) */
-.cards__deck {
-  flex: 1;
-  position: relative;
-  overflow: hidden;
-  cursor: grab;
-  touch-action: none; /* 모바일 드래그 시 스크롤 방지 */
-}
-.cards__deck.is-dragging {
-  cursor: grabbing;
+.cards__state {
+  margin: 60px 0;
+  text-align: center;
+  color: #999;
+  font-size: 13px;
 }
 
-/* 카드 한 장 (기본: 검은 뒷면) — 원 위에 절대 배치 */
-.cards__card {
-  position: absolute;
-  width: 183px;
-  height: 101px;
+/* 카드가 겹치지 않고 몇 장이든 계속 아래로 쌓이는 세로 리스트 */
+.cards__list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* 카드 한 장 (목록에 쌓이는 형태) */
+.cards__item {
+  position: relative;
+  width: 319px;
+  height: 191px;
+  flex-shrink: 0;
   border-radius: 8px;
   background: #1a1a1a;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
   overflow: hidden;
-  transition: left 0.35s ease, top 0.35s ease, transform 0.35s ease;
-}
-/* 드래그 중엔 손가락 따라 즉시 움직이게 (부드러운 스냅은 놓을 때만) */
-.cards__deck.is-dragging .cards__card {
-  transition: none;
-}
-
-/* 선택된 카드 (앞면, 빨강) */
-.cards__card--active {
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4);
-}
-
-/* 아직 생성되지 않은 카드 (검은 플레이스홀더) */
-.cards__card--empty {
-  background: #1a1a1a;
-  cursor: default;
+  cursor: pointer;
 }
 
 .cards__card-bg {
@@ -81,35 +69,10 @@
   height: 100%;
   object-fit: cover;
 }
-.cards__card-const {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  width: 116px;
-  height: 81px;
-  color: #fff;
-  z-index: 1;
-}
 .cards__card-svg {
   width: 100%;
   height: 100%;
   display: block;
-}
-.cards__card-logo {
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  width: 51px;
-  height: auto;
-  z-index: 2;
-}
-.cards__card-name {
-  position: absolute;
-  left: 40px;
-  bottom: 6px;
-  font-size: 8px;
-  color: #fff;
-  z-index: 3;
 }
 
 /* ===== 카드 선택 상세 오버레이 (화면 9.3) ===== */
@@ -138,7 +101,7 @@
   overflow: hidden;
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4);
 }
-/* 확대 카드(300x180) 전용 — 목록 카드(183x101)와 크기가 달라 별도 클래스로 분리 */
+/* 큰 카드(리스트 아이템 319x191 / 확대 카드 300x180) 공용 — 크기가 비슷해서 같이 씀 */
 .cards__detail-const {
   position: absolute;
   top: 10px;
