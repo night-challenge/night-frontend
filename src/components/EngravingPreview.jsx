@@ -9,10 +9,10 @@ const ENGRAVING_POSITION = {
 }
 
 const ENGRAVING_SIZE = {
-  '가방': { width: 24, height: 24 },
-  '트래블': { width: 24, height: 24 },
-  '라이프스타일': { width: 24, height: 24 },
-  '패션소품': { width: 24, height: 24 },
+  '가방': { width: 14, height: 14 },
+  '트래블': { width: 24, height: 23 },
+  '라이프스타일': { width: 24, height: 20 },
+  '패션소품': { width: 24, height: 20 },
 }
 
 // 좌표 계산 기준이 되는 원본 캔버스 크기 (Figma 기준값, 실제 화면 표시 크기 아님!)
