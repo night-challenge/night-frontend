@@ -1,15 +1,13 @@
 import '../styles/EngravingPreview.css'
 
 // Figma 기준 좌표 (px, 140x160 캔버스 기준) — 각 카테고리의 모든 옵션(색상 등)에 공통 적용
-// ⚠️ 이 값도 각인 오버레이가 가방 아래 흰 여백에 찍히는 문제가 있어 재확인 필요
 const ENGRAVING_POSITION = {
   '가방': { x: 59, y: 103 },
   '트래블': { x: 59, y: 70 },
-  '라이프스타일': { x: 59, y: 107 },
-  '패션소품': { x: 56, y: 59 },
+  '라이프스타일': { x: 59, y: 100 },
+  '패션소품': { x: 56, y: 70 },
 }
 
-// TODO: 카테고리별 실제 각인 표시 크기(width/height, px) 확인 필요 — 지금은 임시값
 const ENGRAVING_SIZE = {
   '가방': { width: 24, height: 24 },
   '트래블': { width: 24, height: 24 },
