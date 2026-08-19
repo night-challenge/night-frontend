@@ -51,9 +51,17 @@ function Constellation({ after, className }) {
 }
 
 // 원형 휠 배치 파라미터
-const CX = -313 // 원 중심 x (왼쪽 화면 바깥) → 앞 카드가 가운데로 오게
-const RADIUS = 480 // 반지름 — 카드가 많아져도 서로 안 겹치도록 넉넉하게 키움
-const STEP = 27 // 카드 사이 각도(도)
+// ⚠️ 예전엔 세로 위치까지 원(RADIUS*sin(각도))으로 계산해서, 중심에서 먼 카드일수록
+// (각도가 90도에 가까워질수록) sin 곡선이 평평해지면서 카드 사이 세로 간격이
+// 저절로 줄어드는 구조였다 — RADIUS를 아무리 키워도 카드가 많아지면 결국
+// 바깥쪽 카드들끼리 다시 겹쳤던 원인이 이거. 그래서 세로 위치(topOffset)는
+// SPACING으로 무조건 균등하게 고정하고, 기울기/좌우 곡선(휘어짐)만 원형 계산을
+// 쓰되 일정 각도 이상은 더 안 벌어지게 클램프해서 "부채꼴처럼 보이는 효과"만 남긴다.
+const CX = -93 // 좌우 곡선 원점 x
+const RADIUS = 260 // 좌우 곡선(휘어짐) 반지름 — 세로 간격엔 영향 없음
+const STEP = 27 // 카드 한 칸당 각도(도) — 기울기/곡선 계산용
+const MAX_TILT = 22 // 기울기·좌우 곡선이 이 각도에서 더 이상 안 커짐(카드가 회전으로 서로 침범하지 않게)
+const SPACING = 190 // 카드 사이 세로 간격(px, 항상 고정) — 카드가 몇 장이든 이 간격은 절대 안 줄어듦
 const PAD_PER_SIDE = 3 // 카드가 몇 개든 상관없이 위/아래에 항상 검은 카드가 보이게 고정 패딩
 const DRAG_SENS = 0.28 // 드래그 1px당 회전 각도
 
@@ -210,10 +218,12 @@ function EngravingCards() {
         onPointerCancel={onPointerUp}
       >
         {slots.map((slot, i) => {
-          const angle = i * STEP - rotation // 정면=0
-          const rad = (angle * Math.PI) / 180
+          const rawAngle = i * STEP - rotation // 정면=0, 카드 몇 칸 떨어졌는지(연속값)
+          const offsetSteps = rawAngle / STEP // 정면에서 몇 칸 떨어졌는지(부호 있음)
+          const tiltAngle = Math.max(-MAX_TILT, Math.min(MAX_TILT, rawAngle)) // 기울기·곡선은 여기서 멈춤
+          const rad = (tiltAngle * Math.PI) / 180
           const left = CX + RADIUS * Math.cos(rad)
-          const topOffset = RADIUS * Math.sin(rad)
+          const topOffset = offsetSteps * SPACING // 세로 간격은 항상 고정 → 절대 안 겹침
           const active = !slot.placeholder && i === activeIndex
           return (
             <div
@@ -224,7 +234,7 @@ function EngravingCards() {
               style={{
                 left: `${left}px`,
                 top: `calc(50% + ${topOffset}px)`,
-                transform: `translate(-50%, -50%) rotate(${angle}deg)${
+                transform: `translate(-50%, -50%) rotate(${tiltAngle}deg)${
                   active ? ' scale(1.06)' : ''
                 }`,
                 zIndex: active ? 100 : 50 - Math.abs(i - activeIndex),
