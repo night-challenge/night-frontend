@@ -5,11 +5,13 @@ import axios from 'axios'
 import { thumbMap, detailImageMap, engravingBaseImageMap } from '../data/productAssets'
 import EngravingConstellation from '../components/EngravingConstellation'
 import EngravingPreview from '../components/EngravingPreview'
+import EngravingRequestLoadingScreen from '../components/EngravingRequestLoadingScreen'
 import '../styles/ProductDetail.css'
 import { USE_MOCK, mockProductDetails } from '../data/mockData'
 import { mockEngravings } from '../data/engravingData'
 
 const PAGE_SIZE = 4
+
 const COLORS = [
   { key: 'gold', label: '골드', hex: '#E8A33D' },
   { key: 'silver', label: '실버', hex: '#B0B0B0' },
@@ -35,19 +37,27 @@ function ProductDetail() {
   const [submitError, setSubmitError] = useState(null)
   const [submitSuccess, setSubmitSuccess] = useState(null)
   const [submitting, setSubmitting] = useState(false)
-  const [showColorModal, setShowColorModal] = useState(false)
-  const [showToast, setShowToast] = useState(false)   
-  
 
-  // 7. 제품 상세 조회
+  const [showColorModal, setShowColorModal] = useState(false)
+  const [showToast, setShowToast] = useState(false)
+
+  // 신청 성공 후 로딩 화면 표시 여부
+  const [showLoading, setShowLoading] = useState(false)
+
+  // 제품 상세 조회
   useEffect(() => {
     const fetchProduct = async () => {
       setProductLoading(true)
       setProductError(null)
+
       try {
         if (USE_MOCK) {
           const detail = mockProductDetails[optionId]
-          if (!detail) throw new Error('존재하지 않는 제품입니다.')
+
+          if (!detail) {
+            throw new Error('존재하지 않는 제품입니다.')
+          }
+
           setProduct(detail)
         } else {
           const res = await axios.get(`/api/products/options/${optionId}`)
@@ -55,12 +65,15 @@ function ProductDetail() {
         }
       } catch (err) {
         setProductError(
-          err.response?.data?.message || err.message || '제품 정보를 불러오지 못했습니다.'
+          err.response?.data?.message ||
+            err.message ||
+            '제품 정보를 불러오지 못했습니다.'
         )
       } finally {
         setProductLoading(false)
       }
     }
+
     fetchProduct()
   }, [optionId])
 
@@ -72,18 +85,21 @@ function ProductDetail() {
     setSubmitting(false)
     setShowColorModal(false)
     setShowToast(false)
+    setShowLoading(false)
   }, [optionId])
 
   const handleConfirmColor = () => {
     setShowColorModal(false)
     setShowToast(true)
+
     setTimeout(() => setShowToast(false), 1500)
   }
 
-  // 각인 리스트 조회 (화면 5, 8 공통 API)
+  // 각인 리스트 조회
   useEffect(() => {
     const fetchEngravings = async () => {
       setEngravingLoading(true)
+
       try {
         if (USE_MOCK) {
           setEngravings(mockEngravings)
@@ -97,8 +113,10 @@ function ProductDetail() {
         setEngravingLoading(false)
       }
     }
+
     fetchEngravings()
   }, [])
+
   const siblingOptions = location.state?.siblingOptions || []
 
   const labelKey = product?.optionLabel ?? '기본'
@@ -113,49 +131,82 @@ function ProductDetail() {
       ? engravingBaseImageMap[category]?.[labelKey]
       : null
 
-  // 현재 선택된 각인 레코드 (별자리 points/connections 포함)
-  const selectedRecord = engravings.find((e) => e.id === selectedRecordId) || null
+  // 현재 선택된 각인 레코드
+  const selectedRecord =
+    engravings.find((e) => e.id === selectedRecordId) || null
+
   const selectedConstellationData =
-    selectedRecord?.constellationData?.after ?? selectedRecord?.constellationData ?? null
+    selectedRecord?.constellationData?.after ??
+    selectedRecord?.constellationData ??
+    null
 
   const handleThumbClick = (newId) => {
     if (String(newId) === String(optionId)) return
+
     navigate(`/product/${newId}`, {
       replace: true,
-      state: { category, siblingOptions },
+      state: {
+        category,
+        siblingOptions,
+      },
     })
   }
 
-  const totalPages = Math.max(1, Math.ceil(engravings.length / PAGE_SIZE))
+  const totalPages = Math.max(
+    1,
+    Math.ceil(engravings.length / PAGE_SIZE)
+  )
+
   const pagedEngravings = engravings.slice(
     page * PAGE_SIZE,
     page * PAGE_SIZE + PAGE_SIZE
   )
 
-  const canSubmit = selectedRecordId && selectedColor && !submitting
+  const canSubmit =
+    selectedRecordId &&
+    selectedColor &&
+    !submitting
 
+  // 신청하기 버튼
   const handleSubmit = async () => {
     if (!canSubmit) return
+
     setSubmitting(true)
     setSubmitError(null)
+
     try {
       const res = await axios.post('/api/engraving-requests', {
         nightPathRecordId: selectedRecordId,
         productOptionId: Number(optionId),
         engravingColor: selectedColor,
       })
+
+      // 신청 성공
       setSubmitSuccess(res.data.data.productCode)
+
+      // 신청 성공 후 로딩 화면 표시
+      setShowLoading(true)
     } catch (err) {
       setSubmitError(
-        err.response?.data?.message || '신청 중 오류가 발생했습니다.'
+        err.response?.data?.message ||
+          '신청 중 오류가 발생했습니다.'
       )
     } finally {
       setSubmitting(false)
     }
   }
 
+  // LoadingScreen이 2초 후 호출하는 함수
+  const handleLoadingDone = () => {
+    setShowLoading(false)
+  }
+
   if (productLoading) {
-    return <div className="product-detail__status">불러오는 중...</div>
+    return (
+      <div className="product-detail__status">
+        불러오는 중...
+      </div>
+    )
   }
 
   if (productError || !product) {
@@ -168,6 +219,12 @@ function ProductDetail() {
 
   return (
     <div className="product-detail">
+
+      {/* 신청 성공 후 2초간 로딩 화면 */}
+      {showLoading && (
+        <EngravingRequestLoadingScreen onDone={handleLoadingDone} />
+      )}
+
       <header className="product-detail__topbar">
         <button
           className="product-detail__back"
@@ -176,7 +233,10 @@ function ProductDetail() {
         >
           ‹
         </button>
-        <h1 className="product-detail__topbar-title">제품 더보기</h1>
+
+        <h1 className="product-detail__topbar-title">
+          제품 더보기
+        </h1>
       </header>
 
       <div className="product-detail__image-area">
@@ -193,18 +253,30 @@ function ProductDetail() {
         {siblingOptions.length > 1 && (
           <div className="product-detail__thumbnails">
             {siblingOptions.map((opt) => {
-              const thumbSrc = category && thumbMap[category]?.[opt.label ?? '기본']
-              const isActive = String(opt.id) === String(optionId)
+              const thumbSrc =
+                category &&
+                thumbMap[category]?.[opt.label ?? '기본']
+
+              const isActive =
+                String(opt.id) === String(optionId)
+
               return (
                 <button
                   key={opt.id}
                   className={
                     'product-detail__thumb-btn' +
-                    (isActive ? ' product-detail__thumb-btn--active' : '')
+                    (isActive
+                      ? ' product-detail__thumb-btn--active'
+                      : '')
                   }
                   onClick={() => handleThumbClick(opt.id)}
                 >
-                  {thumbSrc && <img src={thumbSrc} alt={opt.label} />}
+                  {thumbSrc && (
+                    <img
+                      src={thumbSrc}
+                      alt={opt.label}
+                    />
+                  )}
                 </button>
               )
             })}
@@ -212,22 +284,43 @@ function ProductDetail() {
         )}
       </div>
 
-      <h2 className="product-detail__name">{product.optionName}</h2>
+      <h2 className="product-detail__name">
+        {product.optionName}
+      </h2>
+
       <p className="product-detail__price">
         ₩{product.price.toLocaleString('ko-KR')}
       </p>
 
       <section className="product-detail__section">
-        <h3 className="product-detail__section-title">제품 상세정보</h3>
-        {product.description.split('\n').map((line, idx) =>
-          line.trim() ? <p key={idx} className="product-detail__desc-line">{line}</p> : null
-        )}
+        <h3 className="product-detail__section-title">
+          제품 상세정보
+        </h3>
+
+        {product.description
+          .split('\n')
+          .map((line, idx) =>
+            line.trim() ? (
+              <p
+                key={idx}
+                className="product-detail__desc-line"
+              >
+                {line}
+              </p>
+            ) : null
+          )}
       </section>
 
       <section className="product-detail__section">
-        <h3 className="product-detail__section-title">제품에 새길 각인 선택하기</h3>
+        <h3 className="product-detail__section-title">
+          제품에 새길 각인 선택하기
+        </h3>
 
-        {engravingLoading && <p className="product-detail__status-inline">각인 목록 불러오는 중...</p>}
+        {engravingLoading && (
+          <p className="product-detail__status-inline">
+            각인 목록 불러오는 중...
+          </p>
+        )}
 
         {!engravingLoading && engravings.length === 0 && (
           <p className="product-detail__status-inline">
@@ -243,25 +336,42 @@ function ProductDetail() {
                   key={record.id}
                   className={
                     'engraving-card' +
-                    (selectedRecordId === record.id ? ' engraving-card--active' : '')
+                    (selectedRecordId === record.id
+                      ? ' engraving-card--active'
+                      : '')
                   }
-                  onClick={() => setSelectedRecordId(record.id)}
+                  onClick={() =>
+                    setSelectedRecordId(record.id)
+                  }
                 >
                   <div className="engraving-card__thumb">
                     <EngravingConstellation
-                      data={record.constellationData?.after ?? record.constellationData}
+                      data={
+                        record.constellationData?.after ??
+                        record.constellationData
+                      }
                       space="canvas"
                       size={56}
                     />
                   </div>
+
                   <div className="engraving-card__text">
-                    <p className="engraving-card__name">{record.constellationName}</p>
+                    <p className="engraving-card__name">
+                      {record.constellationName}
+                    </p>
+
                     <p className="engraving-card__keywords">
                       {record.keywords.join(' · ')}
                     </p>
-                    <p className="engraving-card__comment">{record.comment}</p>
+
+                    <p className="engraving-card__comment">
+                      {record.comment}
+                    </p>
                   </div>
-                  <span className="engraving-card__chevron">›</span>
+
+                  <span className="engraving-card__chevron">
+                    ›
+                  </span>
                 </button>
               ))}
             </div>
@@ -269,14 +379,22 @@ function ProductDetail() {
             {totalPages > 1 && (
               <div className="engraving-pager">
                 <button
-                  onClick={() => setPage((p) => Math.max(0, p - 1))}
+                  onClick={() =>
+                    setPage((p) => Math.max(0, p - 1))
+                  }
                   disabled={page === 0}
                 >
                   ‹
                 </button>
+
                 <span>{page + 1}</span>
+
                 <button
-                  onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+                  onClick={() =>
+                    setPage((p) =>
+                      Math.min(totalPages - 1, p + 1)
+                    )
+                  }
                   disabled={page === totalPages - 1}
                 >
                   ›
@@ -291,12 +409,16 @@ function ProductDetail() {
         <h3 className="product-detail__section-title product-detail__section-title--center">
           각인할 색 선정하기
         </h3>
+
         <div className="color-picker">
           {COLORS.map((c) => (
             <button
               key={c.key}
               className={
-                'color-swatch' + (selectedColor === c.key ? ' color-swatch--active' : '')
+                'color-swatch' +
+                (selectedColor === c.key
+                  ? ' color-swatch--active'
+                  : '')
               }
               style={{ backgroundColor: c.hex }}
               aria-label={c.label}
@@ -314,7 +436,10 @@ function ProductDetail() {
           className="color-modal-overlay"
           onClick={() => setShowColorModal(false)}
         >
-          <div className="color-modal" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="color-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
             <p className="color-modal__note">
               예시 이미지입니다.
               <br />
@@ -341,7 +466,10 @@ function ProductDetail() {
                 <button
                   key={c.key}
                   className={
-                    'color-swatch' + (selectedColor === c.key ? ' color-swatch--active' : '')
+                    'color-swatch' +
+                    (selectedColor === c.key
+                      ? ' color-swatch--active'
+                      : '')
                   }
                   style={{ backgroundColor: c.hex }}
                   aria-label={c.label}
@@ -362,7 +490,9 @@ function ProductDetail() {
       )}
 
       {showToast && (
-        <div className="toast-message">색상이 선택되었습니다.</div>
+        <div className="toast-message">
+          색상이 선택되었습니다.
+        </div>
       )}
 
       <button className="product-detail__more-link">
@@ -370,7 +500,12 @@ function ProductDetail() {
         <span>›</span>
       </button>
 
-      {submitError && <p className="product-detail__error">{submitError}</p>}
+      {submitError && (
+        <p className="product-detail__error">
+          {submitError}
+        </p>
+      )}
+
       {submitSuccess && (
         <p className="product-detail__success">
           신청 완료! 제품 코드: {submitSuccess}
