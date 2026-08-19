@@ -113,11 +113,11 @@ function Profile() {
         </div>
       </section>
 
-      {/* 신청한 각인 보기 (신청 건 없으면 비활성화) */}
+      {/* 신청한 각인 보기 — 신청 건이 없어도 눌리게 하고, 빈 화면은
+          EngravingRequests 페이지 자체가 처리(신청한 각인이 없습니다 + 게임하러 가기) */}
       <button
         className="profile__request-btn"
         onClick={() => navigate('/engraving-requests')}
-        disabled={!mypage.hasEngravingRequest}
       >
         신청한 각인 보기
       </button>
