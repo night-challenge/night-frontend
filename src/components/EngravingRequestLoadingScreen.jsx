@@ -8,7 +8,7 @@ function EngravingRequestLoadingScreen({ onDone }) {
   onDoneRef.current = onDone
 
   useEffect(() => {
-    const timer = setTimeout(() => onDoneRef.current(), 2000)
+    const timer = setTimeout(() => onDoneRef.current(), 1500)
     return () => clearTimeout(timer)
   }, [])
 
@@ -20,7 +20,7 @@ function EngravingRequestLoadingScreen({ onDone }) {
           alt=""
           className="loading-screen__logo"
         />
-        <p className="loading-screen__label">loding...</p>
+        <p className="loading-screen__label">loading...</p>
       </div>
 
       <div className="loading-screen__tip-box">

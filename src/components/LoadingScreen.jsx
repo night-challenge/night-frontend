@@ -17,7 +17,7 @@ function LoadingScreen({ onDone }) {
   onDoneRef.current = onDone
 
   useEffect(() => {
-    const timer = setTimeout(() => onDoneRef.current(), 2000)
+    const timer = setTimeout(() => onDoneRef.current(), 1500)
     return () => clearTimeout(timer)
   }, [])
 
@@ -25,7 +25,7 @@ function LoadingScreen({ onDone }) {
     <div className="loading-screen">
       <div className="loading-screen__logo-wrap">
         <img src={mcmLogo} alt="" className="loading-screen__logo" />
-        <p className="loading-screen__label">loding...</p>
+        <p className="loading-screen__label">loading...</p>
       </div>
       <div className="loading-screen__tip-box">
         <p className="loading-screen__tip-title">Tip!</p>
