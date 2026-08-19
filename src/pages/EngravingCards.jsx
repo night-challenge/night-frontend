@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
@@ -50,10 +50,19 @@ function Constellation({ after, className }) {
   )
 }
 
+// 원형 휠 배치 파라미터
+const CX = -313 // 원 중심 x (왼쪽 화면 바깥) → 앞 카드가 가운데로 오게
+const RADIUS = 480 // 반지름 — 카드가 많아져도 서로 안 겹치도록 넉넉하게 키움
+const STEP = 27 // 카드 사이 각도(도)
+const PAD_PER_SIDE = 3 // 카드가 몇 개든 상관없이 위/아래에 항상 검은 카드가 보이게 고정 패딩
+const DRAG_SENS = 0.28 // 드래그 1px당 회전 각도
+
 function EngravingCards() {
   const navigate = useNavigate()
   const [cards, setCards] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [rotation, setRotation] = useState(0) // 휠 회전각(도)
+  const [dragging, setDragging] = useState(false)
+  const drag = useRef({ active: false, startY: 0, startRot: 0 })
   const [detail, setDetail] = useState(null) // 선택된 카드 상세(오버레이). null이면 닫힘
   const [saved, setSaved] = useState(false) // "저장되었습니다." 토스트
   const [shareOpen, setShareOpen] = useState(false) // 카드 공유하기 → share 이미지 모달
@@ -80,12 +89,92 @@ function EngravingCards() {
         setCards(sorted)
       } catch (err) {
         console.error('카드 모음 조회 실패:', err)
-      } finally {
-        setLoading(false)
       }
     }
     fetchCards()
   }, [])
+
+  // 검은 플레이스홀더를 실제 카드 앞/뒤로 항상 고정 개수만큼 채운다 →
+  // 카드가 몇 장이든(9장이 넘어도) 맨 위/맨 아래로 끝까지 스크롤해도
+  // 항상 검은 카드가 보이게(리스트가 꽉 차서 끝나 보이지 않도록)
+  const slots = [
+    ...Array.from({ length: PAD_PER_SIDE }, (_, i) => ({
+      placeholder: true,
+      id: `placeholder-b-${i}`,
+    })),
+    ...cards,
+    ...Array.from({ length: PAD_PER_SIDE }, (_, i) => ({
+      placeholder: true,
+      id: `placeholder-a-${i}`,
+    })),
+  ]
+
+  // 카드 로딩 끝나면 카드 목록의 정 가운데 카드가 정면에 오도록 회전값 초기화
+  useEffect(() => {
+    if (cards.length > 0) {
+      const middleOffset = Math.floor((cards.length - 1) / 2)
+      setRotation((PAD_PER_SIDE + middleOffset) * STEP)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cards.length])
+
+  const maxRot = (slots.length - 1) * STEP
+  const clampRot = (r) => Math.max(0, Math.min(r, maxRot))
+  // 정면(각도 0)에 가장 가까운 슬롯이 활성
+  const activeIndex = clampRot(Math.round(rotation / STEP) * STEP) / STEP
+
+  // 실제 카드가 있는 인덱스만 모아서, 놓았을 때 검은 플레이스홀더가 아니라
+  // 항상 실제 카드 중 가장 가까운 것에 스냅되게 함
+  const realIndices = slots.reduce((acc, s, i) => {
+    if (!s.placeholder) acc.push(i)
+    return acc
+  }, [])
+  const snapToNearestReal = (r) => {
+    if (realIndices.length === 0) return clampRot(Math.round(r / STEP) * STEP)
+    let best = realIndices[0]
+    let bestDiff = Infinity
+    for (const idx of realIndices) {
+      const diff = Math.abs(idx * STEP - r)
+      if (diff < bestDiff) {
+        bestDiff = diff
+        best = idx
+      }
+    }
+    return best * STEP
+  }
+
+  // ===== 드래그로 휠 돌리기 =====
+  // (손가락/커서를 아래로 내리면 다음 카드로, 위로 올리면 이전 카드로 넘어가도록
+  //  방향을 반대로 잡아준다 — 예전엔 이게 반대라 위/아래가 뒤집힌 느낌이었음)
+  const onPointerDown = (e) => {
+    drag.current = { active: true, startY: e.clientY, startRot: rotation }
+    setDragging(true)
+    e.currentTarget.setPointerCapture?.(e.pointerId)
+  }
+  const onPointerMove = (e) => {
+    if (!drag.current.active) return
+    const dy = e.clientY - drag.current.startY
+    setRotation(clampRot(drag.current.startRot - dy * DRAG_SENS))
+  }
+  const onPointerUp = (e) => {
+    if (!drag.current.active) return
+    const moved = Math.abs(e.clientY - drag.current.startY)
+    drag.current.active = false
+    setDragging(false)
+    if (moved < 6) {
+      // 거의 안 움직였으면 탭 → 정면 카드 상세 열기
+      const front = slots[activeIndex]
+      if (front && !front.placeholder) openDetail(front)
+    } else {
+      setRotation((r) => snapToNearestReal(r)) // 검은 카드 말고 실제 카드로만 스냅
+    }
+  }
+  // ⚠️ onPointerLeave에서는 드래그를 끝내지 않는다 — pointerdown에서
+  // setPointerCapture를 걸어놨기 때문에, 손가락/커서가 카드 영역 밖으로
+  // 나가도 move/up 이벤트는 계속 이 요소로 들어온다. 근데 pointerleave는
+  // capture와 무관하게 "실제 좌표가 요소 밖으로 나감"을 기준으로 발생해서,
+  // 여기서 드래그를 끊어버리면 세로로 조금만 크게 드래그해도 중간에
+  // 끊기는 문제가 있었다 (드래그가 잘 안 된다는 문제의 원인).
 
   // 카드 상세 조회: GET /api/engravings/{id} (목록엔 keywords가 없어 상세로 받아옴)
   const openDetail = async (card) => {
@@ -113,31 +202,52 @@ function EngravingCards() {
         <h1 className="cards__title">저장된 카드 전체 보기</h1>
       </header>
 
-      {/* 카드가 겹치지 않고 몇 장이든 계속 아래로 쌓이는 세로 리스트 */}
-      <div className="cards__list">
-        {loading ? (
-          <p className="cards__state">불러오는 중...</p>
-        ) : cards.length === 0 ? (
-          <p className="cards__state">아직 저장된 카드가 없어요.</p>
-        ) : (
-          cards.map((card) => (
+      <div
+        className={`cards__deck${dragging ? ' is-dragging' : ''}`}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+      >
+        {slots.map((slot, i) => {
+          const angle = i * STEP - rotation // 정면=0
+          const rad = (angle * Math.PI) / 180
+          const left = CX + RADIUS * Math.cos(rad)
+          const topOffset = RADIUS * Math.sin(rad)
+          const active = !slot.placeholder && i === activeIndex
+          return (
             <div
-              key={card.id}
-              className="cards__item"
-              onClick={() => openDetail(card)}
+              key={slot.id}
+              className={`cards__card${active ? ' cards__card--active' : ''}${
+                slot.placeholder ? ' cards__card--empty' : ''
+              }`}
+              style={{
+                left: `${left}px`,
+                top: `calc(50% + ${topOffset}px)`,
+                transform: `translate(-50%, -50%) rotate(${angle}deg)${
+                  active ? ' scale(1.06)' : ''
+                }`,
+                zIndex: active ? 100 : 50 - Math.abs(i - activeIndex),
+              }}
             >
-              <img src={cardImage} alt="" className="cards__card-bg" />
-              <div className="cards__detail-const">
-                <Constellation
-                  after={card.constellationData}
-                  className="cards__card-svg"
-                />
-              </div>
-              <img src={cardText} alt="" className="cards__detail-logo" />
-              <span className="cards__detail-name">{card.constellationName}</span>
+              {/* 플레이스홀더(아직 없는 카드)만 빈 검은 박스, 실제 카드는
+                  정면이 아니어도 항상 얼굴이 보이게 → 드래그 중에도 서로 구분됨 */}
+              {!slot.placeholder && (
+                <>
+                  <img src={cardImage} alt="" className="cards__card-bg" />
+                  <div className="cards__card-const">
+                    <Constellation
+                      after={slot.constellationData}
+                      className="cards__card-svg"
+                    />
+                  </div>
+                  <img src={cardText} alt="" className="cards__card-logo" />
+                  <span className="cards__card-name">{slot.constellationName}</span>
+                </>
+              )}
             </div>
-          ))
-        )}
+          )
+        })}
       </div>
 
       {/* 카드 선택 시 상세 오버레이 (화면 9.3) — 헤더/하단 탭까지 다 덮도록 폰 프레임 전체에 렌더 */}
