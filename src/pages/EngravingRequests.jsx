@@ -3,10 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { USE_MOCK } from '../data/mockData'
 import { mockEngravingRequests } from '../data/engravingData'
+import { detailImageMap } from '../data/productAssets'
 import travelSuitcase from '../assets/travel_suitcase_option1.svg'
-import perfume from '../assets/fashion_perfume_option1_detail.svg'
-import bag from '../assets/bag_brown_detail.svg'
-import airpod from '../assets/lifestyle_airpod_case_detail.svg'
 import mcmLogo from '../assets/mcm_logo_loding.png'
 import '../styles/EngravingRequests.css'
 
@@ -17,14 +15,30 @@ const ENGRAVING_COLOR_LABEL = {
   black: '검정색',
 }
 
-// product.optionName 으로 제품 이미지 매핑 (API가 이미지 URL을 주지 않으므로 프론트에서 매핑)
+// product.optionName 으로 카테고리를 유추 (API가 카테고리를 따로 안 줘서 키워드로 판단)
+function getCategory(optionName) {
+  const name = optionName || ''
+  if (name.includes('수트케이스') || name.includes('트래블')) return '트래블'
+  if (name.includes('퍼퓸') || name.includes('향수')) return '패션소품'
+  if (name.includes('토트') || name.includes('가방') || name.includes('백')) return '가방'
+  if (name.includes('에어팟') || name.includes('케이스')) return '라이프스타일'
+  return null
+}
+
+// product.optionName + optionLabel 로 제품 이미지 매핑 (API가 이미지 URL을 주지 않으므로 프론트에서 매핑)
+// 가방/트래블/패션소품은 옵션(색상/용량)에 따라 이미지가 달라야 하므로 optionLabel까지 같이 봐야 함 (ProductSelect와 동일한 매핑 테이블 재사용)
 function getProductImage(product) {
-  const name = product?.optionName || ''
-  if (name.includes('수트케이스') || name.includes('트래블')) return travelSuitcase
-  if (name.includes('퍼퓸') || name.includes('향수')) return perfume
-  if (name.includes('토트') || name.includes('가방') || name.includes('백')) return bag
-  if (name.includes('에어팟') || name.includes('케이스')) return airpod
-  return travelSuitcase // 기본값
+  const category = getCategory(product?.optionName)
+  const byCategory = category ? detailImageMap[category] : null
+  if (byCategory) {
+    // optionLabel과 정확히 일치하는 이미지가 있으면 그걸 쓰고,
+    // 없으면(라이프스타일처럼 라벨이 달라도 이미지가 하나뿐인 경우 등) 그 카테고리의 첫 이미지로 폴백
+    const matched = product?.optionLabel ? byCategory[product.optionLabel] : null
+    if (matched) return matched
+    const fallback = Object.values(byCategory)[0]
+    if (fallback) return fallback
+  }
+  return travelSuitcase // 카테고리조차 못 찾은 경우의 최종 기본값
 }
 
 // 별자리(after)를 tight viewBox로 그리는 헬퍼
