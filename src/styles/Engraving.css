@@ -123,12 +123,12 @@
   aspect-ratio: 1 / 1;
   margin-right: 15px;        /* 이미지 ~ 텍스트 사이 간격 */
   border-radius: 5px;
-  background: #d9d9d9;
+  background: #0d0d0d;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #555;               /* 별자리 선/점 색 (ConstellationThumb의 currentColor) */
+  color: #fff;               /* 별자리 선/점 색 (EngravingConstellation의 currentColor) — 다른 화면과 통일 */
 }
 .engrave-card__thumb img {
   width: 100%;
