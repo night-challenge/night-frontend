@@ -9,7 +9,7 @@ const ENGRAVING_POSITION = {
 }
 
 const ENGRAVING_SIZE = {
-  '가방': { width: 14, height: 12 },
+  '가방': { width: 19, height: 17 },
   '트래블': { width: 24, height: 23 },
   '라이프스타일': { width: 24, height: 20 },
   '패션소품': { width: 24, height: 20 },
