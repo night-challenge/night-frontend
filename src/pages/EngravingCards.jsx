@@ -117,11 +117,10 @@ function EngravingCards() {
     })),
   ]
 
-  // 카드 로딩 끝나면 카드 목록의 정 가운데 카드가 정면에 오도록 회전값 초기화
+  // 카드 로딩 끝나면 최신 카드(cards[0], 정렬 기준 가장 최근)가 정면에 오도록 회전값 초기화
   useEffect(() => {
     if (cards.length > 0) {
-      const middleOffset = Math.floor((cards.length - 1) / 2)
-      setRotation((PAD_PER_SIDE + middleOffset) * STEP)
+      setRotation(PAD_PER_SIDE * STEP)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cards.length])
