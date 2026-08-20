@@ -301,7 +301,8 @@
 .product-detail__submit-btn {
   width: 100%;
   padding: 14px;
-  margin-top: 16px;
+  margin-top: 25px;
+  margin-bottom: 45px;
   border: none;
   border-radius: 8px;
   background: #222;

@@ -495,11 +495,13 @@ function ProductDetail() {
         </div>
       )}
 
-      <button className="product-detail__more-link">
+      <button
+        className="product-detail__more-link"
+        onClick={() => window.location.href = 'https://kr.mcmworldwide.com/ko_KR/home?srsltid=AfmBOoqeAVwQPTgMUdI3TGxjxfOk-kK1NeEFjI16L28dIUBzv5FjNXcR'}
+      >
         MCM에서 더 많은 제품 보기
         <span>›</span>
       </button>
-
       {submitError && (
         <p className="product-detail__error">
           {submitError}
