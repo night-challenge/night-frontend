@@ -19,7 +19,7 @@ function GameResultLoadingScreen({ onDone, engraving }) {
   useEffect(() => {
     const t1 = setTimeout(() => {
       setStage(2)
-    }, 1500)
+    }, 2000)
 
     const t2 = setTimeout(() => {
       onDone?.()
