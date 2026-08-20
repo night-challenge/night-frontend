@@ -57,7 +57,7 @@ function Constellation({ after, className }) {
 // 바깥쪽 카드들끼리 다시 겹쳤던 원인이 이거. 그래서 세로 위치(topOffset)는
 // SPACING으로 무조건 균등하게 고정하고, 기울기/좌우 곡선(휘어짐)만 원형 계산을
 // 쓰되 일정 각도 이상은 더 안 벌어지게 클램프해서 "부채꼴처럼 보이는 효과"만 남긴다.
-const CX = -463 // 좌우 곡선 원점 x (앞 카드를 아주 살짝 왼쪽으로)
+const CX = -460.5 // 좌우 곡선 원점 x — 앞(정면) 카드가 화면(375px) 정중앙(187.5px)에 오도록 CX+RADIUS=187.5로 맞춤
 const RADIUS = 648 // 좌우 곡선(휘어짐) 반지름 — 세로 간격엔 영향 없음, 크게 줘서 부채꼴이 확실히 보이게
 const STEP = 27 // 카드 한 칸당 각도(도) — 기울기/곡선 계산용
 const MAX_TILT = 45 // 기울기·좌우 곡선이 이 각도에서 더 이상 안 커짐(카드가 회전으로 서로 침범하지 않게)
@@ -72,8 +72,16 @@ function EngravingCards() {
   const [dragging, setDragging] = useState(false)
   const drag = useRef({ active: false, startY: 0, startRot: 0 })
   const [detail, setDetail] = useState(null) // 선택된 카드 상세(오버레이). null이면 닫힘
-  const [saved, setSaved] = useState(false) // "저장되었습니다." 토스트
+  const [toast, setToast] = useState(null) // 토스트 { id, msg } | null
+  const toastTimer = useRef(null)
   const [shareOpen, setShareOpen] = useState(false) // 카드 공유하기 → share 이미지 모달
+
+  // 토스트 잠깐 보여주기 (매번 새 id로 애니메이션 재시작 → 눌렀을 때마다 매번 다시 뜸)
+  const showToast = (message) => {
+    setToast({ id: Date.now(), msg: message })
+    if (toastTimer.current) clearTimeout(toastTimer.current)
+    toastTimer.current = setTimeout(() => setToast(null), 2000)
+  }
 
   // 카드 모음 조회: GET /api/engravings/cards
   useEffect(() => {
@@ -194,9 +202,94 @@ function EngravingCards() {
         d = res.data?.data
       }
       setDetail(d || null)
-      setSaved(false)
+      setToast(null)
     } catch (err) {
       console.error('카드 상세 조회 실패:', err)
+    }
+  }
+
+  // 이미지 로드를 Promise로 (canvas에 그리려면 로드가 끝나야 함)
+  const loadImageEl = (src) =>
+    new Promise((resolve, reject) => {
+      const img = new Image()
+      img.onload = () => resolve(img)
+      img.onerror = reject
+      img.src = src
+    })
+
+  // 카드 저장하기: 확대 카드(cards__detail-*)와 똑같은 배치로 canvas에 그려서
+  // 실제 PNG 이미지 파일로 다운로드한다. 별도 서버 API 없이 프론트에서만 처리.
+  const handleSaveCard = async () => {
+    if (!detail) return
+    try {
+      const SCALE = 2 // 저장 화질을 위해 2배 해상도로 렌더
+      const CW = 300 * SCALE
+      const CH = 180 * SCALE
+      const canvas = document.createElement('canvas')
+      canvas.width = CW
+      canvas.height = CH
+      const ctx = canvas.getContext('2d')
+
+      // 1) 카드 배경
+      const bg = await loadImageEl(cardImage)
+      ctx.drawImage(bg, 0, 0, CW, CH)
+
+      // 2) 별자리(after) — Constellation 컴포넌트와 동일한 tight viewBox 로직으로 SVG를 직접 만들어 그린다
+      const after = detail.constellationData?.after
+      if (after) {
+        const xs = after.points.map((p) => p.x)
+        const ys = after.points.map((p) => p.y)
+        const pad = 8
+        const minX = Math.min(...xs) - pad
+        const minY = Math.min(...ys) - pad
+        const w = Math.max(...xs) + pad - minX
+        const h = Math.max(...ys) + pad - minY
+        const pm = Object.fromEntries(after.points.map((p) => [p.id, p]))
+        const lines = after.connections
+          .map(([a, b]) => {
+            const p1 = pm[a]
+            const p2 = pm[b]
+            if (!p1 || !p2) return ''
+            return `<line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>`
+          })
+          .join('')
+        const dots = after.points
+          .map((p) => `<circle cx="${p.x}" cy="${p.y}" r="3" fill="#fff"/>`)
+          .join('')
+        const svgMarkup = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${minX} ${minY} ${w} ${h}">${lines}${dots}</svg>`
+        const svgDataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgMarkup)}`
+        const constImg = await loadImageEl(svgDataUrl)
+        ctx.drawImage(constImg, 10 * SCALE, 10 * SCALE, 190 * SCALE, 145 * SCALE)
+      }
+
+      // 3) 카드 텍스트(로고) 이미지
+      const logo = await loadImageEl(cardText)
+      const logoW = 84 * SCALE
+      const logoH = logoW * (logo.height / logo.width)
+      ctx.drawImage(logo, 8 * SCALE, 8 * SCALE, logoW, logoH)
+
+      // 4) 각인 이름 텍스트
+      ctx.fillStyle = '#fff'
+      ctx.font = `${9 * SCALE}px 'Pretendard', sans-serif`
+      ctx.textBaseline = 'bottom'
+      ctx.fillText(detail.constellationName || '', 66 * SCALE, CH - 10 * SCALE)
+
+      // 5) PNG로 변환해서 다운로드
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'))
+      if (!blob) throw new Error('이미지 생성 실패')
+      const url = URL.createObjectURL(blob)
+      const safeName = (detail.constellationName || 'mcm-card').replace(/[\\/:*?"<>|]/g, '')
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `${safeName || 'mcm-card'}.png`
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      URL.revokeObjectURL(url)
+
+      showToast('저장되었습니다.')
+    } catch (err) {
+      console.error('카드 저장 실패:', err)
     }
   }
 
@@ -293,9 +386,12 @@ function EngravingCards() {
                     ? detail.keywords.join(' · ')
                     : ''}
                 </p>
+                {toast && (
+                  <div key={toast.id} className="cards__detail-toast">
+                    {toast.msg}
+                  </div>
+                )}
               </div>
-
-              {saved && <div className="cards__detail-toast">저장되었습니다.</div>}
 
               <div className="cards__detail-buttons">
                 <button
@@ -304,10 +400,7 @@ function EngravingCards() {
                 >
                   카드 공유하기
                 </button>
-                <button
-                  className="cards__detail-save"
-                  onClick={() => setSaved(true)}
-                >
+                <button className="cards__detail-save" onClick={handleSaveCard}>
                   카드 저장하기
                 </button>
               </div>

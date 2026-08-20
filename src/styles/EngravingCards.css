@@ -124,11 +124,16 @@
   padding: 20px;
 }
 .cards__detail-inner {
+  /* 카드+설명+버튼 묶음 전체가 아니라, 카드(300x180) 자체의 세로 중앙이
+     화면 정중앙에 오도록 절대 배치. 카드 높이의 절반(90px)만큼 위로 올려서
+     top을 잡아두면, 그 아래 설명/버튼은 원래대로 자연스럽게 이어서 쌓임. */
+  position: absolute;
+  top: calc(50% - 90px - 70px); /* 카드 세로중앙(-90px) 기준에서 70px 더 위로 */
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
-  width: 100%;
 }
 .cards__detail-card {
   position: relative;
@@ -165,7 +170,9 @@
   z-index: 3;
 }
 .cards__detail-info {
+  position: relative;        /* 토스트를 이 박스 기준 바로 아래에 띄우기 위한 기준점 */
   width: 300px;
+  margin-top: 14px;          /* 확대 카드 ~ 설명 14px */
   padding: 12px 14px;
   border-radius: 8px;
   background: rgba(40, 40, 40, 0.92);
@@ -175,18 +182,36 @@
   margin: 4px 0;
   font-size: 12px;
 }
+
+/* 저장 완료 토스트 — 설명 박스 바로 밑에 떴다 사라짐. absolute라 레이아웃(97px 간격)에 영향 없음 */
 .cards__detail-toast {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-top: 8px;
+  transform: translateX(-50%);
   padding: 9px 18px;
   border-radius: 6px;
   background: rgba(50, 50, 50, 0.92);
   color: #fff;
   font-size: 12px;
+  white-space: nowrap;
+  z-index: 250;
+  animation: cards-detail-toast 2s ease forwards;
 }
+@keyframes cards-detail-toast {
+  0% { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+}
+
 .cards__detail-buttons {
   display: flex;
   justify-content: center;
   gap: 10px;
   width: 300px;
+  margin-top: 97px;          /* 설명 ~ 버튼 97px */
 }
 .cards__detail-share,
 .cards__detail-save {
