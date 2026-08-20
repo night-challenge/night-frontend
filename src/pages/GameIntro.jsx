@@ -35,14 +35,12 @@ function GameIntro() {
           ‹
         </button>
 
-        {/* 배너 이미지 */}
         <img
           src={banners[currentBanner]}
           alt={`Night Challenge 2026 ${currentBanner + 1}`}
           className="banner-image"
         />
 
-        {/* 오른쪽 화살표 */}
         <button
           className="banner-arrow banner-arrow-right"
           onClick={handleNext}

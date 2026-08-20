@@ -15,6 +15,7 @@ import EngravingCardResult from './pages/EngravingCardResult.jsx'
 import Profile from './pages/Profile.jsx'
 import EngravingRequests from './pages/EngravingRequests.jsx'
 import EngravingCards from './pages/EngravingCards.jsx'
+import GameResultLoading from './components/GameResultLoadingScreen.jsx'
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path="/engraving-requests" element={<EngravingRequests />} />
         <Route path="/engravings/cards" element={<EngravingCards />} />
         <Route path="/engraving/:id" element={<EngravingDetail />} />
+        <Route path="/game/loading/:gameSessionId" element={<GameResultLoading />} />
       </Routes>
     </PhoneFrame>
   )
