@@ -406,31 +406,34 @@ function ProductDetail() {
       </section>
 
       <section className="product-detail__section">
-        <h3 className="product-detail__section-title product-detail__section-title--center">
-          각인할 색 선정하기
-        </h3>
-
         <div className="color-picker">
-          {COLORS.map((c) => (
-            <button
-              key={c.key}
-              className={
-                'color-swatch' +
-                (selectedColor === c.key
-                  ? ' color-swatch--active'
-                  : '')
-              }
-              style={{ backgroundColor: c.hex }}
-              aria-label={c.label}
-              onClick={() => {
-                setSelectedColor(c.key)
-                setShowColorModal(true)
-              }}
-            />
-          ))}
+          <h3 className="product-detail__section-title product-detail__section-title--center">
+            각인할 색 선정하기
+          </h3>
+
+          <div className="color-picker__swatches">
+            {COLORS.map((c) => (
+              <button
+                key={c.key}
+                className={
+                  'color-swatch' +
+                  (selectedColor === c.key
+                    ? c.key === 'black'
+                      ? ' color-swatch--active-black'
+                      : ' color-swatch--active'
+                    : '')
+                }
+                style={{ backgroundColor: c.hex }}
+                aria-label={c.label}
+                onClick={() => {
+                  setSelectedColor(c.key)
+                  setShowColorModal(true)
+                }}
+              />
+            ))}
+          </div>
         </div>
       </section>
-
       {showColorModal && (
         <div
           className="color-modal-overlay"
@@ -478,6 +481,7 @@ function ProductDetail() {
               ))}
             </div>
 
+
             <button
               className="color-modal__confirm-btn"
               onClick={handleConfirmColor}
@@ -497,7 +501,12 @@ function ProductDetail() {
 
       <button
         className="product-detail__more-link"
-        onClick={() => window.location.href = 'https://kr.mcmworldwide.com/ko_KR/home?srsltid=AfmBOoqeAVwQPTgMUdI3TGxjxfOk-kK1NeEFjI16L28dIUBzv5FjNXcR'}
+        onClick={() =>
+          window.open(
+            'https://kr.mcmworldwide.com/ko_KR/home',
+            '_blank'
+          )
+        }
       >
         MCM에서 더 많은 제품 보기
         <span>›</span>

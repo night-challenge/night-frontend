@@ -19,18 +19,20 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.6);
   border: none;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+  background: transparent;
+  color: white;
   font-size: 18px;
+  font-weight: 100;
   line-height: 1;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  stroke-width: 1px;
+  z-index: 999;
 }
+
 
 .banner-arrow--left {
   left: 12px;
@@ -68,7 +70,7 @@
 
 .game-intro-section-title {
   font-weight: 700;
-  margin: 40px 26px 15px 26px;
+  margin: 40px auto 15px 7px;
   color: #222;
   font-family: Pretendard;
   font-size: 20px;
@@ -79,11 +81,13 @@
 
 .reward-card {
   padding: 15px;
+  width: 320px;
+  height: 100px;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
   align-self: stretch;
-  margin: 15px 26px 25px 26px;
+  margin: 15px auto 25px auto;
   border-radius: 5px;
   border: 0.8px solid #B5B5B5;
   display: flex;
@@ -112,7 +116,7 @@
   font-weight: 400; 
   line-height: normal;
   letter-spacing: 0.42px;
-  margin: 0 0 0 41px;
+  margin:0 0 0 10px;
 }
 
 .game-cta-button {
@@ -142,25 +146,6 @@
   width: 100%;
 }
 
-.banner-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-
-  border: none;
-  background: transparent;
-  color: white;
-
-  font-size: 40px;
-  line-height: 1;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  cursor: pointer;
-  z-index: 999;
-}
 
 .banner-arrow-left {
   left: 10px;
@@ -168,8 +153,4 @@
 
 .banner-arrow-right {
   right: 10px;
-}
-
-.banner-arrow:hover {
-  background: rgba(0, 0, 0, 0.7);
 }

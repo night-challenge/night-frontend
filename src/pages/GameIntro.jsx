@@ -32,7 +32,7 @@ function GameIntro() {
           className="banner-arrow banner-arrow-left"
           onClick={handlePrev}
         >
-          ‹
+          〈
         </button>
 
         <img
@@ -45,7 +45,7 @@ function GameIntro() {
           className="banner-arrow banner-arrow-right"
           onClick={handleNext}
         >
-          ›
+          〉
         </button>
 
       </div>

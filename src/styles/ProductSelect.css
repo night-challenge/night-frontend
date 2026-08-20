@@ -27,7 +27,7 @@
 .product-select__categories {
   display: flex;
   gap: 12px;
-  padding: 30px 0 15px;
+  padding: 5px 0 15px;
   margin-bottom: 15px;
 }
 

@@ -121,14 +121,34 @@
   margin-top: 30px;
 }
 
-.product-detail__section-title {
+.color-picker .product-detail__section-title {
+  margin: 0;
   color: #222;
   font-family: Pretendard;
-  font-size: 10px;
+  font-size: 12px;
   font-style: normal;
   font-weight: 400;
-  line-height: 160%; 
+  line-height: 160%;
   letter-spacing: 0.2px;
+  text-align: center;
+}
+
+.color-picker__swatches {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.color-swatch {
+  width: 44px;
+  height: 54px;
+  padding: 0;
+  border: none;
+  border-radius: 7px;
+  flex-shrink: 0;
+  cursor: pointer;
 }
 
 .product-detail__section-title--center {
@@ -242,12 +262,20 @@
 }
 
 .color-picker {
+  width: 162px;
+  height: 77px;
   display: flex;
-  justify-content: center;
-  gap: 14px;
-  background: #F5F5F5;
-  padding: 16px;
-  border-radius: 10px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+
+  background: #F7F7F7;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #B5B5B5;
+  margin: 45px auto 0 auto;
+  box-sizing: border-box;
 }
 
 .color-swatch {
@@ -255,15 +283,12 @@
   height: 36px;
   border-radius: 8px;
   border: 2px solid transparent;
-  cursor: pointer;
+  box-sizing: border-box;
 }
 
-.color-swatch--active {
-  border-color: #222; /* 금색/실버 선택 시 검정 테두리 */
-}
 
 /* 검정 선택 시에는 검정 테두리가 안 보이니 흰색 테두리로 구분 */
-.color-swatch--active-black {
+.color-swatch--active{
   border-color: #fff;
   box-shadow: 0 0 0 1px #222; /* 흰 배경 위에서도 경계가 보이도록 */
 }
@@ -363,6 +388,7 @@
   display: flex;
   gap: 12px;
   margin-top: 20px;
+  transform: none;
 }
 
 .color-modal__confirm-btn {
