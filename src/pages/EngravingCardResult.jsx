@@ -113,7 +113,10 @@ function EngravingCardResult() {
       </div>
 
       <div className="cardresult__buttons">
-        <button className="cardresult__btn" onClick={() => navigate('/engraving')}>
+        <button
+          className="cardresult__btn"
+          onClick={() => navigate('/engravings/cards')}
+        >
           카드 보러가기
         </button>
         <button className="cardresult__btn" onClick={() => navigate('/products')}>
