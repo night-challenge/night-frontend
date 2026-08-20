@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import ConstellationThumb from '../components/ConstellationThumb'
+import GameResultLoadingScreen from '../components/GameResultLoadingScreen'
 import { buildGroupsFromMoveLog } from '../data/gameTrajectory'
 import '../styles/GameSessionDetail.css'
 import { gameApi } from '../api/game'
@@ -11,9 +12,7 @@ async function fetchGameSession(gameSessionId) {
 }
 
 async function createEngraving(gameSessionId) {
-  const res =
-    await gameApi.createEngraving(gameSessionId)
-
+  const res = await gameApi.createEngraving(gameSessionId)
   return res.data.data
 }
 
@@ -27,17 +26,16 @@ export default function GameSessionDetail() {
   const { gameSessionId } = useParams()
   const navigate = useNavigate()
 
-  const onBack = () => navigate(-1)
-
   const [session, setSession] = useState(null)
-  const [status, setStatus] =
-    useState('loading')
+  const [status, setStatus] = useState('loading')
 
-  const [finishing, setFinishing] =
-    useState(false)
+  const [finishing, setFinishing] = useState(false)
+  const [finishError, setFinishError] = useState(null)
 
-  const [finishError, setFinishError] =
-    useState(null)
+  const [engraving, setEngraving] = useState(null)
+  const [showLoading, setShowLoading] = useState(false)
+
+  const onBack = () => navigate(-1)
 
   useEffect(() => {
     let cancelled = false
@@ -50,15 +48,11 @@ export default function GameSessionDetail() {
           setSession(data)
           setStatus('ready')
 
-          // 게임이 이미 끝났으면
-          // localStorage에 저장된 세션 ID 삭제
           if (
             data.status === 'WON' ||
             data.status === 'LOST'
           ) {
-            localStorage.removeItem(
-              'gameSessionId'
-            )
+            localStorage.removeItem('gameSessionId')
           }
         }
       })
@@ -73,7 +67,6 @@ export default function GameSessionDetail() {
     }
   }, [gameSessionId])
 
-  // 세션이 바뀔 때만 그룹(체인)을 다시 계산
   const trajectoryGroups = useMemo(() => {
     if (!session) return []
 
@@ -89,14 +82,10 @@ export default function GameSessionDetail() {
     setFinishError(null)
 
     try {
-      const engraving =
-        await createEngraving(
-          gameSessionId
-        )
+      const data = await createEngraving(gameSessionId)
 
-      navigate(
-        `/engraving/regenerate/${engraving.id}`
-      )
+      setEngraving(data)
+      setShowLoading(true)
     } catch (e) {
       setFinishError(
         '각인 저장에 실패했어요. 다시 시도해주세요.'
@@ -104,6 +93,16 @@ export default function GameSessionDetail() {
 
       setFinishing(false)
     }
+  }
+
+  const handleLoadingDone = () => {
+    if (!engraving?.id) return
+
+    setShowLoading(false)
+
+    navigate(
+      `/engraving/regenerate/${engraving.id}`
+    )
   }
 
   if (status === 'loading') {
@@ -114,10 +113,7 @@ export default function GameSessionDetail() {
     )
   }
 
-  if (
-    status === 'error' ||
-    !session
-  ) {
+  if (status === 'error' || !session) {
     return (
       <div className="gsd-state">
         게임 세션을 불러오지 못했어요.
@@ -127,6 +123,13 @@ export default function GameSessionDetail() {
 
   return (
     <div className="gsd-page">
+      {showLoading && engraving && (
+        <GameResultLoadingScreen
+          engraving={engraving}
+          onDone={handleLoadingDone}
+        />
+      )}
+
       <header className="gsd-header">
         <button
           className="gsd-back"
@@ -159,9 +162,8 @@ export default function GameSessionDetail() {
           <div className="gsd-stat-row">
             <dt>최종 결과</dt>
             <dd>
-              {STATUS_LABEL[
-                session.status
-              ] ?? session.status}
+              {STATUS_LABEL[session.status] ??
+                session.status}
             </dd>
           </div>
 
