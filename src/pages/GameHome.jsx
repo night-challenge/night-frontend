@@ -179,13 +179,17 @@ function GameHome() {
           </li>
 
           <li>
-            나이트로 움직여 기물을 잡으면 포인트를 획득한다.
+            나이트를 움직여 기물을 잡으면 포인트를 획득한다.
           </li>
 
           <li>
             턴 안에 목표 포인트를 모으면 게임이 종료된다.
           </li>
         </ol>
+
+        <p className= "caution">
+          나이트 외 기물의 이동은 점수 획득 및 궤적 생성에 반영되지 않습니다
+        </p>
       </div>
 
       <div className="knight-preview-box">
